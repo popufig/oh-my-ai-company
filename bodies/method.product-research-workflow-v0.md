@@ -233,6 +233,18 @@ Hyperagent 的修正见 [[note.hyperagent-product-takeaway-2026-07-10]]。
 
 Kernel 这轮与前面的 Browserbase、Hyperbrowser、Browserless 对照后，补出了三条还需要继续验证的方法。相关过程见 [[note.kernel-research-run-2026-07-13]]。
 
+### 这轮质量较高的原因
+
+后续可以参考 Kernel 的证据闭环，但不要复制它的报告目录。真正值得复用的是以下过程：
+
+- **从已知图谱进入**：先和 Browserbase、Hyperbrowser、Browserless 对照，带着明确缺口查 Kernel，而不是从搜索结果重新堆一遍公司介绍。
+- **产品、规模、演化并行**：官网/docs 回答“现在卖什么”，流量与客户用量回答“做到多大”，launch/release/founder vision 回答“如何走到这里、准备往哪里走”。三条线互相校正。
+- **关键结论至少跨两类证据**：官方叙事之外，尽量补平台数据、客户案例、GitHub 或社区反馈；融资稿、供应商案例和第三方估算都保留各自边界。
+- **把失败状态继续追到可解释**：首页空壳、Reddit 搜索异常、LinkedIn 员工误报都没有停在“工具失败”，而是复测、反馈工具 owner、修复后回填证据状态。未解决的 GitHub star history 和产品实测则明确留空。
+- **研究结果与研究过程一起资产化**：主体报告、source、人物/投资关系、流量快照、图片、note、concept、监控入口和本轮反思同时落库，使下一家公司可以直接复用比较基线。
+
+这组动作更适合被理解为“质量控制回路”，而不是固定模板。垂直 AI、消费产品或开源项目仍应按其真实问题增删证据线。
+
 ### API-first infra 的规模必须双轨判断
 
 网站流量衡量的是外部注意力与获客，不等于 API/backend 使用。研究 browser、sandbox、模型服务等 infra 时，至少并列观察：
