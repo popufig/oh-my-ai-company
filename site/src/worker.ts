@@ -51,10 +51,13 @@ async function metadata(env: Env) {
   const meta = Object.fromEntries((values.results || []).map((row) => [row.key, row.value]));
   return {
     name: "Oh My AI Company",
-    description: "A living atlas of AI companies, founders, investors, evidence, and research notes.",
+    description: "A curated atlas of AI companies, founders, investors, evidence, and market signals.",
     generated_at: meta.generated_at || null,
     object_count: Number(meta.object_count || 0),
     link_count: Number(meta.link_count || 0),
+    company_count: Number(meta.company_count || 0),
+    asset_count: Number(meta.asset_count || 0),
+    publication_manifest_version: Number(meta.publication_manifest_version || 0),
     type_count: Number(types?.count || 0)
   };
 }
@@ -151,21 +154,24 @@ async function graph(request: Request, env: Env) {
   const edgeMap = new Map<number, Record<string, unknown>>();
 
   for (let level = 0; level < depth && frontier.length > 0 && seen.size < 150; level += 1) {
-    const active = frontier.slice(0, 75);
-    const placeholders = active.map(() => "?").join(",");
-    const result = await env.DB.prepare(`
-      SELECT id, from_object_id, to_object_id, kind, relation
-      FROM links
-      WHERE from_object_id IN (${placeholders}) OR to_object_id IN (${placeholders})
-      LIMIT 500
-    `).bind(...active, ...active).all<Record<string, unknown>>();
     const next: string[] = [];
-    for (const edge of result.results || []) {
-      edgeMap.set(Number(edge.id), edge);
-      for (const id of [String(edge.from_object_id), String(edge.to_object_id)]) {
-        if (!seen.has(id) && seen.size < 150) {
-          seen.add(id);
-          next.push(id);
+    const active = frontier.slice(0, 120);
+    for (let start = 0; start < active.length && seen.size < 150; start += 40) {
+      const batch = active.slice(start, start + 40);
+      const placeholders = batch.map(() => "?").join(",");
+      const result = await env.DB.prepare(`
+        SELECT id, from_object_id, to_object_id, kind, relation
+        FROM links
+        WHERE from_object_id IN (${placeholders}) OR to_object_id IN (${placeholders})
+        LIMIT 500
+      `).bind(...batch, ...batch).all<Record<string, unknown>>();
+      for (const edge of result.results || []) {
+        edgeMap.set(Number(edge.id), edge);
+        for (const id of [String(edge.from_object_id), String(edge.to_object_id)]) {
+          if (!seen.has(id) && seen.size < 150) {
+            seen.add(id);
+            next.push(id);
+          }
         }
       }
     }
@@ -190,6 +196,9 @@ async function serveMedia(request: Request, env: Env) {
   const url = new URL(request.url);
   const key = decodeURIComponent(url.pathname.slice("/media/".length));
   if (!key || key.includes("..")) return new Response("Not found", { status: 404 });
+  const published = await env.DB.prepare("SELECT path, content_type FROM public_assets WHERE path = ?")
+    .bind(key).first<{ path: string; content_type: string }>();
+  if (!published) return new Response("Not found", { status: 404 });
   const object = await env.MEDIA.get(key);
   if (!object) return new Response("Not found", { status: 404 });
   const headers = new Headers();

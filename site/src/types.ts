@@ -43,5 +43,8 @@ export interface Meta {
   generated_at: string | null;
   object_count: number;
   link_count: number;
+  company_count: number;
+  asset_count: number;
+  publication_manifest_version: number;
   type_count: number;
 }
