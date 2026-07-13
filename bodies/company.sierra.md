@@ -71,12 +71,18 @@ Sierra 把合规和安全放得很重：SOC 2、HIPAA、GDPR、PCI、FedRAMP Hig
 
 Sierra 的 GTM 不是 developer-led，而是高信任企业销售 + 行业场景落地 + 结果定价。
 
+![Sierra Similarweb overview](assets/sierra-similarweb-overview-2026-07-13.png)
+
 它的强势点：
 
 - 创始人信任红利：Bret Taylor 和 Clay Bavor 的企业/平台履历，让 Sierra 能进入大客户采购讨论。
 - 客户证言密度高：官网把客户故事做成核心资产，按行业呈现，强调上线周期和业务结果。
 - 结果定价：官网直接写 “Pay for a job well done”，把采购决策从 seat/tool 迁移到 outcome。
 - 安全合规先行：对 Fortune 50 级客户，这是进入门槛，不是附加功能。
+
+Similarweb 也能看出它的 GTM 不是单点 PR：2026 年 1-6 月 sierra.ai 总访问量约 1.613M，月访问约 186K；Direct 41.93%，Organic Search 30.49%，Paid Search 7.43%，Referral 7.36%，Organic Social 9.64%。搜索流量里品牌占比 86.11%，说明主要还是品牌认知驱动，但它也已经在做 paid search 和地区落地页，如 `ads-meet-your-agent`、`ai-agent-for-enterprises`、`/jp`。
+
+社交流量几乎全靠 LinkedIn：社交访问 137.2K，占总流量 10.16%，其中 LinkedIn 98.29%。这和 Sierra 的企业客户、创始人声量、融资叙事很一致：它不是 Product Hunt/HN 自增长型样本，而是 enterprise executive / investor / operator 网络里扩散。
 
 ## 社区反馈与风险
 
@@ -100,6 +106,8 @@ Hacker News 对 $950M / $15B 融资的讨论很有价值。支持者认为，很
 - Ada、Cognigy、Talkdesk、Genesys 等 contact center / conversational AI 厂商：更传统但有企业渠道。
 - Dust、Adept、Browserbase/Hyperbrowser 等不是直接客服竞品，但在 agent workspace、operator、browser automation、agent infra 上构成相邻参考。
 
+Similarweb 类似网站里 Cognigy、Voiceflow、Cresta、ASAPP、Ada、Zowie 与 Sierra 更接近；Decagon 在受众兴趣交叉访问里排第一，是这轮最值得继续对比的 AI customer support 竞品。OpenAI、Claude、Cursor、Lovable、Perplexity 等也出现在类似网站/交叉访问里，但这更像 AI 受众相邻或搜索兴趣重叠，不能直接当竞品。
+
 Sierra 的差异点是“客户体验场景 + 企业可信执行 + outcome pricing + 大客户分发”。
 
 ## 对我们的启发
@@ -110,9 +118,10 @@ Sierra 的差异点是“客户体验场景 + 企业可信执行 + outcome prici
 4. 结果定价值得重点关注。它把 agent 的价值从 token/seat 转成业务结果，但也要求厂商能度量和承担交付责任。
 5. 创始人/投资人/客户网络本身就是 GTM 资产。Sierra 不是纯产品自增长样本，而是强关系企业销售样本。
 
-## 数据缺口
+## 流量与数据口径
 
-- Similarweb 公网页面对 sierra.ai 显示 No Data，无法可靠写入访问量或渠道构成。
+- Similarweb 公网页面对 sierra.ai 曾显示 No Data，但 Similarweb Pro 视图可见完整数据；本卷宗以 [[source.similarweb.sierra-no-data-2026-07-13]] / [[traffic.similarweb.sierra-2026-h1]] 为准。
+- Similarweb 内容页热门页面模块没有拿到有效内容，可能是权限/模块限制。
 - LinkedIn 员工数、招聘节奏、组织结构还没完整拉取。
 - Reddit/X 上的一线用户反馈还不够系统，目前社区判断主要来自 HN。
 - ARR 口径来自第三方报道，需要和官方材料区分。
@@ -121,7 +130,7 @@ Sierra 的差异点是“客户体验场景 + 企业可信执行 + outcome prici
 
 S1 官方：[[source.website.sierra-home-2026-07-13]]、[[source.website.sierra-about-2026-07-13]]、[[source.website.sierra-product-2026-07-13]]、[[source.website.sierra-ghostwriter-2026-07-13]]、[[source.website.sierra-trust-2026-07-13]]、[[source.website.sierra-customers-2026-07-13]]、[[source.blog.sierra-agents-as-a-service-2026-03-25]]、[[source.blog.sierra-350m-10b-2025-09-04]]、[[source.blog.sierra-950m-15b-2026-05-04]]
 
-S2 第三方：[[source.techcrunch.sierra-350m-2025-09-04]]、[[source.siliconangle.sierra-950m-2026-05-04]]、[[source.cmswire.sierra-950m-2026-05-05]]、[[source.forbes.sarah-guo-profile-2026-05-27]]
+S2 第三方：[[source.techcrunch.sierra-350m-2025-09-04]]、[[source.siliconangle.sierra-950m-2026-05-04]]、[[source.cmswire.sierra-950m-2026-05-05]]、[[source.forbes.sarah-guo-profile-2026-05-27]]、[[source.similarweb.sierra-no-data-2026-07-13]]
 
 S3 社区：[[source.hn.sierra-950m-thread-2026-05-04]]
 
