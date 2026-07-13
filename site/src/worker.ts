@@ -599,8 +599,17 @@ async function api(request: Request, env: Env) {
   }
   if (url.pathname === "/api/run" && request.method === "POST") return handleRun(request, env);
   if (url.pathname === "/api/file" && request.method === "GET") {
-    const key = normalizeAssetPath(url.searchParams.get("path") || "", url.searchParams.get("base") || "");
-    return serveMediaKey(key, env);
+    const target = url.searchParams.get("path") || "";
+    const base = url.searchParams.get("base") || "";
+    const candidates = [...new Set([
+      normalizeAssetPath(target, base),
+      normalizeAssetPath(target, "")
+    ])];
+    for (const key of candidates) {
+      const response = await serveMediaKey(key, env);
+      if (response.status !== 404) return response;
+    }
+    return new Response("Not found", { status: 404 });
   }
   if (request.method !== "GET") return json({ error: "read-only API" }, { status: 405 });
 
