@@ -9,4 +9,5 @@
 site/generated/
 site/dist/
 site/node_modules/
+site/.wrangler/
 site/*.tsbuildinfo
