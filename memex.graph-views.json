@@ -1,0 +1,1179 @@
+{
+  "version": 2,
+  "views": [
+    {
+      "id": "company-research-map",
+      "label": "Company Research Map",
+      "root_type": "company",
+      "description": "公司一屏全景：证据、笔记、触点、流量、创始人、投资人、概念/方法。",
+      "paths": [
+        {
+          "steps": [
+            {
+              "relation": "about_company",
+              "direction": "in",
+              "target_type": "source.item"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "about_company",
+              "direction": "in",
+              "target_type": "note"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "owner_company",
+              "direction": "in",
+              "target_type": "touchpoint"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "company",
+              "direction": "in",
+              "target_type": "traffic.snapshot"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "founders",
+              "direction": "out",
+              "target_type": "person"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "company",
+              "direction": "in",
+              "target_type": "investment"
+            },
+            {
+              "relation": "investor",
+              "direction": "out",
+              "target_type": "investor"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "related_companies",
+              "direction": "in",
+              "target_type": "concept"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "related_companies",
+              "direction": "in",
+              "target_type": "method"
+            }
+          ]
+        }
+      ],
+      "nodes": {
+        "company": {
+          "variant": "rich",
+          "title_field": "name",
+          "subtitle_field": "one_liner",
+          "meta_fields": [
+            "status",
+            "website"
+          ],
+          "badge_fields": [
+            "category",
+            "tags"
+          ]
+        },
+        "concept": {
+          "variant": "standard",
+          "title_field": "title",
+          "subtitle_field": "summary",
+          "meta_fields": [
+            "kind",
+            "confidence",
+            "status"
+          ],
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "investor": {
+          "variant": "standard",
+          "title_field": "name",
+          "subtitle_field": "focus",
+          "meta_fields": [
+            "kind"
+          ],
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "method": {
+          "variant": "standard",
+          "title_field": "title",
+          "subtitle_field": "summary",
+          "meta_fields": [
+            "kind",
+            "confidence",
+            "status"
+          ],
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "note": {
+          "variant": "standard",
+          "title_field": "title",
+          "subtitle_field": "kind",
+          "meta_fields": [
+            "author",
+            "created_at"
+          ],
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "person": {
+          "variant": "standard",
+          "title_field": "name",
+          "subtitle_field": "bio",
+          "meta_fields": [
+            "role"
+          ],
+          "badge_fields": [
+            "title"
+          ]
+        },
+        "source.item": {
+          "variant": "standard",
+          "title_field": "title",
+          "subtitle_field": "platform",
+          "meta_fields": [
+            "evidence_level",
+            "quality",
+            "published_at",
+            "collected_at"
+          ],
+          "badge_fields": [
+            "item_type"
+          ]
+        },
+        "touchpoint": {
+          "variant": "compact",
+          "title_field": "title",
+          "subtitle_field": "platform",
+          "meta_fields": [
+            "kind",
+            "monitor_priority",
+            "status"
+          ],
+          "badge_fields": [
+            "handle"
+          ]
+        },
+        "traffic.snapshot": {
+          "variant": "rich",
+          "title_field": "title",
+          "subtitle_field": "domain",
+          "meta_fields": [
+            "monthly_visits",
+            "total_visits",
+            "period_start",
+            "period_end",
+            "organic_search_pct",
+            "direct_pct",
+            "gen_ai_pct"
+          ],
+          "badge_fields": [
+            "platform",
+            "quality"
+          ]
+        }
+      },
+      "bridges": {
+        "investment": {
+          "label_fields": [
+            "round",
+            "role",
+            "amount_text",
+            "announced_at",
+            "confidence"
+          ],
+          "aggregate": true
+        }
+      }
+    },
+    {
+      "id": "portfolio",
+      "label": "Portfolio",
+      "root_type": "investor",
+      "description": "投资机构 portfolio：investor \u003c- investment -\u003e company，investment 收缩为边。",
+      "paths": [
+        {
+          "steps": [
+            {
+              "relation": "investor",
+              "direction": "in",
+              "target_type": "investment"
+            },
+            {
+              "relation": "company",
+              "direction": "out",
+              "target_type": "company"
+            }
+          ]
+        }
+      ],
+      "nodes": {
+        "company": {
+          "variant": "rich",
+          "title_field": "name",
+          "subtitle_field": "one_liner",
+          "meta_fields": [
+            "status",
+            "website"
+          ],
+          "badge_fields": [
+            "category",
+            "tags"
+          ]
+        },
+        "investor": {
+          "variant": "rich",
+          "title_field": "name",
+          "subtitle_field": "focus",
+          "meta_fields": [
+            "kind",
+            "website"
+          ],
+          "badge_fields": [
+            "tags"
+          ]
+        }
+      },
+      "bridges": {
+        "investment": {
+          "label_fields": [
+            "round",
+            "role",
+            "amount_text",
+            "announced_at",
+            "confidence"
+          ],
+          "aggregate": true
+        }
+      }
+    },
+    {
+      "id": "investor-map",
+      "label": "Investor Map",
+      "root_type": "investor",
+      "description": "投资机构全景：portfolio、证据、触点。",
+      "paths": [
+        {
+          "steps": [
+            {
+              "relation": "investor",
+              "direction": "in",
+              "target_type": "investment"
+            },
+            {
+              "relation": "company",
+              "direction": "out",
+              "target_type": "company"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "about_investor",
+              "direction": "in",
+              "target_type": "source.item"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "owner_investor",
+              "direction": "in",
+              "target_type": "touchpoint"
+            }
+          ]
+        }
+      ],
+      "nodes": {
+        "company": {
+          "variant": "standard",
+          "title_field": "name",
+          "subtitle_field": "one_liner",
+          "meta_fields": [
+            "status"
+          ],
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "investor": {
+          "variant": "rich",
+          "title_field": "name",
+          "subtitle_field": "focus",
+          "meta_fields": [
+            "kind",
+            "website"
+          ],
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "source.item": {
+          "variant": "standard",
+          "title_field": "title",
+          "subtitle_field": "platform",
+          "meta_fields": [
+            "evidence_level",
+            "quality",
+            "published_at"
+          ],
+          "badge_fields": [
+            "item_type"
+          ]
+        },
+        "touchpoint": {
+          "variant": "compact",
+          "title_field": "title",
+          "subtitle_field": "platform",
+          "meta_fields": [
+            "kind",
+            "monitor_priority"
+          ]
+        }
+      },
+      "bridges": {
+        "investment": {
+          "label_fields": [
+            "round",
+            "role",
+            "amount_text",
+            "announced_at",
+            "confidence"
+          ],
+          "aggregate": true
+        }
+      }
+    },
+    {
+      "id": "investor-evidence",
+      "label": "Investor Evidence",
+      "root_type": "investor",
+      "description": "投资机构相关证据。",
+      "paths": [
+        {
+          "steps": [
+            {
+              "relation": "about_investor",
+              "direction": "in",
+              "target_type": "source.item"
+            }
+          ]
+        }
+      ],
+      "nodes": {
+        "investor": {
+          "variant": "standard",
+          "title_field": "name",
+          "subtitle_field": "focus",
+          "meta_fields": [
+            "kind"
+          ],
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "source.item": {
+          "variant": "rich",
+          "title_field": "title",
+          "subtitle_field": "url",
+          "meta_fields": [
+            "platform",
+            "item_type",
+            "evidence_level",
+            "quality",
+            "published_at",
+            "collected_at"
+          ]
+        }
+      }
+    },
+    {
+      "id": "company-investors",
+      "label": "Company Investors",
+      "root_type": "company",
+      "description": "公司融资图：company \u003c- investment -\u003e investor，investment 收缩为边。",
+      "paths": [
+        {
+          "steps": [
+            {
+              "relation": "company",
+              "direction": "in",
+              "target_type": "investment"
+            },
+            {
+              "relation": "investor",
+              "direction": "out",
+              "target_type": "investor"
+            }
+          ]
+        }
+      ],
+      "nodes": {
+        "company": {
+          "variant": "rich",
+          "title_field": "name",
+          "subtitle_field": "one_liner",
+          "meta_fields": [
+            "status"
+          ],
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "investor": {
+          "variant": "rich",
+          "title_field": "name",
+          "subtitle_field": "focus",
+          "meta_fields": [
+            "kind",
+            "website"
+          ],
+          "badge_fields": [
+            "tags"
+          ]
+        }
+      },
+      "bridges": {
+        "investment": {
+          "label_fields": [
+            "round",
+            "role",
+            "amount_text",
+            "announced_at",
+            "confidence"
+          ],
+          "aggregate": true
+        }
+      }
+    },
+    {
+      "id": "company-evidence",
+      "label": "Company Evidence",
+      "root_type": "company",
+      "description": "公司证据库：source.item 按平台、证据等级、质量展示。",
+      "paths": [
+        {
+          "steps": [
+            {
+              "relation": "about_company",
+              "direction": "in",
+              "target_type": "source.item"
+            }
+          ]
+        }
+      ],
+      "nodes": {
+        "company": {
+          "variant": "standard",
+          "title_field": "name",
+          "subtitle_field": "one_liner",
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "source.item": {
+          "variant": "rich",
+          "title_field": "title",
+          "subtitle_field": "url",
+          "meta_fields": [
+            "platform",
+            "item_type",
+            "evidence_level",
+            "quality",
+            "published_at",
+            "collected_at"
+          ]
+        }
+      }
+    },
+    {
+      "id": "company-notes",
+      "label": "Company Notes",
+      "root_type": "company",
+      "description": "公司相关判断、takeaway、问题和复盘。",
+      "paths": [
+        {
+          "steps": [
+            {
+              "relation": "about_company",
+              "direction": "in",
+              "target_type": "note"
+            }
+          ]
+        }
+      ],
+      "nodes": {
+        "company": {
+          "variant": "standard",
+          "title_field": "name",
+          "subtitle_field": "one_liner"
+        },
+        "note": {
+          "variant": "rich",
+          "title_field": "title",
+          "subtitle_field": "kind",
+          "meta_fields": [
+            "author",
+            "created_at"
+          ],
+          "badge_fields": [
+            "tags"
+          ]
+        }
+      }
+    },
+    {
+      "id": "company-touchpoints",
+      "label": "Company Touchpoints",
+      "root_type": "company",
+      "description": "公司持续监控入口。",
+      "paths": [
+        {
+          "steps": [
+            {
+              "relation": "owner_company",
+              "direction": "in",
+              "target_type": "touchpoint"
+            }
+          ]
+        }
+      ],
+      "nodes": {
+        "company": {
+          "variant": "standard",
+          "title_field": "name",
+          "subtitle_field": "one_liner"
+        },
+        "touchpoint": {
+          "variant": "rich",
+          "title_field": "title",
+          "subtitle_field": "url",
+          "meta_fields": [
+            "platform",
+            "kind",
+            "handle",
+            "status",
+            "monitor_priority"
+          ]
+        }
+      }
+    },
+    {
+      "id": "company-traffic",
+      "label": "Company Traffic",
+      "root_type": "company",
+      "description": "公司流量快照，用于横向比较规模和获客结构。",
+      "paths": [
+        {
+          "steps": [
+            {
+              "relation": "company",
+              "direction": "in",
+              "target_type": "traffic.snapshot"
+            }
+          ]
+        }
+      ],
+      "nodes": {
+        "company": {
+          "variant": "standard",
+          "title_field": "name",
+          "subtitle_field": "website"
+        },
+        "traffic.snapshot": {
+          "variant": "rich",
+          "title_field": "title",
+          "subtitle_field": "domain",
+          "meta_fields": [
+            "monthly_visits",
+            "total_visits",
+            "unique_visitors",
+            "period_start",
+            "period_end",
+            "direct_pct",
+            "organic_search_pct",
+            "referral_pct",
+            "organic_social_pct",
+            "gen_ai_pct",
+            "bounce_rate_pct"
+          ],
+          "badge_fields": [
+            "platform",
+            "quality"
+          ]
+        }
+      }
+    },
+    {
+      "id": "company-founders",
+      "label": "Company Founders",
+      "root_type": "company",
+      "description": "公司创始人与关键人物。",
+      "paths": [
+        {
+          "steps": [
+            {
+              "relation": "founders",
+              "direction": "out",
+              "target_type": "person"
+            }
+          ]
+        }
+      ],
+      "nodes": {
+        "company": {
+          "variant": "standard",
+          "title_field": "name",
+          "subtitle_field": "one_liner"
+        },
+        "person": {
+          "variant": "rich",
+          "title_field": "name",
+          "subtitle_field": "bio",
+          "meta_fields": [
+            "role",
+            "x_url",
+            "linkedin_url"
+          ],
+          "badge_fields": [
+            "title"
+          ]
+        }
+      }
+    },
+    {
+      "id": "person-network",
+      "label": "Person Network",
+      "root_type": "person",
+      "description": "人物全景：公司、证据、笔记、触点。",
+      "paths": [
+        {
+          "steps": [
+            {
+              "relation": "founders",
+              "direction": "in",
+              "target_type": "company"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "founded_companies",
+              "direction": "out",
+              "target_type": "company"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "about_person",
+              "direction": "in",
+              "target_type": "source.item"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "about_person",
+              "direction": "in",
+              "target_type": "note"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "owner_person",
+              "direction": "in",
+              "target_type": "touchpoint"
+            }
+          ]
+        }
+      ],
+      "nodes": {
+        "company": {
+          "variant": "standard",
+          "title_field": "name",
+          "subtitle_field": "one_liner",
+          "meta_fields": [
+            "status"
+          ],
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "note": {
+          "variant": "standard",
+          "title_field": "title",
+          "subtitle_field": "kind",
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "person": {
+          "variant": "rich",
+          "title_field": "name",
+          "subtitle_field": "bio",
+          "meta_fields": [
+            "role",
+            "x_url",
+            "linkedin_url"
+          ],
+          "badge_fields": [
+            "title"
+          ]
+        },
+        "source.item": {
+          "variant": "standard",
+          "title_field": "title",
+          "subtitle_field": "platform",
+          "meta_fields": [
+            "evidence_level",
+            "quality"
+          ],
+          "badge_fields": [
+            "item_type"
+          ]
+        },
+        "touchpoint": {
+          "variant": "compact",
+          "title_field": "title",
+          "subtitle_field": "platform",
+          "meta_fields": [
+            "kind",
+            "status"
+          ]
+        }
+      }
+    },
+    {
+      "id": "person-companies",
+      "label": "Person Companies",
+      "root_type": "person",
+      "description": "人物关联公司：兼容 company.founders 与 person.founded_companies 两种写法。",
+      "paths": [
+        {
+          "steps": [
+            {
+              "relation": "founders",
+              "direction": "in",
+              "target_type": "company"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "founded_companies",
+              "direction": "out",
+              "target_type": "company"
+            }
+          ]
+        }
+      ],
+      "nodes": {
+        "company": {
+          "variant": "rich",
+          "title_field": "name",
+          "subtitle_field": "one_liner",
+          "meta_fields": [
+            "status",
+            "website"
+          ],
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "person": {
+          "variant": "standard",
+          "title_field": "name",
+          "subtitle_field": "bio",
+          "meta_fields": [
+            "role"
+          ]
+        }
+      }
+    },
+    {
+      "id": "person-touchpoints",
+      "label": "Person Touchpoints",
+      "root_type": "person",
+      "description": "人物社交/主页触点。",
+      "paths": [
+        {
+          "steps": [
+            {
+              "relation": "owner_person",
+              "direction": "in",
+              "target_type": "touchpoint"
+            }
+          ]
+        }
+      ],
+      "nodes": {
+        "person": {
+          "variant": "standard",
+          "title_field": "name",
+          "subtitle_field": "bio"
+        },
+        "touchpoint": {
+          "variant": "rich",
+          "title_field": "title",
+          "subtitle_field": "url",
+          "meta_fields": [
+            "platform",
+            "kind",
+            "handle",
+            "status",
+            "monitor_priority"
+          ]
+        }
+      }
+    },
+    {
+      "id": "person-evidence",
+      "label": "Person Evidence",
+      "root_type": "person",
+      "description": "人物证据。",
+      "paths": [
+        {
+          "steps": [
+            {
+              "relation": "about_person",
+              "direction": "in",
+              "target_type": "source.item"
+            }
+          ]
+        }
+      ],
+      "nodes": {
+        "person": {
+          "variant": "standard",
+          "title_field": "name",
+          "subtitle_field": "bio"
+        },
+        "source.item": {
+          "variant": "rich",
+          "title_field": "title",
+          "subtitle_field": "url",
+          "meta_fields": [
+            "platform",
+            "item_type",
+            "evidence_level",
+            "quality",
+            "published_at"
+          ]
+        }
+      }
+    },
+    {
+      "id": "concept-evidence",
+      "label": "Concept Evidence",
+      "root_type": "concept",
+      "description": "概念/模式的证据、相关公司、相关笔记，以及反向相关方法。",
+      "paths": [
+        {
+          "steps": [
+            {
+              "relation": "related_companies",
+              "direction": "out",
+              "target_type": "company"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "related_notes",
+              "direction": "out",
+              "target_type": "note"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "evidence_items",
+              "direction": "out",
+              "target_type": "source.item"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "related_concepts",
+              "direction": "in",
+              "target_type": "method"
+            }
+          ]
+        }
+      ],
+      "nodes": {
+        "company": {
+          "variant": "standard",
+          "title_field": "name",
+          "subtitle_field": "one_liner",
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "concept": {
+          "variant": "rich",
+          "title_field": "title",
+          "subtitle_field": "summary",
+          "meta_fields": [
+            "kind",
+            "confidence",
+            "status",
+            "created_at"
+          ],
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "method": {
+          "variant": "standard",
+          "title_field": "title",
+          "subtitle_field": "summary",
+          "meta_fields": [
+            "kind",
+            "status"
+          ]
+        },
+        "note": {
+          "variant": "standard",
+          "title_field": "title",
+          "subtitle_field": "kind",
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "source.item": {
+          "variant": "standard",
+          "title_field": "title",
+          "subtitle_field": "platform",
+          "meta_fields": [
+            "evidence_level",
+            "quality"
+          ],
+          "badge_fields": [
+            "item_type"
+          ]
+        }
+      }
+    },
+    {
+      "id": "source-trail",
+      "label": "Source Trail",
+      "root_type": "source.item",
+      "description": "从单条证据追到相关主体、触点、笔记、投资关系、概念和方法。",
+      "paths": [
+        {
+          "steps": [
+            {
+              "relation": "about_company",
+              "direction": "out",
+              "target_type": "company"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "about_person",
+              "direction": "out",
+              "target_type": "person"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "about_investor",
+              "direction": "out",
+              "target_type": "investor"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "from_touchpoint",
+              "direction": "out",
+              "target_type": "touchpoint"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "source_items",
+              "direction": "in",
+              "target_type": "note"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "evidence_items",
+              "direction": "in",
+              "target_type": "investment"
+            },
+            {
+              "relation": "investor",
+              "direction": "out",
+              "target_type": "investor"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "evidence_items",
+              "direction": "in",
+              "target_type": "concept"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "evidence_items",
+              "direction": "in",
+              "target_type": "method"
+            }
+          ]
+        }
+      ],
+      "nodes": {
+        "company": {
+          "variant": "standard",
+          "title_field": "name",
+          "subtitle_field": "one_liner",
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "concept": {
+          "variant": "standard",
+          "title_field": "title",
+          "subtitle_field": "summary",
+          "meta_fields": [
+            "kind",
+            "confidence",
+            "status"
+          ],
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "investor": {
+          "variant": "standard",
+          "title_field": "name",
+          "subtitle_field": "focus",
+          "meta_fields": [
+            "kind"
+          ]
+        },
+        "method": {
+          "variant": "standard",
+          "title_field": "title",
+          "subtitle_field": "summary",
+          "meta_fields": [
+            "kind",
+            "status"
+          ]
+        },
+        "note": {
+          "variant": "standard",
+          "title_field": "title",
+          "subtitle_field": "kind",
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "person": {
+          "variant": "standard",
+          "title_field": "name",
+          "subtitle_field": "bio",
+          "meta_fields": [
+            "role"
+          ]
+        },
+        "source.item": {
+          "variant": "rich",
+          "title_field": "title",
+          "subtitle_field": "url",
+          "meta_fields": [
+            "platform",
+            "item_type",
+            "evidence_level",
+            "quality",
+            "published_at",
+            "collected_at"
+          ]
+        },
+        "touchpoint": {
+          "variant": "compact",
+          "title_field": "title",
+          "subtitle_field": "platform",
+          "meta_fields": [
+            "kind",
+            "status"
+          ]
+        }
+      },
+      "bridges": {
+        "investment": {
+          "label_fields": [
+            "round",
+            "role",
+            "amount_text",
+            "announced_at",
+            "confidence"
+          ],
+          "aggregate": true
+        }
+      }
+    }
+  ]
+}

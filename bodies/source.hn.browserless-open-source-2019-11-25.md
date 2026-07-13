@@ -1,0 +1,1 @@
+HN API：score 252，descendants 98，url 指向 SourceSort/Joel Griffith interview。Joel 在评论中回应“为什么有人为这个付费”：managed database 类比；复杂度不只是搭 bare bones solution，而是要集成、支持、维护、queue/concurrency、notifications、monitoring、API。评论区也有 license/open-source 争议，说明 Browserless 的开源定位并非简单 MIT 模型，而是商业 license/source-available 与 GPL/商业边界长期被讨论。

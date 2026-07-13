@@ -1,0 +1,1 @@
+GitHub repo view：HyperAgent 描述为 AI Browser Automation，约 1,468 stars / 180 forks，TypeScript，created 2025-04-14，pushed 2026-05-11，updated 2026-07-12。Topics 包括 ai、automation、playwright、llm、agent、chrome、web。LicenseInfo 显示 Other，商业使用/许可证边界需要后续核验。

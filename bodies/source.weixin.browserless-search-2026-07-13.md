@@ -1,0 +1,1 @@
+搜狗微信搜索 Browserless 返回约 342 条结果。Top 结果混杂：ChatGPT 接入教程、VPS/Docker 中提到 browserless/chrome、2026 年 AI 教程“0元部署PageAgent，我删了200刀的Browserless”、以及 2023 年关于 Browserless 年收入/Similarweb 流量的中文文章。结论：中文内容不是强用户反馈，但 Browserless 已经以 Docker/headless browser/AI agent browser 组件身份进入中文教程生态。

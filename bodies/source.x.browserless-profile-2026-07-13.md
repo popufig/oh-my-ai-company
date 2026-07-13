@@ -1,0 +1,1 @@
+X adapter 返回：screen_name browserless，name browserless，verified true，bio = Browser infrastructure that scales with you. Run scraping, automation & testing without managing browsers. URL https://x.com/browserless。Followers 987，following 160，tweets 303。账号规模不大，说明 Browserless 并不是 X-driven 增长型产品。

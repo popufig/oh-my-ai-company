@@ -1,0 +1,1 @@
+SaaS Club 页面 read 只抓到摘要，未拿到完整正文，作为 partial evidence。页面摘要称 Joel Griffith 把 Browserless bootstrapped 到 nearly $4M ARR，团队 under 10 people，依靠 8-year content engine 驱动几乎所有 inbound growth，并经历 Google Cloud 和一个 $60M competitor 的竞争压力。这个数字是第三方摘要，需保留口径：非 Browserless 官方财务披露，可信度低于官方博客 $1M ARR 口径。

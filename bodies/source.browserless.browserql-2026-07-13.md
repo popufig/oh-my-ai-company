@@ -1,0 +1,1 @@
+BrowserQL 页面定位为 dedicated scraping language/browser automation tool/infrastructure，主打 bypass bot detector。特性包括 Cloudflare/Datadome bypass、auto-click CAPTCHA、browser session reuse、humanized interactions、hidden debugger protocol、fingerprint evasion、residential proxy integration、live IDE/DevTools/copy-as-cURL。这个页面说明 Browserless 已经不只是托管浏览器，而是在更直接卖 stealth + scraping reliability。

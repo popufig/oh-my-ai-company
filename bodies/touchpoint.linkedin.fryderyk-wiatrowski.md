@@ -1,0 +1,1 @@
+# Fryd Wiatrowski LinkedIn profile

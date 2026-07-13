@@ -1,0 +1,8 @@
+.DS_Store
+*.tmp
+*.bak
+*.swp
+*.swo
+*.log
+.memex/*.db-shm
+.memex/*.db-wal

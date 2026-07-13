@@ -1,0 +1,1 @@
+# Conviction -> Sunday portfolio relation

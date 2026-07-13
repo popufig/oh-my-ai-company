@@ -1,0 +1,1 @@
+GitHub API profile：login joelgriffith，name Joel Griffith，company @browserless，blog https://browserless.io/，location Ridgefield, WA，bio CEO @browserless，public repos 26，followers 216，created_at 2012-03-04，updated_at 2026-06-30。注意：X/LinkedIn 搜到的 joelgriffith/joelgriffith 同名对象不是 Browserless 创始人，未采用。
