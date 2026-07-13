@@ -2,6 +2,8 @@
 
 Kernel 是为 AI agents 提供云浏览器、认证会话、可观察性和计算机操作运行时的基础设施公司。它从“几十毫秒启动一个隔离浏览器”切入，正在向更难替代的层扩张：持久会话、Managed Auth、原生 computer controls、GPU、browser pools，以及让网站识别合法 agent 的身份与委托协议。
 
+![Kernel homepage hero: you build agents](../assets/kernel/homepage-hero.png)
+
 ## TL;DR
 
 Kernel 值得关注的不是单一的“20ms 浏览器冷启动”，而是它把浏览器执行、登录态、安全、反检测、模型评测和 agent 身份串成了一条产品演化路径。
