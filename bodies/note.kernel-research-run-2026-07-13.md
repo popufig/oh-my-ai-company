@@ -31,7 +31,7 @@ Kernel 至少有三个 launch：4 月技术 artifact、8 月 YC 产品 launch、
 
 - Kernel 首页最初只显示背景，`readyState=complete` 时仍是 CSR 空 shell。工具调查确认同一 default-profile tab 显式等待正文后可以渲染约 2,215 字、63 links、17 images，但 fresh tab 仍可能 30 秒不出正文。本轮补回官网 hero 截图，同时保留 docs/blog fallback。
 - Reddit adapter 最初因相对 URL 解析失败；工具修复后已用四组查询复跑，执行成功但只得到 0 条或 Linux/kernel 同名噪声。最终报告据此从“工具覆盖不足”更新为“原生搜索未命中聚焦讨论”，仍不写成“无人讨论”。
-- LinkedIn employees 返回错误的推荐卡片；改用公开人物搜索和官方 team image 交叉验证，已反馈 site owner。
+- LinkedIn employees 初次把关注提示误识别为员工；工具修复后复测为 `count=0, partial=true`，误报已消失，但 Voyager 员工请求仍未捕获。人员信息继续用公开人物搜索与官方 team image 交叉验证，不把空结果解释成无人任职。
 - X list 连续并行写入时出现 target closed；串行重试更稳。
 - GitHub 当前数据可取，但 star history 没有可靠接口，本轮明确缺失，不自行拟合。
 - 无 `KERNEL_API_KEY`，所以没有产品实测。报告必须明确这是 desk research。
