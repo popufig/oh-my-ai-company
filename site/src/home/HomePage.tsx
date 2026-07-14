@@ -41,33 +41,77 @@ type PublicMeta = {
 };
 
 const ontologyNodes = [
-  { id: "source", x: 8, y: 17, href: "/sources" },
-  { id: "traffic", x: 8, y: 48, href: "/traffic" },
-  { id: "method", x: 8, y: 80, href: "/methods" },
-  { id: "note", x: 29, y: 17, href: "/notes" },
-  { id: "concept", x: 29, y: 80, href: "/concepts" },
-  { id: "company", x: 48, y: 48, href: "/companies" },
-  { id: "investment", x: 68, y: 27, href: "/investments" },
-  { id: "investor", x: 89, y: 18, href: "/investors" },
-  { id: "person", x: 89, y: 68, href: "/people" },
-  { id: "touchpoint", x: 68, y: 91, href: "/touchpoints" }
+  { id: "source", x: 100, y: 105, href: "/sources" },
+  { id: "note", x: 300, y: 105, href: "/notes" },
+  { id: "company", x: 500, y: 260, href: "/companies" },
+  { id: "investment", x: 700, y: 140, href: "/investments" },
+  { id: "investor", x: 900, y: 140, href: "/investors" },
+  { id: "traffic", x: 100, y: 260, href: "/traffic" },
+  { id: "touchpoint", x: 100, y: 415, href: "/touchpoints" },
+  { id: "person", x: 900, y: 375, href: "/people" },
+  { id: "concept", x: 500, y: 430, href: "/concepts" },
+  { id: "method", x: 500, y: 65, href: "/methods" }
 ] as const;
 
-const ontologyEdges = [
-  { from: "source", to: "note" },
-  { from: "source", to: "company" },
-  { from: "traffic", to: "company" },
-  { from: "method", to: "note" },
-  { from: "note", to: "company" },
-  { from: "note", to: "concept" },
-  { from: "company", to: "concept" },
-  { from: "company", to: "investment" },
-  { from: "investment", to: "investor" },
-  { from: "company", to: "person", label: "founders" },
-  { from: "touchpoint", to: "company" },
-  { from: "touchpoint", to: "investor" },
-  { from: "touchpoint", to: "person" }
-] as const;
+type OntologyNodeID = typeof ontologyNodes[number]["id"];
+type OntologyEdge = {
+  from: OntologyNodeID;
+  to: OntologyNodeID;
+  kind: "primary" | "supporting";
+  label?: string;
+  curve?: number;
+};
+
+const ontologyEdges: readonly OntologyEdge[] = [
+  { from: "source", to: "note", kind: "primary" },
+  { from: "note", to: "company", kind: "primary" },
+  { from: "traffic", to: "company", kind: "supporting" },
+  { from: "touchpoint", to: "company", kind: "supporting" },
+  { from: "note", to: "method", kind: "supporting" },
+  { from: "company", to: "concept", kind: "supporting" },
+  { from: "company", to: "investment", kind: "primary" },
+  { from: "investment", to: "investor", kind: "primary" },
+  { from: "company", to: "person", kind: "primary", label: "founders" }
+];
+
+function ontologyEdgeGeometry(edge: OntologyEdge) {
+  const from = ontologyNodes.find((node) => node.id === edge.from)!;
+  const to = ontologyNodes.find((node) => node.id === edge.to)!;
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const length = Math.hypot(dx, dy);
+  const ux = dx / length;
+  const uy = dy / length;
+
+  const boundaryInset = (nodeID: OntologyNodeID) => {
+    const halfWidth = nodeID === "company" ? 70 : 58;
+    const halfHeight = nodeID === "company" ? 40 : 33;
+    return 1 / Math.max(Math.abs(ux) / halfWidth, Math.abs(uy) / halfHeight);
+  };
+
+  const startInset = boundaryInset(from.id) + 4;
+  const endInset = boundaryInset(to.id) + 9;
+  const start = { x: from.x + ux * startInset, y: from.y + uy * startInset };
+  const end = { x: to.x - ux * endInset, y: to.y - uy * endInset };
+  const horizontal = Math.abs(dx) >= Math.abs(dy);
+  const curve = edge.curve ?? 0;
+  const normal = { x: -uy * curve, y: ux * curve };
+  const control1 = horizontal
+    ? { x: start.x + (end.x - start.x) * 0.44 + normal.x, y: start.y + normal.y }
+    : { x: start.x + normal.x, y: start.y + (end.y - start.y) * 0.44 + normal.y };
+  const control2 = horizontal
+    ? { x: end.x - (end.x - start.x) * 0.44 + normal.x, y: end.y + normal.y }
+    : { x: end.x + normal.x, y: end.y - (end.y - start.y) * 0.44 + normal.y };
+  const label = {
+    x: (start.x + 3 * control1.x + 3 * control2.x + end.x) / 8,
+    y: (start.y + 3 * control1.y + 3 * control2.y + end.y) / 8
+  };
+
+  return {
+    d: `M ${start.x} ${start.y} C ${control1.x} ${control1.y}, ${control2.x} ${control2.y}, ${end.x} ${end.y}`,
+    label
+  };
+}
 
 async function fetchJSON<T>(url: string): Promise<T> {
   const response = await fetch(url);
@@ -346,14 +390,16 @@ export function HomePage({ language, setLanguage, automationRef }: SiteHomeProps
                 </marker>
               </defs>
               {ontologyEdges.map((edge) => {
-                const from = ontologyNodes.find((node) => node.id === edge.from)!;
-                const to = ontologyNodes.find((node) => node.id === edge.to)!;
-                const labelX = (from.x + to.x) * 5;
-                const labelY = (from.y + to.y) * 2.6;
+                const geometry = ontologyEdgeGeometry(edge);
                 return (
-                  <g key={`${edge.from}-${edge.to}`}>
-                    <line x1={from.x * 10} y1={from.y * 5.2} x2={to.x * 10} y2={to.y * 5.2} />
-                    {"label" in edge && <text x={labelX} y={labelY - 8}>{edge.label}</text>}
+                  <g className={`omac-ontology-edge is-${edge.kind}`} key={`${edge.from}-${edge.to}`}>
+                    <path d={geometry.d} />
+                    {edge.label && (
+                      <g className="omac-ontology-edge-label" transform={`translate(${geometry.label.x} ${geometry.label.y})`}>
+                        <rect x="-39" y="-12" width="78" height="24" rx="4" />
+                        <text y="4">{edge.label}</text>
+                      </g>
+                    )}
                   </g>
                 );
               })}
@@ -363,7 +409,7 @@ export function HomePage({ language, setLanguage, automationRef }: SiteHomeProps
                 className={`omac-ontology-node is-${node.id}`}
                 href={node.href}
                 key={node.id}
-                style={{ left: `${node.x}%`, top: `${node.y}%` }}
+                style={{ left: `${node.x / 10}%`, top: `${node.y / 5.2}%` }}
               >
                 <strong>{node.id}</strong>
                 <span>{copy.modelNodes[node.id]}</span>

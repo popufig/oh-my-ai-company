@@ -136,10 +136,10 @@ export const homeCopy = {
       method: "研究方法"
     },
     modelPaths: [
-      "Source / Traffic → Company ← Investment → Investor",
+      "Source → Note → Company ← Investment → Investor",
       "Company — founders → Person",
-      "Touchpoint → Company / Person / Investor",
-      "Source → Note → Subject；Company + Evidence → Concept；Note → Method"
+      "Traffic / Touchpoint → Subject",
+      "Company + Evidence → Concept；Repeated Notes → Method"
     ],
     modelDebtTitle: "当前模型仍在演化",
     modelDebtDescription: "首页只保留最关键边界，完整的数据边界和维护方式收录在公开仓库。",
@@ -277,10 +277,10 @@ export const homeCopy = {
       method: "Research method"
     },
     modelPaths: [
-      "Source / Traffic → Company ← Investment → Investor",
+      "Source → Note → Company ← Investment → Investor",
       "Company — founders → Person",
-      "Touchpoint → Company / Person / Investor",
-      "Source → Note → Subject; Company + Evidence → Concept; Note → Method"
+      "Traffic / Touchpoint → Subject",
+      "Company + Evidence → Concept; Repeated Notes → Method"
     ],
     modelDebtTitle: "The model is still evolving",
     modelDebtDescription: "The homepage keeps only the most important boundaries; the public repository documents the full data boundary and maintenance model.",

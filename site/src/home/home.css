@@ -578,17 +578,35 @@
   height: 100%;
 }
 
-.omac-ontology svg line {
-  stroke: hsl(var(--foreground) / 0.2);
-  stroke-width: 1.4;
+.omac-ontology-edge > path {
+  fill: none;
   marker-end: url(#omac-ontology-arrow);
+  stroke-linecap: round;
   vector-effect: non-scaling-stroke;
 }
 
-.omac-ontology svg text {
+.omac-ontology-edge.is-primary > path {
+  stroke: hsl(var(--earth) / 0.56);
+  stroke-width: 1.6;
+}
+
+.omac-ontology-edge.is-supporting > path {
+  stroke: hsl(var(--foreground) / 0.18);
+  stroke-width: 1.15;
+  stroke-dasharray: 3 6;
+}
+
+.omac-ontology-edge-label rect {
+  fill: hsl(var(--background) / 0.96);
+  stroke: hsl(var(--earth) / 0.24);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.omac-ontology-edge-label text {
   fill: hsl(var(--earth));
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   text-anchor: middle;
 }
