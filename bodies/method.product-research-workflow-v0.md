@@ -193,6 +193,19 @@ Hyperagent 的修正见 [[note.hyperagent-product-takeaway-2026-07-10]]。
 - 播客/视频的转录、分段、观点抽取还需要更稳定地进入 `source.item`。
 - 方法还在练兵阶段，不应过早写死成模板。
 
+## 2026-07-14 Skyfire 调研补充
+
+本轮对象：[[company.skyfire]]。过程记录：[[note.skyfire-research-run-2026-07-14]]；产品判断：[[note.skyfire-product-takeaway-2026-07-14]]。
+
+这轮针对 identity/payment/trust 产品补出四项检查：
+
+- 产品不能只看授权和支付接口，必须沿 `authorization → charge/settlement → dispute/liability` 走完整闭环。
+- 合作网络按 protocol member、integration partner、demo、customer、investor 分层；官网 logo 默认不是客户证据。
+- 旧融资报道、当前官网和最新 docs 要并排读，产品 repositioning 与能力口径冲突本身就是证据。
+- 社区先行能降低官网叙事偏差；没有聚焦讨论只能写“公开样本薄”，不能写成无人使用。
+
+本轮还验证了：支付产品的真正壁垒可能从 rail 转向 identity、access 和 policy enforcement，但是否形成独立品类仍需更多样本。
+
 ## 2026-07-13 Hyperbrowser 调研补充
 
 本轮对象：[[company.hyperbrowser]]。相关记录：[[note.hyperbrowser-product-takeaway-2026-07-13]]、[[note.hyperbrowser-research-run-2026-07-13]]。
