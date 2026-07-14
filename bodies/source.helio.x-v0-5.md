@@ -1,0 +1,1 @@
+官方 0.5 更新宣布 Web app、artifact gallery、实时任务步骤、桌面/Web 跨端同步，以及 Slack、GitHub、Notion、Google Workspace、LinkedIn 集成和 8 种语言。该帖截至采集时 28 likes、6 reposts。

@@ -1,0 +1,1 @@
+Helio 官方博客把 agent-native workspace 的核心归纳为 identity、ownership、shared timeline 和 handoff：关键不是多一个聊天框，而是让工作在多人、多 Agent 和时间之间保持可归属、可追踪、可接力。

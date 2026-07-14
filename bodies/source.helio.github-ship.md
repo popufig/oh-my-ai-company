@@ -1,0 +1,1 @@
+Helio 官方开源的开发 harness，面向 Claude Code 与 Codex，包含阶段门、独立 reviewer、证据要求、磁盘状态和质量门。采集时约 84 stars、6 forks，MIT License。它证明团队在长任务、审查和可验证交付方面有独立工程资产，但不等于 Helio 商业产品的用户量。

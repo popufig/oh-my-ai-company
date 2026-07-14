@@ -1,0 +1,1 @@
+Helio 默认提供托管模型访问，也支持 Anthropic、OpenAI、DeepSeek API key，以及 Claude Code / ChatGPT 订阅。凭据存于 Helio credential vault 并静态加密；每个 AI teammate 可独立或共享一组凭据。

@@ -1,0 +1,1 @@
+2026-07-14 检查官方下载入口：macOS latest 重定向到 Helio-0.5.2-arm64.dmg，约 106.6 MB；Windows latest 重定向到 Helio-Setup-0.5.2.exe，约 104.4 MB。说明桌面产品持续发布，但未执行安装与登录后的全流程测试。

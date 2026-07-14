@@ -1,0 +1,1 @@
+anycli 是 Go 编写的可嵌入认证 CLI 核心，宿主注入凭据解析器，支持 git、gh、curl、jq 以及 Slack、Notion、Google、Discord、LinkedIn、X 等服务工具。它为 Helio 的技能、工具调用和凭据隔离提供了工程侧证据。

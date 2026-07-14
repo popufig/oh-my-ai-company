@@ -1,0 +1,1 @@
+TestingCatalog 以 HR Manager、Content Writer、Content Editor 组成 AI 团队，创建任务并让角色在频道内协作。体验中 Editor 会指出未经核实的创始人说法、删除空泛开头并要求明确首段用例。它证明当时 public beta 的角色、任务、频道和协作流程可运行，但不能证明长期留存或企业规模使用。

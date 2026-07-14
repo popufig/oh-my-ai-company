@@ -1,0 +1,1 @@
+采集时官方账号 @helioim_ai 已验证，约 3,853 followers、487 posts。时间线显示：5 月 20 日 Windows、5 月 21 日 teammate templates、5 月 22 日 AI channels、5 月 26 日 public beta 传播、6 月 15 日 Events、6 月 16 日 Activity trace、6 月 17 日 docs、7 月 13 日 Helio 0.5。多数单条更新互动有限，说明产品发布持续，但不能把 follower 数直接当活跃用户。

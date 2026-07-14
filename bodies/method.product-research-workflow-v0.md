@@ -361,3 +361,23 @@ Sitemap、SSR 正文或缓存可能暴露旧定价和旧产品。若客户端已
 ### 产品版本与法律主体交叉核验
 
 Version Log、Wayback 资源、隐私更新时间与公司成立日期如果不一致，保留冲突并继续找前置主体、技术资产或合同迁移证据。不要为了让故事顺畅而补造公司时间线。
+
+## 2026-07-14 Helio 调研补充
+
+本轮对象：[[company.helio]]。产品判断：[[note.helio-product-takeaway-2026-07-14]]；过程记录：[[note.helio-research-run-2026-07-14]]。
+
+对照 Kernel、Anyway、Sapiom 和 PayInsider 后，本轮只增加三项候选检查。
+
+### AI employee 产品增加 trust contract audit
+
+审批、审计和凭据隔离是产品控制面；Terms、Privacy、DPA、subprocessor、数据驻留、删除、训练用途和合规认证是合同控制面。两者要并排看。若 UI 的治理承诺领先于公开合同边界，应把它记录为企业采用风险，而不是被“有 approval”提前说服。
+
+### Workspace architecture 与 distribution surface 分开
+
+产品可以拥有自己的身份、任务和记忆模型，同时通过 Slack、Teams、Lark 或 Discord 获客与交付。研究时分别回答：状态保存在哪里、Agent 在组织中是什么身份、人从哪里使用它。不要仅凭“长得像 IM”或“接入 Slack”判断产品类别。
+
+### Use-case breadth 与 verified product depth 分开
+
+Automation 模板、SEO use-case 页面和角色目录说明团队想覆盖的市场；App、Docs、下载包、release、repo 与独立体验才说明当前实现深度。对页面里的每项能力至少标成 live、preview、coming soon、third-party verified 或 marketing-only，避免把模板数量当产品成熟度。
+
+这些观察目前主要来自 Helio 及少量治理/企业 Agent 样本，继续在 Raft、Multica、Bloome、Lucius 等产品中复验后再决定是否升格为正式检查表。

@@ -1,0 +1,1 @@
+官方定位：Helio 是一个让 AI teammates 长期承接重复性工作的工作区，核心原语包括 Automation、Profile、Memory、Skills、Tasks、Calendar、Integrations；Inbox / Email 仍标注为 preview。首页同时列出 Slack、Lark、Microsoft Teams、Discord 适配器，以及 Claude Code、Codex、Custom MCP、Docker 运行时。

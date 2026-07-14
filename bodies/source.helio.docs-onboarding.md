@@ -1,0 +1,1 @@
+新用户先选择一个具体交付任务，系统自动创建默认 AI teammate 和 DM，并直接交付文件、报告或计划，而不是先配置团队。之后可按角色模板雇用专职 teammate，选择 computer、engine、model 与 credential。
