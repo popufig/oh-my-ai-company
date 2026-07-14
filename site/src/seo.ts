@@ -148,13 +148,14 @@ export function objectDescription(object: SEOObject) {
 export function objectPageTitle(object: SEOObject) {
   const name = object.title || object.id;
   const suffix = ({
-    company: "AI company profile, founders and evidence",
-    investor: "AI portfolio, people and investments",
-    person: "companies, roles and evidence",
-    concept: "AI market concept and evidence",
-    "source.item": "research source and evidence"
+    company: "AI company profile",
+    investor: "AI investor profile",
+    person: "AI ecosystem profile",
+    concept: "AI market concept",
+    "source.item": "Research evidence"
   } as Record<string, string>)[object.type_id] || `${routeForType(object.type_id)?.label || "Research"} record`;
-  return `${name} — ${suffix} | ${seoConfig.site.short_name}`;
+  const ending = ` — ${suffix} | ${seoConfig.site.short_name}`;
+  return `${truncate(name, Math.max(24, 60 - ending.length))}${ending}`;
 }
 
 export function pageLanguage(object?: SEOObject) {
@@ -293,10 +294,17 @@ export function objectSEOBody(object: SEOObject, relations: SEORelation[]) {
   const route = routeForType(object.type_id);
   const fields = visibleFieldRows(object);
   const related = relationRows(relations);
-  const hasHeading = /<h1\b/i.test(object.body_html);
+  let h1Seen = false;
+  const bodyHTML = object.body_html.replace(/<h1\b([^>]*)>([\s\S]*?)<\/h1>/gi, (heading, attributes, content) => {
+    if (!h1Seen) {
+      h1Seen = true;
+      return heading;
+    }
+    return `<h2${attributes}>${content}</h2>`;
+  });
   return `<div class="seo-prerender">
     <header><a class="seo-brand" href="/">${escapeHTML(seoConfig.site.name)}</a><nav aria-label="Breadcrumb"><a href="/">Atlas</a><span>/</span>${route ? `<a href="/${escapeHTML(route.collection)}">${escapeHTML(route.label)}</a><span>/</span>` : ""}<span>${escapeHTML(object.title)}</span></nav></header>
-    <main><article>${hasHeading ? "" : `<h1>${escapeHTML(object.title)}</h1>`}<p class="seo-lede">${escapeHTML(objectDescription(object))}</p>${fields ? `<dl class="seo-fields">${fields}</dl>` : ""}<div class="seo-markdown">${object.body_html}</div></article>${related ? `<aside aria-labelledby="seo-related"><h2 id="seo-related">Connected research</h2><ul class="seo-relations">${related}</ul></aside>` : ""}</main>
+    <main><article>${h1Seen ? "" : `<h1>${escapeHTML(object.title)}</h1>`}<p class="seo-lede">${escapeHTML(objectDescription(object))}</p>${fields ? `<dl class="seo-fields">${fields}</dl>` : ""}<div class="seo-markdown">${bodyHTML}</div></article>${related ? `<aside aria-labelledby="seo-related"><h2 id="seo-related">Connected research</h2><ul class="seo-relations">${related}</ul></aside>` : ""}</main>
   </div>`;
 }
 
@@ -329,8 +337,14 @@ export function renderDocument(options: DocumentOptions) {
   const canonical = absoluteURL(options.canonicalPath);
   const image = options.image || absoluteURL(seoConfig.site.default_image);
   const robots = options.indexable ? "index,follow,max-image-preview:large,max-snippet:-1" : "noindex,follow";
+  const descriptionFallback = "Explore connected AI companies, people, capital, evidence, and market signals in Oh My AI Company.";
+  const conciseDescription = options.description.trim().replace(/\s+/g, " ");
+  const description = truncate(
+    conciseDescription.length >= 110 ? conciseDescription : `${conciseDescription} ${descriptionFallback}`.trim(),
+    155
+  );
   const metadata = [
-    `<meta name="description" content="${escapeHTML(options.description)}">`,
+    `<meta name="description" content="${escapeHTML(description)}">`,
     `<meta name="robots" content="${robots}">`,
     ...(seoConfig.site.google_site_verification
       ? [`<meta name="google-site-verification" content="${escapeHTML(seoConfig.site.google_site_verification)}">`]
@@ -342,13 +356,13 @@ export function renderDocument(options: DocumentOptions) {
     `<link rel="canonical" href="${escapeHTML(canonical)}">`,
     `<meta property="og:site_name" content="${escapeHTML(seoConfig.site.name)}">`,
     `<meta property="og:title" content="${escapeHTML(options.title)}">`,
-    `<meta property="og:description" content="${escapeHTML(options.description)}">`,
+    `<meta property="og:description" content="${escapeHTML(description)}">`,
     `<meta property="og:type" content="${options.type || "website"}">`,
     `<meta property="og:url" content="${escapeHTML(canonical)}">`,
     `<meta property="og:image" content="${escapeHTML(image)}">`,
     `<meta name="twitter:card" content="summary_large_image">`,
     `<meta name="twitter:title" content="${escapeHTML(options.title)}">`,
-    `<meta name="twitter:description" content="${escapeHTML(options.description)}">`,
+    `<meta name="twitter:description" content="${escapeHTML(description)}">`,
     `<meta name="twitter:image" content="${escapeHTML(image)}">`,
     ...(options.structuredData || []).map((value) => `<script type="application/ld+json">${safeJSON(value)}</script>`),
     prerenderCSS

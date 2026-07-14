@@ -13,6 +13,11 @@ function includesAll(body, values, context) {
   for (const value of values) assert(body.includes(value), `${context}: missing ${JSON.stringify(value)}`);
 }
 
+function metaContent(body, name) {
+  const match = body.match(new RegExp(`<meta name="${name}" content="([^"]*)">`, "i"));
+  return match?.[1] || "";
+}
+
 const home = await read("/");
 assert(home.response.status === 200, `home: expected 200, got ${home.response.status}`);
 includesAll(home.body, [
@@ -29,7 +34,7 @@ const company = await read("/companies/kernel");
 assert(company.response.status === 200, `company: expected 200, got ${company.response.status}`);
 assert(company.response.headers.get("x-robots-tag") === "index, follow", "company: expected index header");
 includesAll(company.body, [
-  "<title>Kernel — AI company profile, founders and evidence | OMAC</title>",
+  "<title>Kernel — AI company profile | OMAC</title>",
   '<link rel="canonical" href="https://companies.yan5xu.ai/companies/kernel">',
   '<html lang="zh-CN">',
   "Kernel 是为 AI agents 提供云浏览器",
@@ -37,10 +42,13 @@ includesAll(company.body, [
   'src="/media/assets/kernel/wordmark.png"',
   '"@type":"Organization"'
 ], "company");
+const companyDescription = metaContent(company.body, "description");
+assert(companyDescription.length >= 110 && companyDescription.length <= 155, `company: unexpected meta description length ${companyDescription.length}`);
+assert((company.body.match(/<h1\b/gi) || []).length === 1, "company: expected exactly one H1");
 
 const investor = await read("/investors/accel");
 assert(investor.response.status === 200, `investor: expected 200, got ${investor.response.status}`);
-includesAll(investor.body, ["<title>Accel — AI portfolio, people and investments | OMAC</title>", "Connected research"], "investor");
+includesAll(investor.body, ["<title>Accel — AI investor profile | OMAC</title>", "Connected research"], "investor");
 
 const collection = await read("/companies");
 assert(collection.response.status === 200, `collection: expected 200, got ${collection.response.status}`);
@@ -53,6 +61,12 @@ includesAll(graph.body, ['<meta name="robots" content="noindex,follow">', "Inter
 const weakSource = await read("/sources/agent-card.aisa-api-2026-07-08");
 assert(weakSource.response.status === 200, `weak source: expected 200, got ${weakSource.response.status}`);
 assert(weakSource.response.headers.get("x-robots-tag") === "noindex, follow", "weak source: expected noindex header");
+
+const multiHeadingSource = await read("/sources/cyzone.accel-40-years-2023-05-28");
+assert(multiHeadingSource.response.status === 200, `multi-heading source: expected 200, got ${multiHeadingSource.response.status}`);
+assert((multiHeadingSource.body.match(/<h1\b/gi) || []).length === 1, "multi-heading source: expected exactly one H1");
+const multiHeadingTitle = multiHeadingSource.body.match(/<title>([^<]+)<\/title>/i)?.[1] || "";
+assert(multiHeadingTitle.length <= 60, `multi-heading source: unexpected title length ${multiHeadingTitle.length}`);
 
 const missing = await read("/companies/definitely-not-an-object");
 assert(missing.response.status === 404, `missing: expected 404, got ${missing.response.status}`);
