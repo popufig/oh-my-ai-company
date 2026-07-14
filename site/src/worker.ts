@@ -557,7 +557,7 @@ async function handleRun(request: Request, env: Env) {
     const where = argumentValue(argv, "--where");
     const rows = await env.DB.prepare(`
       SELECT id, type_id, title, body_path, fields_json, created_at, updated_at
-      FROM objects WHERE type_id = ? ORDER BY title COLLATE NOCASE, id LIMIT 200
+      FROM objects WHERE type_id = ? ORDER BY title COLLATE NOCASE, id
     `).bind(argv[1]).all<ObjectRow>();
     const result = (rows.results || []).map(memexObject).filter((row) => rowMatchesWhere(row, where)).slice(0, limit).map((row) => ({ id: row.id, title: row.title, ...row.fields }));
     return runOK({ rows: result });

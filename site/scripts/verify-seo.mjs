@@ -58,6 +58,14 @@ assert(lindyObjectResponse.response.status === 200, `lindy API: expected 200, go
 const lindyObject = JSON.parse(lindyObjectResponse.body).object;
 assert(lindyDescription === lindyObject.fields.one_liner, "lindy: long Chinese one_liner should remain intact");
 
+const investments = await read("/api/run", {
+  method: "POST",
+  headers: { "content-type": "application/json" },
+  body: JSON.stringify({ argv: ["query", "investment", "--where", "company = company.11x", "--limit", "100", "--json"] })
+});
+assert(investments.response.status === 200, `investment query: expected 200, got ${investments.response.status}`);
+assert(JSON.parse(investments.body).data.rows.length === 15, "investment query: filtering must run before the result limit");
+
 const investor = await read("/investors/accel");
 assert(investor.response.status === 200, `investor: expected 200, got ${investor.response.status}`);
 includesAll(investor.body, ["<title>Accel — AI investor profile | OMAC</title>", "Connected research"], "investor");
