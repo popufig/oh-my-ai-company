@@ -31,6 +31,7 @@ type SEOConfig = {
     default_description: string;
     default_image: string;
     github_url: string;
+    google_site_verification?: string;
   };
   routes: Record<string, RouteConfig>;
   indexing: {
@@ -329,6 +330,9 @@ export function renderDocument(options: DocumentOptions) {
   const metadata = [
     `<meta name="description" content="${escapeHTML(options.description)}">`,
     `<meta name="robots" content="${robots}">`,
+    ...(seoConfig.site.google_site_verification
+      ? [`<meta name="google-site-verification" content="${escapeHTML(seoConfig.site.google_site_verification)}">`]
+      : []),
     `<link rel="canonical" href="${escapeHTML(canonical)}">`,
     `<meta property="og:site_name" content="${escapeHTML(seoConfig.site.name)}">`,
     `<meta property="og:title" content="${escapeHTML(options.title)}">`,

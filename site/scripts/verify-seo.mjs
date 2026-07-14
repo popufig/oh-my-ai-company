@@ -17,6 +17,7 @@ const home = await read("/");
 assert(home.response.status === 200, `home: expected 200, got ${home.response.status}`);
 includesAll(home.body, [
   "<title>Oh My AI Company — Evidence-traceable AI company atlas</title>",
+  '<meta name="google-site-verification" content="y58gkdLQcQrxFG3fj1Xyf6zhNXpxUNLQ-yYLa1ffPTk">',
   '<link rel="canonical" href="https://companies.yan5xu.ai/">',
   'type="application/ld+json"',
   "Follow AI companies through evidence"

@@ -7,7 +7,8 @@
     "default_title": "Oh My AI Company — Evidence-traceable AI company atlas",
     "default_description": "A living, evidence-traceable atlas connecting AI companies, founders, investors, products, market signals, and research judgments.",
     "default_image": "/og-default.png",
-    "github_url": "https://github.com/yan5xu/oh-my-ai-company"
+    "github_url": "https://github.com/yan5xu/oh-my-ai-company",
+    "google_site_verification": "y58gkdLQcQrxFG3fj1Xyf6zhNXpxUNLQ-yYLa1ffPTk"
   },
   "routes": {
     "batch": { "collection": "batches", "id_prefix": "batch", "label": "Batches" },
