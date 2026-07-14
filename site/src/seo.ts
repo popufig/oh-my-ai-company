@@ -168,7 +168,7 @@ export function objectDescription(object: SEOObject) {
   return `${object.title} in the Oh My AI Company evidence-traceable research atlas${route ? ` · ${route.label}` : ""}.`;
 }
 
-export function objectPageTitle(object: SEOObject) {
+export function objectPageTitle(object: Pick<SEOObject, "id" | "type_id" | "title">) {
   const name = object.title || object.id;
   const suffix = ({
     company: "AI company profile",
