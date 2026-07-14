@@ -1,4 +1,4 @@
-# Investor portfolio network expansion
+# 投资机构 Portfolio 网络扩张方法
 
 This method came from using Lightspeed as a seed expansion engine for AI/agent infra.
 
@@ -57,3 +57,37 @@ Use this when an investor appears repeatedly across companies we care about, and
 Investor: [[investor.lightspeed-venture-partners]]
 Stack: [[concept.agent-substrate-stack]]
 Companies: [[company.paid]], [[company.exa]], [[company.temporal]], [[company.resolve-ai]], [[company.reindeer-ai]], [[company.endor-labs]], [[company.luel]]
+
+## 2026-07-14 Accel 调研补充
+
+[[investor.accel]] 说明：当一家机构已经反复出现在多个目标公司背后时，不能只继续添加 portfolio edge，需要把机构本身拆成三层来研究。
+
+### 1. Fund architecture
+
+先确认机构能在哪些阶段下注，以及 early/growth/late-stage 资金工具如何衔接。Accel 的 $650M early-stage fund、$1.35B Growth Fund 7 和 $5B late-stage capital，解释了它为什么既能领投 Seed/Series A，也能继续参与 Cursor、Vercel、Lovable、Anthropic 等成长项目。
+
+### 2. Partner clusters
+
+机构 thesis 通常不是一个中心化口号。沿投资文章 byline 和 team profile 建 partner cluster，能看到不同能力圈：
+
+- [[person.zhenya-loginov]]：enterprise adoption / GTM；
+- [[person.daniel-levine]]：product-first developer infrastructure；
+- [[person.rich-wong]]、[[person.ben-fletcher]]：AI / cloud / enterprise；
+- [[person.josh-fang]]：coding / developer collaboration。
+
+Partner cluster 比单纯 portfolio list 更能解释“为什么投”和“下一家可能从哪里出现”。
+
+### 3. Portfolio control points
+
+不要按行业标签堆公司，要问每家公司控制 Agent 生产栈的哪一层。Accel 本轮形成的图包括模型、coding/app creation、orchestration/context、browser/auth、enterprise entry、vertical workflow、payments 和 production security。
+
+优先扩张能揭示二阶需求的对象，例如 [[company.sapiom]] 的 Agent 支付治理、[[company.tolmo]] 的生产上下文安全；不需要一次搬完 800+ portfolio。
+
+### 本轮建模修正
+
+- `note` 增加 `about_investor`，让投资判断能强关联机构。
+- `method` 增加 `related_investors`，让研究方法能从 Investor Graph 被发现。
+- Investor Map 同时展示 portfolio、source、note、method、touchpoint。
+- 投资方文章可以确认投资事实与 thesis，但增长、收入、效率数字仍按 party claim 处理。
+
+过程记录：[[note.accel-research-run-2026-07-14]]；判断：[[note.accel-ai-investment-takeaway-2026-07-14]]。

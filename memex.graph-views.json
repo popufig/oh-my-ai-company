@@ -283,7 +283,7 @@
       "id": "investor-map",
       "label": "Investor Map",
       "root_type": "investor",
-      "description": "投资机构全景：portfolio、证据、触点。",
+      "description": "投资机构全景：portfolio、团队、证据、判断笔记、方法与触点。",
       "paths": [
         {
           "steps": [
@@ -305,6 +305,33 @@
               "relation": "about_investor",
               "direction": "in",
               "target_type": "source.item"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "about_investor",
+              "direction": "in",
+              "target_type": "note"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "related_investors",
+              "direction": "in",
+              "target_type": "method"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "relation": "affiliated_investors",
+              "direction": "in",
+              "target_type": "person"
             }
           ]
         },
@@ -340,6 +367,39 @@
           ],
           "badge_fields": [
             "tags"
+          ]
+        },
+        "method": {
+          "variant": "standard",
+          "title_field": "title",
+          "subtitle_field": "summary",
+          "meta_fields": [
+            "kind",
+            "confidence",
+            "status"
+          ],
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "note": {
+          "variant": "standard",
+          "title_field": "title",
+          "subtitle_field": "kind",
+          "meta_fields": [
+            "author",
+            "created_at"
+          ],
+          "badge_fields": [
+            "tags"
+          ]
+        },
+        "person": {
+          "variant": "standard",
+          "title_field": "name",
+          "subtitle_field": "bio",
+          "meta_fields": [
+            "role"
           ]
         },
         "source.item": {
