@@ -27,6 +27,8 @@
 
 ![Eva 被包装成可以理解的“行政岗位”，而不是一组工具调用 {wide}](../assets/marblism/eva-office.webp)
 
+![Stan 把线索搜集、触达与跟进包装成一个销售岗位 {wide}](../assets/marblism/stan-call.webp)
+
 角色不是单纯换头像。用户先创建 business/workspace，连接 Gmail、Outlook、Google Calendar、LinkedIn、Facebook、Instagram、X 等外部系统，再通过 dashboard 或 chat 给员工下达一次性、周期性任务。每个 business 有独立的 AI team；同一账号可以管理多个 business。[[source.marblism.task-creation-2026-07-15]]
 
 这与 [[concept.character-first-ai-workforce]] 一致：购买者不需要先理解 workflow builder、tool calling 或模型选择，只需判断“我要一个销售、行政还是 SEO”。Marblism 和 [[company.sintra]] 都降低了 SMB 的 Agent 认知成本；Marblism 的岗位更少、更贴近办公室基础职能，Sintra 则提供更多 Helpers、Brain、Builder 和 Marketplace。
@@ -38,6 +40,8 @@
 这意味着角色化界面也会放大一个特殊风险：普通用户更容易把“员工的自然语言承诺”当成真实权限。产品需要的不只是模型准确率，还包括 capability discovery、执行回执、失败状态和 approval。否则角色越像人，错误承诺越有说服力。
 
 Linda 也明确只是合同总结、审阅与草拟工具，不替代律师；对法律、邮件、电话和大规模触达，人的复核仍是产品闭环的一部分。[[source.marblism.linda-2026-07-15]]
+
+![Linda 是法律辅助角色，官方同时明确其不能替代律师 {wide}](../assets/marblism/linda-legal.webp)
 
 本轮打开 `ai.marblism.com/onboarding/`，页面请求存在，但当前浏览器只得到动态 shell，无法可靠完成视觉体验。因此报告只确认公开 onboarding 入口，不声称亲自完成了连接账号、触达或电话流程。[[source.marblism.app-onboarding-smoke-2026-07-15]]
 
