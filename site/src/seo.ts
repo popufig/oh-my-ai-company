@@ -136,6 +136,29 @@ function truncate(value: string, length: number) {
   return `${text.slice(0, Math.max(1, length - 1)).trimEnd()}…`;
 }
 
+function looksLikeCJKText(value: string) {
+  const cjk = (value.match(/[\u3400-\u9fff]/g) || []).length;
+  const letters = (value.match(/[A-Za-z\u3400-\u9fff]/g) || []).length;
+  return letters > 0 && cjk / letters > 0.18;
+}
+
+function metaDescription(value: string, lang: string) {
+  const concise = value.trim().replace(/\s+/g, " ");
+  const cjk = looksLikeCJKText(concise) || (!concise && lang.startsWith("zh"));
+  const minimumLength = cjk ? 30 : 110;
+  const maximumLength = cjk ? 90 : 155;
+  const fallback = cjk
+    ? "在本研究图谱中查看关联主体、证据与市场信号。"
+    : "Explore related evidence and market context in OMAC.";
+
+  if (!concise) return fallback;
+  if (concise.length >= minimumLength) return truncate(concise, maximumLength);
+
+  const separator = /[。！？.!?]$/.test(concise) ? (cjk ? "" : " ") : (cjk ? "。" : ". ");
+  const supplemented = `${concise}${separator}${fallback}`;
+  return supplemented.length <= maximumLength ? supplemented : truncate(concise, maximumLength);
+}
+
 export function objectDescription(object: SEOObject) {
   const fields = parseFields(object);
   const preferred = fieldText(fields, ["one_liner", "description", "definition", "bio", "summary", "statement"]);
@@ -161,9 +184,7 @@ export function objectPageTitle(object: SEOObject) {
 export function pageLanguage(object?: SEOObject) {
   if (!object) return "en";
   const sample = `${object.title} ${objectDescription(object)} ${object.body.slice(0, 600)}`;
-  const cjk = (sample.match(/[\u3400-\u9fff]/g) || []).length;
-  const letters = (sample.match(/[A-Za-z\u3400-\u9fff]/g) || []).length;
-  return letters > 0 && cjk / letters > 0.18 ? "zh-CN" : "en";
+  return looksLikeCJKText(sample) ? "zh-CN" : "en";
 }
 
 function listContains(values: string[], value: unknown) {
@@ -337,12 +358,7 @@ export function renderDocument(options: DocumentOptions) {
   const canonical = absoluteURL(options.canonicalPath);
   const image = options.image || absoluteURL(seoConfig.site.default_image);
   const robots = options.indexable ? "index,follow,max-image-preview:large,max-snippet:-1" : "noindex,follow";
-  const descriptionFallback = "Explore connected AI companies, people, capital, evidence, and market signals in Oh My AI Company.";
-  const conciseDescription = options.description.trim().replace(/\s+/g, " ");
-  const description = truncate(
-    conciseDescription.length >= 110 ? conciseDescription : `${conciseDescription} ${descriptionFallback}`.trim(),
-    155
-  );
+  const description = metaDescription(options.description, options.lang || "en");
   const metadata = [
     `<meta name="description" content="${escapeHTML(description)}">`,
     `<meta name="robots" content="${robots}">`,

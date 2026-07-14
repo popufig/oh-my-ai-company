@@ -43,8 +43,12 @@ includesAll(company.body, [
   '"@type":"Organization"'
 ], "company");
 const companyDescription = metaContent(company.body, "description");
-assert(companyDescription.length >= 110 && companyDescription.length <= 155, `company: unexpected meta description length ${companyDescription.length}`);
+assert(companyDescription.length >= 30 && companyDescription.length <= 155, `company: unexpected meta description length ${companyDescription.length}`);
 assert((company.body.match(/<h1\b/gi) || []).length === 1, "company: expected exactly one H1");
+const companyObjectResponse = await read("/api/objects/company.kernel");
+assert(companyObjectResponse.response.status === 200, `company API: expected 200, got ${companyObjectResponse.response.status}`);
+const companyObject = JSON.parse(companyObjectResponse.body).object;
+assert(companyDescription === companyObject.fields.one_liner, "company: Chinese meta description should preserve one_liner without a generic English suffix");
 
 const investor = await read("/investors/accel");
 assert(investor.response.status === 200, `investor: expected 200, got ${investor.response.status}`);
