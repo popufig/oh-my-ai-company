@@ -13,7 +13,7 @@
 ## 失败与边界
 
 - Trustpilot 只返回验证页，按空壳红线丢弃。
-- `ai.marblism.com/onboarding/` 在当前浏览器只显示动态 shell，未完成真实产品体验；不能写成产品故障。
+- `ai.marblism.com/onboarding/` 首次被 `open/read` 误读为 Remix bootstrap；改用业务文本 readiness 等待后成功渲染。动态 app 的“正文非空”不等于业务 UI 已就绪，仍需用 snapshot/screenshot 复核。本轮只完成未登录首屏，不把它扩写成完整产品体验。
 - Google 对 linux.do/V2EX 精确搜索遇到 429，没有伪造“零讨论”。
 - 融资数据库互相冲突，本轮只建 YC 高置信边；400 万美元保留为创始人自报总额。
 - Product Hunt listing 与 campaign 日期不一致，报告保留阶段性 launch，不制造唯一日期。
