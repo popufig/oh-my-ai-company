@@ -8,7 +8,7 @@
     "worker:dev": "wrangler dev --remote --port 8787",
     "build": "npm run check && npm run build:ui",
     "build:ui": "node scripts/build-memex-ui.mjs",
-    "check": "tsc -p tsconfig.worker.json",
+    "check": "tsc -p tsconfig.worker.json && tsc -p tsconfig.home.json",
     "cf:types": "wrangler types",
     "db:migrate": "wrangler d1 migrations apply oh-my-ai-company-prod --remote",
     "data:export": "node scripts/export-vault.mjs .. generated/vault.sql",

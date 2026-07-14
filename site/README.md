@@ -16,6 +16,22 @@ Production URL: <https://companies.yan5xu.ai>
 
 The public Worker accepts read-only `/api/run` commands needed by the canonical UI. It rejects editing, uploads, and arbitrary SQL while exposing the complete public Vault for reading.
 
+## Project Homepage
+
+The homepage belongs to Oh My AI Company, not to Memex. Memex provides the build-time extension contract, shared React/TanStack/shadcn primitives, routing, and browser automation; this repository owns the page composition and editorial content.
+
+```text
+src/site-extension.tsx       # Registers the OMAC extension
+src/home/HomePage.tsx        # Real homepage component and data queries
+src/home/home-content.ts     # Chinese/English editorial copy and featured objects
+src/home/home.css            # OMAC visual language and responsive layout
+src/home/assets/             # Homepage-only bundled assets
+```
+
+`HomePage.tsx` reads the public D1 projection through `/api/meta` and `/api/objects`. Links enter the canonical Memex object, collection, and graph routes, so the homepage remains a project-owned introduction rather than a second application.
+
+Use `npm run check` before committing homepage changes. `npm run build` type-checks both the Worker and extension, then builds the pinned Memex frontend with the OMAC extension.
+
 ## Publication Boundary
 
 The GitHub repository and the website are two read surfaces over the same public Vault.
@@ -136,4 +152,8 @@ window.memex.openGraph()
 window.memex.graphWorkspace.setView("portfolio")
 window.memex.graphWorkspace.setCenter("investor.lightspeed-venture-partners")
 window.memex.setLanguage("en")
+window.memex.openHome()
+window.memex.site.state()
+window.memex.site.invoke("setSearch", "Kernel")
+window.memex.site.invoke("setLanguage", "zh")
 ```
