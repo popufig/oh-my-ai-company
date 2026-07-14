@@ -1,0 +1,1 @@
+ALTER TABLE objects ADD COLUMN body_html TEXT NOT NULL DEFAULT '';

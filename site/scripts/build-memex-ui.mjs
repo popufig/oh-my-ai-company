@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { copyFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -27,3 +27,8 @@ execFileSync("npm", ["run", "build"], {
   },
   stdio: "inherit"
 });
+
+copyFileSync(
+  resolve(siteRoot, "src/home/assets/research-graph.png"),
+  resolve(siteRoot, "dist/og-default.png")
+);

@@ -42,6 +42,44 @@ The GitHub repository and the website are two read surfaces over the same public
 - Every local asset referenced by published Markdown is registered in D1 and served from R2.
 - Sensitive patterns, missing bodies, missing assets, broken links, and source/projection count mismatches fail publication.
 
+## SEO Projection
+
+Public availability and search indexing are separate policies. The site remains a full-vault public projection, while `seo.config.json` selects the pages that are substantial enough to enter search indexes.
+
+- Company, investor, person, and concept pages require a minimum Markdown body length.
+- Source pages additionally require usable quality, S1-S3 evidence, and a parsed/summarized/linked processing state.
+- Notes, methods, touchpoints, investment events, traffic snapshots, Graph state, filters, and thin sources remain readable but return `noindex`.
+- The export step converts Markdown into sanitized HTML, rewrites `[[object.id]]` links to canonical public URLs, and rewrites local images to R2 media URLs.
+- The Worker returns the semantic body, unique metadata, canonical URL, Open Graph data, and JSON-LD in the initial HTML response. React then enhances the same route.
+- Missing objects return a real `404`; legacy query-string object URLs permanently redirect to canonical paths.
+
+Generated discovery files:
+
+```text
+/robots.txt
+/sitemap.xml
+/sitemaps/pages.xml
+/sitemaps/companies.xml
+/sitemaps/investors.xml
+/sitemaps/people.xml
+/sitemaps/concepts.xml
+/sitemaps/sources.xml
+```
+
+After starting the local Worker, run the repeatable SEO smoke test:
+
+```bash
+npm run seo:verify -- http://127.0.0.1:8788
+```
+
+After deployment, run it against production:
+
+```bash
+npm run seo:verify -- https://companies.yan5xu.ai
+```
+
+Submit `https://companies.yan5xu.ai/sitemap.xml` in Google Search Console. Use URL Inspection on the homepage, one company, one investor, one indexed source, one `noindex` source, and one missing object after material routing changes.
+
 ## Cloudflare Resources
 
 ```text

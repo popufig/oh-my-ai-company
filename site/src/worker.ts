@@ -1,3 +1,30 @@
+import {
+  absoluteURL,
+  appSEOBody,
+  collectionIsIndexable,
+  collectionSEOBody,
+  collectionStructuredData,
+  escapeXML,
+  firstObjectImage,
+  homeSEOBody,
+  homeStructuredData,
+  isObjectIndexable,
+  notFoundSEOBody,
+  objectDescription,
+  objectIDFromPath,
+  objectPageTitle,
+  objectPath,
+  objectSEOBody,
+  objectStructuredData,
+  pageLanguage,
+  renderDocument,
+  routeForCollection,
+  routeForType,
+  seoConfig,
+  type SEOObject,
+  type SEORelation
+} from "./seo";
+
 interface Env {
   DB: D1Database;
   MEDIA: R2Bucket;
@@ -9,6 +36,7 @@ type ObjectRow = {
   type_id: string;
   title: string;
   body?: string;
+  body_html?: string;
   body_path?: string;
   fields_json: string;
   created_at: string;
@@ -546,6 +574,246 @@ async function handleRun(request: Request, env: Env) {
   return runError(`command is unavailable in the public read-only site: ${argv.join(" ")}`, "read_only", 1);
 }
 
+async function getSEOObject(id: string, env: Env) {
+  return env.DB.prepare(`
+    SELECT id, type_id, title, body, body_html, body_path, fields_json, created_at, updated_at
+    FROM objects WHERE id = ?
+  `).bind(id).first<SEOObject>();
+}
+
+async function getSEOCollection(type: string, env: Env) {
+  const rows = await env.DB.prepare(`
+    SELECT id, type_id, title, body, body_html, body_path, fields_json, created_at, updated_at
+    FROM objects WHERE type_id = ?
+    ORDER BY title COLLATE NOCASE, id
+    LIMIT 1000
+  `).bind(type).all<SEOObject>();
+  const objects = rows.results || [];
+  return (collectionIsIndexable(type) ? objects.filter(isObjectIndexable) : objects).slice(0, 120);
+}
+
+async function getSEORelations(id: string, env: Env) {
+  const [outgoing, incoming] = await Promise.all([
+    env.DB.prepare(`
+      SELECT o.id AS object_id, o.title, o.type_id, l.relation
+      FROM links l JOIN objects o ON o.id = l.to_object_id
+      WHERE l.from_object_id = ? AND l.kind = 'field'
+      ORDER BY l.relation, o.title COLLATE NOCASE
+      LIMIT 80
+    `).bind(id).all<Omit<SEORelation, "direction">>(),
+    env.DB.prepare(`
+      SELECT o.id AS object_id, o.title, o.type_id, l.relation
+      FROM links l JOIN objects o ON o.id = l.from_object_id
+      WHERE l.to_object_id = ? AND l.kind = 'field'
+      ORDER BY l.relation, o.title COLLATE NOCASE
+      LIMIT 80
+    `).bind(id).all<Omit<SEORelation, "direction">>()
+  ]);
+  return [
+    ...(outgoing.results || []).map((row) => ({ ...row, direction: "out" as const })),
+    ...(incoming.results || []).map((row) => ({ ...row, direction: "in" as const }))
+  ].slice(0, 120);
+}
+
+async function appShell(request: Request, env: Env) {
+  const url = new URL("/", request.url);
+  const response = await env.ASSETS.fetch(new Request(url, { method: "GET", headers: request.headers }));
+  if (!response.ok) throw new Error(`app shell unavailable: ${response.status}`);
+  return response.text();
+}
+
+async function htmlPage(
+  request: Request,
+  env: Env,
+  options: Parameters<typeof renderDocument>[0],
+  status = 200
+) {
+  const body = renderDocument({ ...options, shell: await appShell(request, env) });
+  const headers = new Headers({
+    "content-type": "text/html; charset=utf-8",
+    "x-content-type-options": "nosniff",
+    "x-robots-tag": options.indexable ? "index, follow" : "noindex, follow",
+    "cache-control": status === 200
+      ? "public, max-age=0, s-maxage=600, stale-while-revalidate=3600"
+      : "no-store"
+  });
+  return new Response(request.method === "HEAD" ? null : body, { status, headers });
+}
+
+function lastModifiedDate(value: string) {
+  const match = value.match(/^\d{4}-\d{2}-\d{2}/);
+  return match?.[0] || "";
+}
+
+function xmlResponse(request: Request, body: string) {
+  return new Response(request.method === "HEAD" ? null : body, {
+    headers: {
+      "content-type": "application/xml; charset=utf-8",
+      "cache-control": "public, max-age=300, s-maxage=3600",
+      "x-content-type-options": "nosniff"
+    }
+  });
+}
+
+async function serveSitemap(request: Request, env: Env) {
+  const url = new URL(request.url);
+  if (url.pathname === "/sitemap.xml") {
+    const entries = ["pages", ...seoConfig.indexing.collection_types.map((type) => routeForType(type)?.collection).filter(Boolean)];
+    const body = entries.map((name) => `<sitemap><loc>${escapeXML(absoluteURL(`/sitemaps/${name}.xml`))}</loc></sitemap>`).join("");
+    return xmlResponse(request, `<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${body}</sitemapindex>`);
+  }
+
+  const match = url.pathname.match(/^\/sitemaps\/([^/]+)\.xml$/);
+  if (!match) return null;
+  const name = match[1];
+  if (name === "pages") {
+    const paths = ["/", ...seoConfig.indexing.collection_types.flatMap((type) => {
+      const route = routeForType(type);
+      return route ? [`/${route.collection}`] : [];
+    })];
+    const values = paths.map((path) => `<url><loc>${escapeXML(absoluteURL(path))}</loc></url>`).join("");
+    return xmlResponse(request, `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${values}</urlset>`);
+  }
+
+  const route = routeForCollection(name);
+  if (!route || !collectionIsIndexable(route.type)) {
+    return new Response("Sitemap not found", { status: 404, headers: { "content-type": "text/plain; charset=utf-8" } });
+  }
+  const rows = await env.DB.prepare(`
+    SELECT id, type_id, title, body, body_html, body_path, fields_json, created_at, updated_at
+    FROM objects WHERE type_id = ? ORDER BY id
+  `).bind(route.type).all<SEOObject>();
+  const values = (rows.results || []).filter(isObjectIndexable).map((object) => {
+    const lastmod = lastModifiedDate(object.updated_at);
+    return `<url><loc>${escapeXML(absoluteURL(objectPath(object)))}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ""}</url>`;
+  }).join("");
+  return xmlResponse(request, `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${values}</urlset>`);
+}
+
+function serveRobots(request: Request) {
+  const body = [
+    "User-agent: *",
+    "Allow: /",
+    "Disallow: /api/",
+    "Sitemap: https://companies.yan5xu.ai/sitemap.xml",
+    ""
+  ].join("\n");
+  return new Response(request.method === "HEAD" ? null : body, {
+    headers: {
+      "content-type": "text/plain; charset=utf-8",
+      "cache-control": "public, max-age=300, s-maxage=3600"
+    }
+  });
+}
+
+async function legacyPublicRedirect(url: URL, env: Env) {
+  if (url.pathname !== "/") return null;
+  const view = url.searchParams.get("view");
+  if (view === "detail") {
+    const id = url.searchParams.get("object") || "";
+    const object = id ? await getSEOObject(id, env) : null;
+    if (object) return Response.redirect(new URL(objectPath(object), url.origin).toString(), 301);
+  }
+  if (view === "objects") {
+    const route = routeForType(url.searchParams.get("type") || "");
+    if (route) return Response.redirect(new URL(`/${route.collection}`, url.origin).toString(), 301);
+  }
+  return null;
+}
+
+async function serveSEOPage(request: Request, env: Env) {
+  if (request.method !== "GET" && request.method !== "HEAD") return null;
+  const url = new URL(request.url);
+  const redirect = await legacyPublicRedirect(url, env);
+  if (redirect) return redirect;
+
+  if (url.pathname === "/") {
+    const hasAppState = ["view", "type", "filter", "object", "graphView", "graphMode", "graphHiddenTypes"].some((name) => url.searchParams.has(name));
+    return htmlPage(request, env, {
+      shell: "",
+      title: seoConfig.site.default_title,
+      description: seoConfig.site.default_description,
+      canonicalPath: "/",
+      body: homeSEOBody(),
+      indexable: !hasAppState,
+      lang: "en",
+      image: absoluteURL(seoConfig.site.default_image),
+      type: "website",
+      structuredData: homeStructuredData()
+    });
+  }
+
+  if (["/graph", "/schema", "/health"].includes(url.pathname)) {
+    const label = url.pathname.slice(1).replace(/^./, (character) => character.toUpperCase());
+    return htmlPage(request, env, {
+      shell: "",
+      title: `${label} | ${seoConfig.site.name}`,
+      description: `${label} workspace for the Oh My AI Company public research atlas.`,
+      canonicalPath: url.pathname,
+      body: appSEOBody(label, `Interactive ${label.toLowerCase()} workspace for the public research atlas.`),
+      indexable: false,
+      lang: "en"
+    });
+  }
+
+  const parts = url.pathname.split("/").filter(Boolean);
+  if (parts.length === 1) {
+    const route = routeForCollection(parts[0]);
+    if (!route) return null;
+    const objects = await getSEOCollection(route.type, env);
+    const indexable = collectionIsIndexable(route.type) && url.searchParams.size === 0;
+    return htmlPage(request, env, {
+      shell: "",
+      title: `${route.label} — evidence-traceable AI research | ${seoConfig.site.short_name}`,
+      description: `Browse ${route.label.toLowerCase()} and their connected evidence in the Oh My AI Company research atlas.`,
+      canonicalPath: `/${route.collection}`,
+      body: collectionSEOBody(route.type, objects),
+      indexable,
+      lang: "en",
+      structuredData: collectionStructuredData(route.type, objects)
+    });
+  }
+
+  if (parts.length === 2 && parts[0] === "objects") {
+    let id = "";
+    try { id = decodeURIComponent(parts[1]); } catch { id = ""; }
+    const object = id ? await getSEOObject(id, env) : null;
+    if (object) return Response.redirect(new URL(objectPath(object), url.origin).toString(), 301);
+  }
+
+  if (parts.length === 2) {
+    const target = objectIDFromPath(parts[0], parts[1]);
+    if (target) {
+      const object = await getSEOObject(target.id, env);
+      if (object && object.type_id === target.type) {
+        const relations = await getSEORelations(object.id, env);
+        return htmlPage(request, env, {
+          shell: "",
+          title: objectPageTitle(object),
+          description: objectDescription(object),
+          canonicalPath: objectPath(object),
+          body: objectSEOBody(object, relations),
+          indexable: isObjectIndexable(object) && url.searchParams.size === 0,
+          lang: pageLanguage(object),
+          image: firstObjectImage(object, normalizeAssetPath),
+          type: "article",
+          structuredData: objectStructuredData(object)
+        });
+      }
+      return htmlPage(request, env, {
+        shell: "",
+        title: `Not found | ${seoConfig.site.name}`,
+        description: "This URL does not match a published research object.",
+        canonicalPath: url.pathname,
+        body: notFoundSEOBody(),
+        indexable: false,
+        lang: "en"
+      }, 404);
+    }
+  }
+  return null;
+}
+
 function normalizeAssetPath(path: string, base: string) {
   const source = path.split("#")[0].split("?")[0];
   const prefix = base.includes("/") ? base.slice(0, base.lastIndexOf("/") + 1) : "";
@@ -643,11 +911,24 @@ export default {
     try {
       if (url.pathname.startsWith("/api/")) return await api(request, env);
       if (url.pathname.startsWith("/media/")) return await serveMedia(request, env);
+      if (url.pathname === "/robots.txt") return serveRobots(request);
+      if (url.pathname === "/sitemap.xml" || url.pathname.startsWith("/sitemaps/")) {
+        const sitemap = await serveSitemap(request, env);
+        if (sitemap) return sitemap;
+      }
+      const seoPage = await serveSEOPage(request, env);
+      if (seoPage) return seoPage;
       const response = await env.ASSETS.fetch(request);
       if (!response.headers.get("content-type")?.includes("text/html")) return response;
-      const headers = new Headers(response.headers);
-      headers.set("cache-control", "no-cache, no-store, must-revalidate");
-      return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+      return htmlPage(request, env, {
+        shell: "",
+        title: `Not found | ${seoConfig.site.name}`,
+        description: "This URL does not match a published page or asset.",
+        canonicalPath: url.pathname,
+        body: notFoundSEOBody(),
+        indexable: false,
+        lang: "en"
+      }, 404);
     } catch (error) {
       console.error(error);
       return json({ error: "internal error" }, { status: 500 });

@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "site": {
+    "name": "Oh My AI Company",
+    "short_name": "OMAC",
+    "base_url": "https://companies.yan5xu.ai",
+    "default_title": "Oh My AI Company — Evidence-traceable AI company atlas",
+    "default_description": "A living, evidence-traceable atlas connecting AI companies, founders, investors, products, market signals, and research judgments.",
+    "default_image": "/og-default.png",
+    "github_url": "https://github.com/yan5xu/oh-my-ai-company"
+  },
+  "routes": {
+    "batch": { "collection": "batches", "id_prefix": "batch", "label": "Batches" },
+    "company": { "collection": "companies", "id_prefix": "company", "label": "Companies" },
+    "concept": { "collection": "concepts", "id_prefix": "concept", "label": "Concepts" },
+    "investment": { "collection": "investments", "id_prefix": "investment", "label": "Investments" },
+    "investor": { "collection": "investors", "id_prefix": "investor", "label": "Investors" },
+    "method": { "collection": "methods", "id_prefix": "method", "label": "Methods" },
+    "note": { "collection": "notes", "id_prefix": "note", "label": "Notes" },
+    "person": { "collection": "people", "id_prefix": "person", "label": "People" },
+    "source.item": { "collection": "sources", "id_prefix": "source", "label": "Sources" },
+    "touchpoint": { "collection": "touchpoints", "id_prefix": "touchpoint", "label": "Touchpoints" },
+    "traffic.snapshot": { "collection": "traffic", "id_prefix": "traffic", "label": "Traffic signals" }
+  },
+  "indexing": {
+    "collection_types": ["company", "investor", "person", "concept", "source.item"],
+    "primary_types": ["company", "investor", "person", "concept"],
+    "minimum_body_chars": {
+      "company": 240,
+      "investor": 240,
+      "person": 180,
+      "concept": 240,
+      "source.item": 280
+    },
+    "source_quality": ["full", "partial"],
+    "source_evidence_levels": ["S1", "S2", "S3"],
+    "source_processing_status": ["summarized", "linked", "parsed"]
+  },
+  "visible_fields": {
+    "company": ["one_liner", "category", "status", "launch_date", "website"],
+    "investor": ["kind", "status", "website", "thesis", "headquarters"],
+    "person": ["role", "title", "bio", "website", "linkedin_url"],
+    "concept": ["kind", "status", "definition"],
+    "investment": ["round", "amount", "currency", "announced_at", "confidence"],
+    "source.item": ["platform", "item_type", "author", "published_at", "evidence_level", "quality", "url"],
+    "traffic.snapshot": ["platform", "period_start", "period_end", "captured_at", "source_url"]
+  }
+}

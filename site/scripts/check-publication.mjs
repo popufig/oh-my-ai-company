@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, rmSync } from "node:fs";
 import { resolve } from "node:path";
 
 const db = resolve("generated/publication-check.db");
@@ -7,11 +7,11 @@ const sourceDB = resolve("../.memex/memex.db");
 const vault = resolve("..");
 const manifest = JSON.parse(readFileSync(resolve("publish.manifest.json"), "utf8"));
 const assets = JSON.parse(readFileSync(resolve("generated/public-assets.json"), "utf8"));
-const sql = [
-  readFileSync(resolve("migrations/0001_public_schema.sql"), "utf8"),
-  readFileSync(resolve("migrations/0002_public_assets.sql"), "utf8"),
-  readFileSync(resolve("generated/vault.sql"), "utf8")
-].join("\n");
+const migrations = readdirSync(resolve("migrations"))
+  .filter((name) => name.endsWith(".sql"))
+  .sort()
+  .map((name) => readFileSync(resolve("migrations", name), "utf8"));
+const sql = [...migrations, readFileSync(resolve("generated/vault.sql"), "utf8")].join("\n");
 
 rmSync(db, { force: true });
 execFileSync("sqlite3", [db], { input: sql, stdio: ["pipe", "pipe", "inherit"], maxBuffer: 128 * 1024 * 1024 });
@@ -51,7 +51,7 @@ assert(Number(scalar(db, "SELECT COUNT(*) FROM object_search")) === sourceCounts
 assert(Number(scalar(db, "SELECT COUNT(*) FROM public_assets")) === assets.length, "asset projection count differs from generated manifest");
 
 const sourceObjects = rows(sourceDB, "SELECT id,body_path FROM objects ORDER BY id");
-const publishedObjects = rows(db, "SELECT id,body,fields_json FROM objects ORDER BY id");
+const publishedObjects = rows(db, "SELECT id,body,body_html,fields_json FROM objects ORDER BY id");
 const publishedByID = new Map(publishedObjects.map((object) => [object.id, object]));
 const publicIDs = new Set(publishedObjects.map((object) => object.id));
 
@@ -60,6 +60,8 @@ for (const object of sourceObjects) {
   assert(published, `missing object ${object.id}`);
   const expectedBody = object.body_path ? readFileSync(resolve(vault, object.body_path), "utf8") : "";
   assert(published.body === expectedBody, `${object.id} body differs from source Markdown`);
+  assert(!/<script\b/i.test(published.body_html), `${object.id} SEO HTML contains a script tag`);
+  if (expectedBody.trim()) assert(published.body_html.trim(), `${object.id} SEO HTML is empty`);
 }
 
 for (const object of publishedObjects) {
@@ -95,6 +97,8 @@ for (const view of graphViews.views || []) {
 assert(scalar(db, "SELECT value FROM metadata WHERE key='publication_mode'") === "full-vault", "publication metadata mode is wrong");
 assert(Number(scalar(db, "SELECT value FROM metadata WHERE key='object_count'")) === sourceCounts.objects, "object metadata count is wrong");
 assert(Number(scalar(db, "SELECT value FROM metadata WHERE key='link_count'")) === sourceCounts.links, "link metadata count is wrong");
+const seoIndexableCount = Number(scalar(db, "SELECT value FROM metadata WHERE key='seo_indexable_count'"));
+assert(seoIndexableCount > 0 && seoIndexableCount <= sourceCounts.objects, "SEO indexable count is invalid");
 
 rmSync(db, { force: true });
 console.log(`Publication check passed: full vault with ${sourceCounts.types} types, ${sourceCounts.objects} objects, ${sourceCounts.links} links, and ${assets.length} assets`);

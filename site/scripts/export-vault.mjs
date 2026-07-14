@@ -1,12 +1,16 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, extname, relative, resolve, sep } from "node:path";
+import { marked } from "marked";
+import sanitizeHtml from "sanitize-html";
 
 const vault = resolve(process.argv[2] || "..");
 const output = resolve(process.argv[3] || "generated/vault.sql");
 const db = resolve(vault, ".memex/memex.db");
 const manifestPath = resolve(dirname(new URL(import.meta.url).pathname), "../publish.manifest.json");
 const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+const seoConfigPath = resolve(dirname(new URL(import.meta.url).pathname), "../seo.config.json");
+const seoConfig = JSON.parse(readFileSync(seoConfigPath, "utf8"));
 
 if (manifest.mode !== "full-vault") throw new Error(`unsupported publication mode: ${manifest.mode}`);
 
@@ -116,6 +120,78 @@ function normalizeAsset(src) {
   return clean.startsWith("assets/") ? clean : "";
 }
 
+function publicObjectPath(object) {
+  const route = seoConfig.routes[object.type_id];
+  if (!route) return `/objects/${encodeURIComponent(object.id)}`;
+  const prefix = `${route.id_prefix}.`;
+  const slug = object.id.startsWith(prefix) ? object.id.slice(prefix.length) : object.id;
+  return `/${route.collection}/${slug.split("/").map(encodeURIComponent).join("/")}`;
+}
+
+function markdownLinkText(value) {
+  return String(value || "").replaceAll("\\", "\\\\").replaceAll("[", "\\[").replaceAll("]", "\\]");
+}
+
+function rewriteWikilinks(body, objectByID) {
+  return body.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_match, rawID, rawLabel) => {
+    const id = String(rawID).trim();
+    const target = objectByID.get(id);
+    const label = String(rawLabel || target?.title || id).trim();
+    return target ? `[${markdownLinkText(label)}](${publicObjectPath(target)})` : markdownLinkText(label);
+  });
+}
+
+function publicMediaURL(src) {
+  const asset = normalizeAsset(src);
+  return asset ? `/media/${asset.split("/").map(encodeURIComponent).join("/")}` : "";
+}
+
+function renderBodyHTML(body, objectByID) {
+  const source = rewriteWikilinks(body, objectByID);
+  const rendered = marked.parse(source, { async: false, gfm: true });
+  return sanitizeHtml(String(rendered), {
+    allowedTags: [...sanitizeHtml.defaults.allowedTags, "img", "figure", "figcaption", "details", "summary", "mark", "del", "sup", "sub"],
+    allowedAttributes: {
+      a: ["href", "title", "rel"],
+      img: ["src", "alt", "title", "loading", "decoding"],
+      code: ["class"],
+      th: ["align"],
+      td: ["align"]
+    },
+    allowedSchemes: ["http", "https", "mailto"],
+    allowProtocolRelative: false,
+    transformTags: {
+      a: (_tagName, attributes) => {
+        const href = attributes.href || "";
+        if (!href || /^(?:javascript|data|vbscript):/i.test(href)) return { tagName: "span", attribs: {} };
+        const external = /^https?:\/\//i.test(href);
+        return {
+          tagName: "a",
+          attribs: {
+            ...attributes,
+            ...(external ? { rel: "external noopener noreferrer" } : {})
+          }
+        };
+      },
+      img: (_tagName, attributes) => {
+        const localURL = publicMediaURL(attributes.src || "");
+        const src = localURL || (/^https?:\/\//i.test(attributes.src || "") ? attributes.src : "");
+        if (!src) return { tagName: "span", attribs: {} };
+        return {
+          tagName: "img",
+          attribs: {
+            src,
+            alt: attributes.alt || "",
+            ...(attributes.title ? { title: attributes.title } : {}),
+            loading: "lazy",
+            decoding: "async"
+          }
+        };
+      }
+    }
+  });
+}
+
 function registerAsset(src, object) {
   const asset = normalizeAsset(src);
   if (!asset) return;
@@ -136,9 +212,26 @@ function publicBody(object) {
 }
 
 const fieldsByID = new Map(objects.map((object) => [object.id, object.fields]));
+const objectByID = new Map(objects.map((object) => [object.id, object]));
 const bodiesByID = new Map(objects.map((object) => [object.id, publicBody(object)]));
+const bodyHTMLByID = new Map(objects.map((object) => [object.id, renderBodyHTML(bodiesByID.get(object.id), objectByID)]));
 const publicAssets = [...assetByPath.values()].sort((a, b) => a.path.localeCompare(b.path));
 const companyCount = objects.filter((object) => object.type_id === "company").length;
+
+function isSEOIndexable(object) {
+  const body = bodiesByID.get(object.id).trim();
+  const minimum = Number(seoConfig.indexing.minimum_body_chars[object.type_id] || 0);
+  if (body.length < minimum) return false;
+  if (seoConfig.indexing.primary_types.includes(object.type_id)) return true;
+  if (object.type_id !== "source.item") return false;
+  const fields = object.fields || {};
+  return seoConfig.indexing.source_quality.includes(String(fields.quality || ""))
+    && seoConfig.indexing.source_evidence_levels.includes(String(fields.evidence_level || ""))
+    && seoConfig.indexing.source_processing_status.includes(String(fields.processing_status || ""));
+}
+
+const seoIndexableObjects = objects.filter(isSEOIndexable);
+const seoIndexableCount = seoIndexableObjects.length;
 
 const lines = [
   "-- Generated from the complete Memex vault. Do not edit.",
@@ -156,7 +249,8 @@ for (const type of types) {
 for (const object of objects) {
   const fieldsJSON = JSON.stringify(fieldsByID.get(object.id));
   const body = bodiesByID.get(object.id);
-  lines.push(`INSERT INTO objects (id,type_id,title,body,body_path,fields_json,created_at,updated_at) VALUES (${sqlString(object.id)},${sqlString(object.type_id)},${sqlString(object.title)},${sqlString(body)},${sqlString(object.body_path)},${sqlString(fieldsJSON)},${sqlString(object.created_at)},${sqlString(object.updated_at)});`);
+  const bodyHTML = bodyHTMLByID.get(object.id);
+  lines.push(`INSERT INTO objects (id,type_id,title,body,body_html,body_path,fields_json,created_at,updated_at) VALUES (${sqlString(object.id)},${sqlString(object.type_id)},${sqlString(object.title)},${sqlString(body)},${sqlString(bodyHTML)},${sqlString(object.body_path)},${sqlString(fieldsJSON)},${sqlString(object.created_at)},${sqlString(object.updated_at)});`);
   lines.push(`INSERT INTO object_search (id,title,body,fields) VALUES (${sqlString(object.id)},${sqlString(object.title)},${sqlString(body)},${sqlString(fieldsJSON)});`);
 }
 for (const link of links) {
@@ -174,6 +268,8 @@ lines.push(`INSERT INTO metadata (key,value) VALUES ('company_count',${sqlString
 lines.push(`INSERT INTO metadata (key,value) VALUES ('object_count',${sqlString(objects.length)});`);
 lines.push(`INSERT INTO metadata (key,value) VALUES ('link_count',${sqlString(links.length)});`);
 lines.push(`INSERT INTO metadata (key,value) VALUES ('asset_count',${sqlString(publicAssets.length)});`);
+lines.push(`INSERT INTO metadata (key,value) VALUES ('seo_config_version',${sqlString(seoConfig.version)});`);
+lines.push(`INSERT INTO metadata (key,value) VALUES ('seo_indexable_count',${sqlString(seoIndexableCount)});`);
 lines.push(`INSERT INTO metadata (key,value) VALUES ('type_definitions',${sqlString(JSON.stringify(typeDefinitions))});`);
 lines.push(`INSERT INTO metadata (key,value) VALUES ('graph_views',${sqlString(JSON.stringify(graphViews))});`);
 
@@ -185,6 +281,8 @@ const report = {
     objects: objects.length,
     links: links.length,
     assets: publicAssets.length,
+    seo_indexable: seoIndexableCount,
+    seo_indexable_by_type: Object.fromEntries(types.map((type) => [type.id, seoIndexableObjects.filter((object) => object.type_id === type.id).length])),
     by_type: Object.fromEntries(types.map((type) => [type.id, objects.filter((object) => object.type_id === type.id).length]))
   }
 };
