@@ -1,0 +1,1 @@
+LinkedIn 公司页定位为“The human control plane for AI labor”，地点 San Francisco，行业 Technology, Information and Internet，规模区间 2–10。2026-07-15 adapter 可见 3 个关联成员，其中明确返回 Devin Foley 与 Scott Tong；自报关联不等于精确正式员工数。

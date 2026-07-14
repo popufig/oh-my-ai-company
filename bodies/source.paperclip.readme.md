@@ -1,0 +1,1 @@
+README 将 Paperclip 定义为 Node.js server + React UI，连接用户自带 Agent。明确不是 chatbot、Agent framework、workflow builder 或单 Agent 工具。当前对象包括公司、组织架构、目标、Issue、预算、审批、心跳、审计、多公司隔离、插件与 secrets；memory、深规划、CEO chat、cloud deploy、desktop app 等仍在 roadmap。

@@ -1,0 +1,1 @@
+20 分 24 秒 founder demo。展示从“Agent 太多、缺可见性”出发，用公司、任务、skills、多模型、Tailscale、routines 和 marketplace 管理 Agent；2026-07-15 观察播放约 21,935。

@@ -1,0 +1,1 @@
+Issue 给出代码与复现：Hermes CLI 输出不包含 token/cost，adapter 依赖正则解析，因此 persisted usage/cost 为 null，预算不会触发。报告称 2026.626.0 和 2026.703 canary 仍存在；Issue open。

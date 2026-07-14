@@ -1,0 +1,1 @@
+Fresh install 用户报告 Agent configuration workspace unavailable；Issue 有 19 条评论，持续到 5 月，存在 workaround/相关 PR 但仍 open。说明多 adapter、本地路径与 worktree 的环境摩擦是核心采用成本。

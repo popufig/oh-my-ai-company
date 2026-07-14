@@ -1,0 +1,1 @@
+Designer Fund 官方团队页称 Scott Tong 为 advisor；最近任 Cambly Head of Design，之前在 IMO Ventures 任 EIR、领导 Pinterest 产品设计、联合创办 IFTTT、早期任职 IDEO。LinkedIn 公司页显示其当前与 Paperclip 关联，角色更适合写设计成员而非创始人。

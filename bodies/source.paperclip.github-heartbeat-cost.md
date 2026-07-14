@@ -1,0 +1,1 @@
+用户称 3 个没有工作可做的 Agent heartbeat 消耗 Claude Max 约 30% 计算窗口，请求廉价预处理器。Issue open。官方文档后来更强调 routine/event 与关闭多数空转 heartbeat。

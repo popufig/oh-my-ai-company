@@ -1,0 +1,1 @@
+Dotta 将当前产品概括为四层：agentic task manager、包含 agents 与 humans 的 org chart、Agent employee training，以及 agentic OS。这表明叙事已经从 zero-human company 上移到 human control plane。

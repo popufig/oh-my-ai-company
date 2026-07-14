@@ -1,0 +1,1 @@
+Issue 有 19 条评论，要求 Board 能先与 Agent brainstorm/对话，再把结果转成任务。它揭示 ticket-first 模型会迫使用户过早结构化探索；当前 Ask/Planning mode 部分缓解，但 CEO Chat 仍在 roadmap，Issue open。

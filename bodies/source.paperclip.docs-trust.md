@@ -1,0 +1,1 @@
+官方已把低信任贡献、review 和执行边界产品化，说明开源生态与 Agent 生成贡献带来的风险已经进入治理设计。该设计存在不等于所有 prompt injection、secret 或 command 执行风险已被消除。

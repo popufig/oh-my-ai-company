@@ -1,0 +1,1 @@
+LinkedIn 当前 headline 为“Building Paperclip - WE’RE HIRING”，地点旧金山，约 1,873 followers。公开资料把其标为 Paperclip Labs cofounder/CTO；前职信息未在本轮从一手履历完整抓取，因此不展开。

@@ -1,0 +1,1 @@
+官方文档把成本归集到公司、Agent、项目和任务，并提供预算与 hard-stop 叙事。该能力依赖 adapter 回传有效 usage/cost；后续 GitHub issues 证明 subscription 与 Hermes 等场景存在上报空缺。

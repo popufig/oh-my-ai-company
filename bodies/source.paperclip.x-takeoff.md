@@ -1,0 +1,1 @@
+发布数日后 Dotta 说项目已经“takeoff”，需要公司模板、插件系统与降低 founder bottleneck；同时提醒大量 PR 中存在 slop，prompt injection 是真实风险，human taste、judgement、accountability 仍重要。

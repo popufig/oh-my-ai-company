@@ -1,0 +1,1 @@
+一名约 30 Agents 的自托管用户报告：subscription-authenticated Claude 运行记录 billed_cents=0，预算不累积、warning 与 auto-pause 均不触发。Issue open。它是可复现用户报告，不是官方确认所有 subscription 场景均失效。

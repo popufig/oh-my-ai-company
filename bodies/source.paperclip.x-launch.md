@@ -1,0 +1,1 @@
+首发帖把产品压缩为“零人公司的编排层”，列出组织架构、目标对齐、任务 ownership、预算和 Agent templates，并给出一条 npx 命令。2026-07-15 页面显示约 260 万 views、442 replies、948 reposts、8,297 likes、约 1 万 bookmarks；含 27 秒产品视频。互动数为动态观察值。

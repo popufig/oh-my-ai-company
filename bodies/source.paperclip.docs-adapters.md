@@ -1,0 +1,1 @@
+官方文档说明控制面与 Agent runtime 解耦。可连接 Claude Code、Codex、Cursor、Gemini、Grok、Hermes、OpenCode、Pi、ACPX、process、HTTP/external adapter 等。适配器能力和遥测完整度并不一致，尤其成本上报决定预算治理是否生效。

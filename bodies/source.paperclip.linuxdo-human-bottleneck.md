@@ -1,0 +1,1 @@
+用户描述用 Paperclip 搭自动小说公司，最终自己只剩批准和转述，多个 Agent 输出速度超过其审阅能力，组织变得混乱。它把核心瓶颈从 Agent 执行转向 human judgement/attention。

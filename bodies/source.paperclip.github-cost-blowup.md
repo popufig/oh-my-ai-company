@@ -1,0 +1,1 @@
+一名 Windows/self-hosted 用户报告升级 v2026.707.0 后 auth 恢复与重复尝试导致单轮约 35.6M input tokens、约 20 美元成本。Issue open，只有个体报告与一条跟帖；不能外推为普遍升级缺陷，但说明成本上限需要独立于模型/API 计费路径。

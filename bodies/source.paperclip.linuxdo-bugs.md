@@ -1,0 +1,1 @@
+一名用户称 Hermes 配置问题导致 Agent 无限循环并刷出上百 Issue，Reviewer/Approver 没能帮助收敛；跟帖称曾整晚写文档、新版有所改善但 Issue 多时仍会困住。样本量小，但与 GitHub 的成本/循环问题方向一致。

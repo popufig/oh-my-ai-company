@@ -1,0 +1,1 @@
+2026-07-14 GitHub API 观察：约 73,651 stars、13,715 forks、371 watchers，MIT License，TypeScript 主体。仓库 2026-03-02 创建；git 初始提交时间为 2026-02-16。Star 代表开源关注和分发，不等同付费、部署或留存。

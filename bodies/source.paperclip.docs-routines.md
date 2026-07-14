@@ -1,0 +1,1 @@
+官方把 heartbeat 与 routine 区分：Agent 可定时醒来检查工作，也可由任务/例行事件触发。当前实践更建议多数 Agent 关闭空转 heartbeat，用 routine/event 驱动，以降低无工作时的模型成本。

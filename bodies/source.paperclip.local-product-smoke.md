@@ -1,0 +1,1 @@
+2026-07-15 在隔离 HOME 与 data-dir 中运行 paperclipai@2026.707.0。9 项 doctor check 通过，embedded PostgreSQL 启动并执行 134 migrations；创建测试公司和 process dummy agent，验证 Dashboard、Tasks、Routines、Goals、Artifacts、Skills、Projects、Org、Timeline、Costs、Activity 与 Settings。未放入真实凭据、未调用付费模型，因此只证明控制面可运行，不证明复杂 Agent 协作质量。

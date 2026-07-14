@@ -1,0 +1,1 @@
+创始人判断企业需要 model-decoupled orchestration 与 private evals。它支持 Paperclip 向企业治理层上移的方向，但仍属于 founder thesis，不是客户采用证据。

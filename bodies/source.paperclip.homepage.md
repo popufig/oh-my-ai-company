@@ -1,0 +1,1 @@
+2026-07-15 抓取。官网将 Paperclip 定义为“people use to manage AI agents for work”与“human control plane for AI labor”。公开能力包括组织架构、目标、Issue、预算、成本、审批、心跳、审计、扩展与自托管；官网同时宣称预算达到上限会自动停止。
