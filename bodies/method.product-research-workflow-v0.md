@@ -551,3 +551,25 @@ API/MCP 路径通常更结构化、可授权和可审计；浏览器执行能覆
 同一家公司的累计融资、扩展轮、战略入股、模型数、连接器数和团队规模会随时间变化。优先用各轮官方公告与强第三方报道逐项对齐，保留“当时口径”，不要把不同日期的数字拼成一个静态事实。
 
 本轮还确认：大型企业平台的 GTM 更可能由创始人网络、战略投资人、实施伙伴和 lighthouse customer 共同推动；Product Hunt、Hacker News 或公司 X 的弱表现不能直接推出获客弱。但这只是 Ema 类型样本的观察，后续需用更多 enterprise agent 公司复验。
+
+## 2026-07-15 Sintra 调研补充
+
+本轮对象：[[company.sintra]]。产品判断：[[note.sintra-product-takeaway-2026-07-15]]；过程记录：[[note.sintra-research-run-2026-07-15]]。
+
+回看 Lindy、11x、Floatbot、Ema 等 AI employee 样本后，本轮增加四项检查。前两项适合 creator/affiliate 驱动的消费 SaaS，后两项适合 credits 产品和 SMB AI suite，暂不泛化到所有企业产品。
+
+### Review 必须做 provenance audit
+
+遇到 YouTube review、X 长帖、Reddit 高分长评或媒体榜单，先核查 sponsored disclosure、affiliate link、coupon、跳转域名、发帖社区性质和作者商业关系，再判断它属于独立评价、客户证据还是分发素材。高播放、高互动和长篇幅都不能自动升级证据等级。Sintra 的多个“review”实际组成了 paid creator 与 affiliate 获客网络。
+
+### 把 credits 换算成任务容量
+
+不要只抄“每月多少 credits”。从官方文档取得聊天、检索、定时任务和复杂多工具任务的消耗区间，再换算套餐大致能承载多少真实任务；同时检查失败重试、跨 workspace 共享、余额耗尽后的行为、top-up 续费与退款。换算只是容量边界，不代表用户真实频次或单位经济。
+
+### 应用商店同时提供采用、版本和视觉证据
+
+当官网被挑战页拦截或营销文案过强时，Apple/Google 商店可交叉验证首次上架、最近更新、评分量、下载区间、移动端价格、开发者主体、公开截图和版本说明。商店描述中的客户数仍是厂商自报；两个平台的文案冲突应保留，不能自行选一个更好看的数字。
+
+### Similar sites 必须逐个做语义复核
+
+算法相似网站只提供候选，不直接等于竞品。对候选逐个核验目标客户、核心任务、产品层级和购买者，再标为 direct、adjacent 或 noise。Sintra 的 Marblism 是直接 SMB AI employee suite；Synta、Vizzy Labs 等更多是关键词、受众或分发邻接。流量工具负责扩种子，研究者负责分类。
