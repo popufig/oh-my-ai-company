@@ -40,6 +40,37 @@ type PublicMeta = {
   company_count: number;
 };
 
+const ontologyNodes = [
+  { id: "source", x: 8, y: 17, href: "/sources" },
+  { id: "traffic", x: 8, y: 48, href: "/traffic" },
+  { id: "method", x: 8, y: 80, href: "/methods" },
+  { id: "note", x: 29, y: 17, href: "/notes" },
+  { id: "concept", x: 29, y: 80, href: "/concepts" },
+  { id: "company", x: 48, y: 48, href: "/companies" },
+  { id: "investment", x: 68, y: 27, href: "/investments" },
+  { id: "founder", x: 68, y: 67, href: "/graph?object=company.kernel&graphView=company-founders" },
+  { id: "investor", x: 89, y: 18, href: "/investors" },
+  { id: "person", x: 89, y: 68, href: "/people" },
+  { id: "touchpoint", x: 68, y: 91, href: "/touchpoints" }
+] as const;
+
+const ontologyEdges = [
+  ["source", "note"],
+  ["source", "company"],
+  ["traffic", "company"],
+  ["method", "note"],
+  ["note", "company"],
+  ["note", "concept"],
+  ["company", "concept"],
+  ["company", "investment"],
+  ["investment", "investor"],
+  ["company", "founder"],
+  ["founder", "person"],
+  ["touchpoint", "company"],
+  ["touchpoint", "investor"],
+  ["touchpoint", "person"]
+] as const;
+
 async function fetchJSON<T>(url: string): Promise<T> {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`Request failed: ${response.status}`);
@@ -214,6 +245,12 @@ export function HomePage({ language, setLanguage, automationRef }: SiteHomeProps
             )}
           </form>
           <p className="omac-search-hint">{copy.searchHint}</p>
+          <div className="omac-topic-links" aria-label={copy.topicsLabel}>
+            <span>{copy.topicsLabel}</span>
+            {copy.topics.map(([label, href]) => (
+              <a href={href} key={href}>{label}</a>
+            ))}
+          </div>
         </div>
 
         <div className="omac-hero-stats" aria-label="Research snapshot">
@@ -282,6 +319,68 @@ export function HomePage({ language, setLanguage, automationRef }: SiteHomeProps
           </figure>
         </section>
 
+        <section className="omac-section omac-model" aria-labelledby="omac-model-title">
+          <div className="omac-section-heading">
+            <p className="omac-eyebrow">{copy.modelEyebrow}</p>
+            <h2 id="omac-model-title">{copy.modelTitle}</h2>
+            <p>{copy.modelDescription}</p>
+          </div>
+          <div className="omac-model-layers">
+            {copy.modelLayers.map((layer) => (
+              <article className="omac-model-layer" key={layer.number}>
+                <span>{layer.number}</span>
+                <h3>{layer.title}</h3>
+                <strong>{layer.types}</strong>
+                <p>{layer.text}</p>
+              </article>
+            ))}
+          </div>
+          <p className="omac-model-flow">{copy.modelFlow}</p>
+          <div className="omac-ontology-heading">
+            <h3>{copy.modelGraphTitle}</h3>
+            <p>{copy.modelGraphDescription}</p>
+          </div>
+          <div className="omac-ontology" role="img" aria-label={copy.modelGraphTitle}>
+            <svg viewBox="0 0 1000 520" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <marker id="omac-ontology-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M 0 0 L 8 4 L 0 8 z" />
+                </marker>
+              </defs>
+              {ontologyEdges.map(([fromID, toID]) => {
+                const from = ontologyNodes.find((node) => node.id === fromID)!;
+                const to = ontologyNodes.find((node) => node.id === toID)!;
+                return <line key={`${fromID}-${toID}`} x1={from.x * 10} y1={from.y * 5.2} x2={to.x * 10} y2={to.y * 5.2} />;
+              })}
+            </svg>
+            {ontologyNodes.map((node) => (
+              <a
+                className={`omac-ontology-node is-${node.id}`}
+                href={node.href}
+                key={node.id}
+                style={{ left: `${node.x}%`, top: `${node.y}%` }}
+              >
+                <strong>{node.id}</strong>
+                <span>{copy.modelNodes[node.id]}</span>
+              </a>
+            ))}
+          </div>
+          <div className="omac-ontology-paths">
+            {copy.modelPaths.map((path) => <code key={path}>{path}</code>)}
+          </div>
+          <aside className="omac-model-debt">
+            <div>
+              <h3>{copy.modelDebtTitle}</h3>
+              <p>{copy.modelDebtDescription}</p>
+            </div>
+            <ol>
+              {copy.modelDebts.map((debt, index) => (
+                <li key={debt}><span>{String(index + 1).padStart(2, "0")}</span>{debt}</li>
+              ))}
+            </ol>
+          </aside>
+        </section>
+
         <section className="omac-section omac-latest">
           <div className="omac-section-heading">
             <p className="omac-eyebrow">{copy.latestEyebrow}</p>
@@ -306,6 +405,7 @@ export function HomePage({ language, setLanguage, automationRef }: SiteHomeProps
             <p className="omac-eyebrow">{copy.methodEyebrow}</p>
             <h2>{copy.methodTitle}</h2>
             <p>{copy.methodDescription}</p>
+            <p className="omac-method-boundary">{copy.methodBoundary}</p>
             <a href="https://github.com/yan5xu/oh-my-ai-company" target="_blank" rel="noreferrer">
               <Github aria-hidden="true" />{copy.repoAction}<ExternalLink aria-hidden="true" />
             </a>
