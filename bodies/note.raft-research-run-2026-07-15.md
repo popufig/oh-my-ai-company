@@ -10,7 +10,7 @@
 4. **把 dogfooding 当 operational proof**：检查一项功能如何在 Raft 内被调研、实现、验证和发布，区分“内部可运行”与“市场已验证”。
 5. **拼接旧域和新域**：分别读取 `slock.ai` 与 `raft.build` 的月度、渠道、地域和关键词，避免改名让增长判断断裂。
 6. **社区先找反证**：X、V2EX、Linux.do、微信、小红书、Reddit、HN、PH 同时检索；重点保留重复劳动、token、上下文、闭源/隐私等反方样本。
-7. **从社区线索反查融资**：常规融资数据库为空后，沿社区提及进入戴雨森播客，拿到 Upgrade Capital 投资 Slock 的直接表述。
+7. **从社区线索反查融资**：常规融资数据库为空后，沿社区提及进入戴雨森播客，拿到 Upgrade Capital 投资 Slock 的直接表述；后续复核再沿旧品牌进入 Lollapalooza 官方 Portfolio，确认王慧文投资平台也是投资方。
 8. **图文资产化与监控**：保存官网 DOM 截图、Docs 产品图、真实 meetup 照片；官方与创始人 X 加入 list；写入 company/person/investor/investment/source/touchpoint/traffic/note/concept。
 
 ## 本轮改变了什么判断
@@ -22,7 +22,7 @@
 - **开始时**：6 月新域只有约 1.7 万访问，看起来规模偏小。
 - **补完后**：旧域 4–5 月已快速增长，6 月是品牌和域名迁移期；单看新域会漏掉产品历史，单看旧域又会误判衰退。
 - **开始时**：公开融资为空。
-- **补完后**：投资方管理合伙人的播客原话足以建立 Upgrade Capital 投资关系，但仍不能补写金额和轮次。
+- **补完后**：投资方管理合伙人的播客原话与投资机构官方 Portfolio 分别确认 Upgrade Capital、Lollapalooza Capital 两条关系，但仍不能补写金额和轮次。
 
 ## 失败、冲突与降级
 
@@ -31,7 +31,8 @@
 - LinkedIn employee search 返回自报关联成员，可能混入客户/顾问；只作线索，不反推正式团队规模。
 - Similarweb 的 `slock.ai` 总量卡片与月度图表冲突，只保留可复核月度序列；`raft.build` 的 non-brand 词实际仍是 Slock 品牌词，品牌分类降级。
 - DAA 页面标注 6 月 15 日发布却使用截至 6 月 21 日样本；保留冲突，不替官方修正日期。
-- Upgrade Capital 投资关系有强证据，但金额、轮次、日期和其他投资人未找到，字段留空。
+- Upgrade Capital 与 Lollapalooza Capital 投资关系有强证据，但金额、轮次、日期与角色未找到，字段留空。
+- 钱宇超参加红杉中国 AI Day、真格投资人传播 Slock 都只是网络信号；同主题文章还会把 Floatboat 的红杉融资紧接在 Slock 介绍之后。三类材料均不得直接转成 Slock 的投资边。
 - 官网用户 logo、证言、DAA 与活动人数均为官方自报，不能替代独立客户、留存或收入数据。
 - Connected Apps / Login with Raft 有 docs 和 UI，不代表已形成第三方生态。
 
@@ -40,7 +41,7 @@
 1. **Rebrand continuity audit**：改名公司要同时查旧名、旧域、旧账号、关键词和 referral；报告按月拼接，不把迁移噪声解释成增长或衰退。
 2. **Self-reported metric consistency audit**：官方指标除定义和样本外，还要核发布日期与样本截止日是否自洽；活跃指标不能替代价值指标。
 3. **Dogfooding evidence ladder**：从“团队说自己在用”升级检查真实工作项、角色分离、验证证据、不可逆 gate 与发布结果。
-4. **Hidden funding path**：数据库为空时，从投资人播客、portfolio、创始人关系与社区线索反查；拿到直接表述才建强关系，金额和轮次继续留空。
+4. **Hidden funding path**：数据库为空时，从旧品牌、投资人播客、投资机构 portfolio、创始人关系与社区线索反查；拿到直接表述才建强关系，金额和轮次继续留空。活动同台、关注和转发只保留为候选信号。
 5. **Counter-thesis mapping**：把社区 objection 映射到产品控制面；功能回应 objection 只能说明团队意识到问题，不能宣称因果或已经解决。
 6. **Visual mix**：同时保存 DOM 截图、官方产品图与线下真实照片；只截官网会让后续读者看不见使用场景和社区密度。
 

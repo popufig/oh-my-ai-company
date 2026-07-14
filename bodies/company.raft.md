@@ -105,11 +105,13 @@ LinkedIn 公司页标示 2–10 employees，并搜索到 6 个自报关联成员
 
 ## 融资
 
-公开公司数据库与常规搜索没有给出 Raft / Slock 的轮次、金额和估值，但投资关系并非完全空白。
+公开公司数据库与常规搜索没有给出 Raft / Slock 的轮次、金额和估值，但沿旧品牌、投资人原话与 Portfolio 反查后，已经确认两条投资关系。
 
 Upgrade Capital 管理合伙人 [[person.dai-yusen]] 在 2026-05-27 的播客约 01:36:14 明确说：“我们投了一家公司叫 Slock。”这足以建立 [[investment.upgrade-capital-raft]] 的高置信关系，但**不足以填写轮次、金额、宣布日期或估值**。[[source.raft.podcast-upgrade-capital]]
 
-本轮没有找到其他可交叉验证的机构投资方。搜索片段会把戴雨森与其历史任职机构联系起来，但该期播客明确使用 Upgrade Capital 身份，因此不能把这笔投资误写为真格基金投资。
+[[investor.lollapalooza-capital]] 官网 Portfolio 也明列 Slock，并链接到旧域 `slock.ai`。官网称该机构由 [[person.huiwen-wang]] 于 2025 年创立；媒体和部分团队成员常称其为“王慧文家族办公室”。这足以建立 [[investment.lollapalooza-capital-raft]] 的高置信关系，同样**不能补写轮次、金额、日期或领投/跟投角色**。[[source.raft.lollapalooza-portfolio]]
+
+红杉中国和真格基金目前只能保留为待核验线索：钱宇超参加红杉中国 AI Day、真格投资人关注或转发 Slock，都说明网络接近性，不等于投资关系。尤其是同主题文章会在介绍 Slock 后紧接着写 Floatboat 获红杉中国种子基金投资，不能把 Floatboat 的融资误套给 Slock。戴雨森播客使用的是 Upgrade Capital 身份，也不能仅因其真格历史关联就把该笔投资改写真格基金。
 
 ## 增长与 GTM
 
@@ -221,7 +223,8 @@ Raft 假设团队式、可见的横向协作能产生新价值；反方假设明
 - Enterprise 私有部署、SSO、RBAC、DPA、subprocessor、数据驻留与安全认证；
 - External Agents、Connected Apps、Login with Raft 的实际第三方采用，而非 docs 存在；
 - 哪些工作在横向 agent team 中优于 hierarchical orchestrator；
-- Upgrade Capital 投资的轮次、金额、日期及其他投资人；
+- Upgrade Capital 与 Lollapalooza Capital 投资的轮次、金额、日期和角色；
+- 红杉中国、真格基金是否实际投资，当前只有活动/人员网络信号，没有直接交易证据；
 - 改名后旧域流量与搜索资产能否完成迁移；
 - LinkedIn 自报关联成员中哪些是正式员工。
 
@@ -253,6 +256,7 @@ Raft 假设团队式、可见的横向协作能产生新价值；反方假设明
 ### S2：第三方强证据
 
 - [戴雨森播客](https://www.teahose.com/podcast/%E5%B0%8F%E5%AE%87%E5%AE%99/6847800e6351603f7775b179) · [[source.raft.podcast-upgrade-capital]]
+- [Lollapalooza Capital 官方 Portfolio](https://lollapalooza.hk/) · [[source.raft.lollapalooza-portfolio]]
 - [Harness Engineering in 2026.3](https://mp.weixin.qq.com/s/st1yRe_Y_sBBY6bV5BH6KA) · [[source.raft.wechat-ed-huang]]
 - [[source.raft.linkedin-company]]
 - [[source.raft.similarweb-slock-ai]]
@@ -271,7 +275,7 @@ Raft 假设团队式、可见的横向协作能产生新价值；反方假设明
 ## 关联资产
 
 - 创始人：[[person.yuchao-richard-qian]]、[[person.tenny-zhuang]]
-- 投资方：[[investor.upgrade-capital]]、[[investment.upgrade-capital-raft]]
+- 投资方：[[investor.upgrade-capital]]、[[investment.upgrade-capital-raft]]、[[investor.lollapalooza-capital]]、[[investment.lollapalooza-capital-raft]]
 - 流量：[[traffic.similarweb.slock-ai-2026-h1]]、[[traffic.similarweb.raft-build-2026-06]]
 - 概念：[[concept.agent-native-collaboration-os]]
 - 产品判断：[[note.raft-product-takeaway-2026-07-15]]
