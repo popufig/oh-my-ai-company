@@ -573,3 +573,25 @@ API/MCP 路径通常更结构化、可授权和可审计；浏览器执行能覆
 ### Similar sites 必须逐个做语义复核
 
 算法相似网站只提供候选，不直接等于竞品。对候选逐个核验目标客户、核心任务、产品层级和购买者，再标为 direct、adjacent 或 noise。Sintra 的 Marblism 是直接 SMB AI employee suite；Synta、Vizzy Labs 等更多是关键词、受众或分发邻接。流量工具负责扩种子，研究者负责分类。
+
+## 2026-07-15 Marblism 调研补充
+
+本轮对象：[[company.marblism]]。产品判断：[[note.marblism-product-takeaway-2026-07-15]]；过程记录：[[note.marblism-research-run-2026-07-15]]。
+
+对照 Sintra、Lindy 与 11x 后，本轮增加四项适用于产品转型、角色化 SMB SaaS 和 affiliate 密集产品的检查。
+
+### 当前产品要追 product genealogy
+
+公司可以保留名称、团队、资本和用户需求，却完全更换交付物。继续查旧官网、旧 launch、founder 复盘与社区 failure mode，回答“旧产品为什么失败、哪些资产被新产品继承”。Marblism 的旧 app builder 已有用户和 ARR，但最后的调试、安全与维护仍要求懂代码；新 AI employees 正是对这个 friction 的重写。
+
+### 对照营销单位与计费单位
+
+“员工”“无限任务”“无限 leads”是购买语言，不一定是 billing unit。继续追 credits、hours、actions、tokens、success fee 或 seat，换算额度耗尽、失败重试、返工和 rollover。Marblism 卖六名员工，实际按厂商估算的人类工作小时计量。
+
+### 创始人变化优先查法定文件
+
+YC、LinkedIn 和媒体适合发现人物；Companies House、州公司注册、董事/PSC filing 等适合确认退出与控制权时间。历史联合创始人关系应保留，但必须和当前管理层分开。
+
+### Partner 声量按 distribution evidence 处理
+
+当官方提供高比例长期佣金时，Reddit、X、YouTube 和博客里的正面内容默认先做 affiliate provenance audit。重复文案、折扣码、referral URL 和 disclosure 证明获客网络存在，但不能直接证明满意度。只有独立客户侧、长期使用和可核验结果才能升级为产品采用证据。

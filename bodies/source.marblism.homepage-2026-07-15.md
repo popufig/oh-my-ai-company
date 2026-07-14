@@ -1,7 +1,7 @@
-# Marblism 官网：AI Employees for SMBs
+2026-07-15 完整读取 Marblism 当前官网。
 
-Marblism 官网同样以“AI employees”面向 SMB，覆盖 inbox、social、SEO、lead generation、calls 与 support，并自称服务 40,000+ businesses。产品角色、目标客户和任务面与 Sintra 高度重叠。
+当前产品列出六名 AI 员工：Eva（行政）、Sonny（社媒）、Stan（获客）、Penny（SEO）、Rachel（电话接待）、Linda（法律辅助）；支持多 business/workspace，并连接 Gmail、Outlook、Calendar、LinkedIn、Facebook、Instagram、X 等系统。官网自报 40,000+ businesses、4.8/5、50+ hours saved。
 
-**可支持：** Marblism 是 Sintra 当前最直接的同类研究对象，而不是仅凭算法相似度出现的邻接网站。
+**可支持：** 当前定位、角色、公开集成与购买叙事；也是 [[company.sintra]] 的直接 SMB AI team 竞品。
 
-**边界：** 40,000+ 是官网自报；本条只核验首页定位，尚未完成 Marblism 的产品、团队、融资、流量和用户反馈调研。
+**边界：** 客户数、评分和节省小时均为厂商自报；“autonomous”必须和 Help Center 的任务、权限与 hallucination 边界一起读。
