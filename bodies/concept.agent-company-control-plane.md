@@ -14,3 +14,5 @@ Agent 公司控制面把 Claude Code、Codex、OpenClaw、Hermes 等 runtime 视
 这一概念不同于 multi-agent framework。Framework 解决 Agent 如何调用和协作；公司控制面解决谁应该做什么、花多少钱、谁批准、如何追责以及何时停止。
 
 Cofounder 进一步暴露了 marketing promise 与 operating contract 的差异：官网说没有批准不会上线，Terms 却允许用户授予自动 merge、deployment、infrastructure change、message 与 payment 权限。控制面研究不能只问“有没有 approval”，还要问 action class、standing authorization、限额、audit、rollback 与 merchant responsibility。[[source.cofounder.terms-2026-07-15]]
+
+[[company.pancake]] 把 Slack coordination、OpenClaw runtime、独享 pod、company brain 与预制 squad 组合成 managed company appliance；但当前公开证据仍缺 action-level audit、rollback 和 policy 样本。其旧产品 [[company.basalt]] 做 experiment/evaluate/monitor，是否把 reliability loop 迁入新控制面，是后续值得追踪的产品线索。

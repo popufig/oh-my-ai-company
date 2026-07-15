@@ -684,3 +684,16 @@ YC、LinkedIn 和媒体适合发现人物；Companies House、州公司注册、
 7. 收入提升是否有独立客户侧证据。
 
 Wonderly 说明结果定价会把治理从技术 runtime 扩展到合同、归因与渠道冲突。它不能被简化为“更接近价值的 pricing”。
+
+## 2026-07-15 Pancake 调研补充
+
+本轮对象：[[company.pancake]] 与其运营主体 [[company.basalt]]。产品判断：[[note.pancake-product-takeaway-2026-07-15]]；过程记录：[[note.pancake-research-run-2026-07-15]]。
+
+对照 Motion/Wonderly、Marblism 和 Cofounder 后，本轮把产品谱系研究补成四个动作：
+
+1. **先查 legal operator**：Terms、Privacy、账单主体和 OAuth app developer 往往比媒体更能回答新品牌属于谁；融资边默认挂法人/公司，不直接迁移到新产品。
+2. **把品牌变化拆成四种状态**：新产品线、pivot、rebrand、独立 spinout。只有官方明确停止旧产品并承接主体时才写完整 rebrand；否则保留两个主体与共享 founders。
+3. **“我们用自己的产品运营”要做 headcount/time audit**：区分从首行代码到收入、当前日常运营和当前团队规模，避免把历史 zero-hire 叙事写成当前零员工。
+4. **内容集群既是 GTM receipt 也是质量风险**：统计集中发布日期、Invalid Date、竞品页覆盖和 brand/non-brand search；文章数量不等于排名、流量或可信度。
+
+Pancake 还补出 autonomy percentage 的强制边界：记录厂商数字时必须同时问分母是任务、工时、动作还是职能，哪些动作需要逐次批准，哪些已有 standing authorization，以及失败如何升级、审计和回滚。没有这些定义时，50%、80% 或 99% 只表示产品叙事，不能作为跨公司 benchmark。[[concept.progressive-company-autonomy]]
