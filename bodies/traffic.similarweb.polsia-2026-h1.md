@@ -1,0 +1,1 @@
+[[company.polsia]] 2026 H1 第三方 Worldwide / All Traffic 快照。约 5.248M total visits、851,189 monthly visits、298,543 monthly unique visitors；美国 78.52%，移动 78.23%。绝对值仅作第三方方向估算。[[source.similarweb.polsia-2026-h1]]
