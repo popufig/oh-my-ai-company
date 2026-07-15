@@ -248,6 +248,19 @@ Lindy 与 11x 共同支持“角色化前台 + 更复杂执行底座”，但二
 
 Bloome 还再次验证了主体边界：共享 founder、员工和开发者账号只说明组织连续性，不能自动迁移另一个产品的融资、团队规模或经营数据。
 
+## 2026-07-15 TeamDay 调研补充
+
+本轮对象：[[company.teamday]]，相关历史产品：[[company.ayanza]]。产品判断：[[note.teamday-product-takeaway-2026-07-15]]；过程记录：[[note.teamday-research-run-2026-07-15]]。
+
+回看 Lindy、Marblism、Motion/Wonderly 等产品谱系样本，本轮增加四个候选动作：
+
+- **商业 launch 与产品出生双时间线**：waitlist、首次公开工件、产品重包装、付费 self-serve 分别记节点。TeamDay 的 2026-07-13 是商业入口，不是产品首次存在。
+- **产品谱系三证合一**：创始人明确表述、法律/运营主体、产品工件连续性一起读。共享团队不等于 rename/acquisition，旧公司的融资和规模不自动迁移。
+- **流量意图审计**：除了 visits 和 channel share，固定检查 brand/non-brand、具体关键词和 similar-site 语义。SEO 访问可能来自模型词、竞品词或完全无关内容。
+- **公开口径漂移审计**：pricing、terms、data policy、security 与 marketing blog 按发布日期并排读。planned/ready/certified、credits/runs 等冲突本身要保留。
+
+TeamDay 同时出现“多阶段商业化、独立产品谱系、SEO 意图污染、政策版本漂移”四类问题，适合把这些动作放入后续同类调研的观察清单；仍不足以升级为所有公司统一模板。
+
 ## 2026-07-14 Skyfire 调研补充
 
 本轮对象：[[company.skyfire]]。过程记录：[[note.skyfire-research-run-2026-07-14]]；产品判断：[[note.skyfire-product-takeaway-2026-07-14]]。
