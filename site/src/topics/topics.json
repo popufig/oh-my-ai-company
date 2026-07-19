@@ -1,0 +1,205 @@
+[
+  {
+    "id": "ai-company-control-plane",
+    "slug": "ai-company-control-plane",
+    "updatedAt": "2026-07-19",
+    "language": "zh-CN",
+    "title": "AI 公司控制面：Agent 如何进入组织、运行工作并接受治理",
+    "htmlTitle": "AI 公司控制面：9 家产品如何管理 Agent 工作与治理 | OMAC",
+    "description": "比较 Paperclip、Cofounder、TeamDay、Pancake、Polsia、NanoCorp、Ema、Relevance AI 与 Evose：它们如何组织 Agent、定义任务、控制运行时、权限审批、成本与评测，以及证据真正支持到哪一步。",
+    "intent": {
+      "primary": ["AI 公司控制面", "AI agent control plane", "AI company OS"],
+      "secondary": ["Agent governance", "AI 员工平台比较", "Agent 任务审批", "Agent 成本与评测"],
+      "excludes": "九家公司各自品牌与主体研究意图仍由 company canonical 承接。"
+    },
+    "promise": "不按功能数量给产品排座次，而是比较 Agent 进入组织后由谁保存状态、如何接任务、在哪里运行、谁能批准副作用、成本怎样被限制、失败怎样被观察与纠正，以及公开证据究竟支持到哪一步。",
+    "introduction": "当 Agent 从聊天窗口进入真实组织，难题就不再只是模型能力。组织需要决定它拥有什么身份和上下文、接受什么工作合同、调用哪个运行环境、能否发邮件或付款、何时必须请求人类批准、成本何时停止，以及失败如何进入审计与改进。我们把管理这些边界的产品层称为“AI 公司控制面”。",
+    "judgments": [
+      "控制面不是单一品类，而是从组织协作、公司自治到企业生命周期治理的连续谱。",
+      "有任务列表不等于有执行合同；能看运行数据不等于有审计或质量评测；客户在生产使用也不能证明每项治理能力都有效。",
+      "当前最成熟的产品证据分散在不同公司：Paperclip 的 work container、Polsia 与 NanoCorp 的公开运行反馈、Relevance AI 的 eval design 与客户侧生产采用，各自只证明控制面的一个部分。",
+      "人类没有从系统中消失，而是从执行者转向目标设定、权限授予、例外处理、审批、结果验收和责任承担者。"
+    ],
+    "dimensions": [
+      { "id": "control_objects", "label": "控制对象", "question": "系统管理公司、角色、目标、项目、任务、Agent、工具、工作流还是外部账户？" },
+      { "id": "context_state", "label": "上下文与组织状态", "question": "哪些 durable state 被保存，semantic context 是否可追踪或版本化？" },
+      { "id": "work_contract", "label": "工作合同", "question": "是否定义 owner、dependency、accepted outcome、retry、compensation、review 与 approval？" },
+      { "id": "runtime", "label": "执行环境", "question": "运行在自有 sandbox、外部 harness adapter、browser，还是 API/MCP connector？" },
+      { "id": "governance", "label": "权限与责任", "question": "RBAC、action policy、human approval、escalation 与 rollback 如何落地？" },
+      { "id": "economics", "label": "成本治理", "question": "是否支持 metering、budget hard stop、cost attribution 与 outcome economics？" },
+      { "id": "feedback", "label": "反馈闭环", "question": "observability、audit 与 eval 各自做到哪一步，是否被错误合成一个分数？" },
+      { "id": "adoption", "label": "采用证据", "question": "证据来自开源分发、公开经营数据、付费计数、供应商案例还是客户侧生产？" }
+    ],
+    "paths": [
+      {
+        "id": "organization-work",
+        "title": "组织与工作控制面",
+        "description": "把 Agent 当作组织成员，把公司目标、角色、任务、状态和审批放进统一工作系统。重点不是 Agent 会做什么，而是谁拥有工作、工作处于什么状态、如何交接和验收。",
+        "companyIDs": ["company.paperclip", "company.cofounder", "company.teamday"]
+      },
+      {
+        "id": "autonomous-operations",
+        "title": "公司自治运行层",
+        "description": "把产品、获客、邮件、广告、支付和支持等公司动作交给持续运行的 Agent 系统。它覆盖 existing-company operating layer 到 autonomous company factory 的连续谱，风险随外部副作用和平台托管范围一起上升。",
+        "companyIDs": ["company.pancake", "company.polsia", "company.nanocorp"]
+      },
+      {
+        "id": "enterprise-lifecycle",
+        "title": "企业 Agent 生命周期",
+        "description": "围绕企业 Agent 的构建、连接、部署、观测、评测、变更和治理建立平台；买方更接近企业 AI、IT、安全和业务运营团队。",
+        "companyIDs": ["company.ema", "company.relevance-ai", "company.evose"]
+      }
+    ],
+    "companies": [
+      {
+        "id": "company.paperclip",
+        "pathID": "organization-work",
+        "dimensions": {
+          "control_objects": { "grade": "A", "summary": "Company、Mission、Goal、Project、组织图、Agent、Issue、预算、审批、heartbeat、routine 与 audit 构成完整对象模型。", "evidenceIDs": ["source.paperclip.readme", "source.paperclip.homepage"], "boundary": "对象模型完整不等于生产治理有效。" },
+          "context_state": { "grade": "A-", "summary": "组织结构、职责、workspace 与 Issue 构成 durable state；本地 no-model smoke 复现 dashboard、任务、spend、approval 与 activity。", "evidenceIDs": ["source.paperclip.local-product-smoke", "source.paperclip.readme"], "boundary": "未运行真实模型或多人生产协作。" },
+          "work_contract": { "grade": "A-/B+", "summary": "Issue 的 owner、status、dependency、reviewer 与 approver 是当前最强 work container。", "evidenceIDs": ["source.paperclip.readme", "source.paperclip.docs-approvals"], "boundary": "缺 accepted outcome、补偿或回滚和真实协作验收。" },
+          "runtime": { "grade": "B+", "summary": "adapter、workspace、heartbeat 和 model-agnostic runtime contract 已实现。", "evidenceIDs": ["source.paperclip.docs-adapters", "source.paperclip.docs-routines", "source.paperclip.local-product-smoke"], "boundary": "smoke 仅 process dummy，未验证付费模型、复杂 workspace 或生产权限。" },
+          "governance": { "grade": "B", "summary": "approval、review 与 execution policy 有文档和 UI。", "evidenceIDs": ["source.paperclip.docs-approvals", "source.paperclip.docs-trust", "source.paperclip.github-secret-leak", "source.paperclip.linuxdo-human-bottleneck"], "boundary": "Issue 循环、secret leak 与人类瓶颈仍是反证。" },
+          "economics": { "grade": "B-/C+", "summary": "cost tracking 与 budget hard-stop 是核心设计。", "evidenceIDs": ["source.paperclip.docs-costs", "source.paperclip.github-budget-subscription", "source.paperclip.github-hermes-cost", "source.paperclip.github-heartbeat-cost", "source.paperclip.github-cost-blowup"], "boundary": "subscription 或 Hermes 成本不上报、heartbeat 空转与 cost blowup 会使限制失效。" },
+          "feedback": { "grade": "B / B- / C", "summary": "activity、cost、approval 和审计可见。", "evidenceIDs": ["source.paperclip.local-product-smoke", "source.paperclip.docs-trust"], "boundary": "无业务质量 eval、rollback 和生产成功率。", "breakdown": { "observability": "B", "audit": "B-", "eval": "C" } },
+          "adoption": { "grade": "B-/C+", "summary": "约 73.7k GitHub stars、第三方流量和社区安装证明兴趣与分发。", "evidenceIDs": ["source.paperclip.github-repo", "source.paperclip.similarweb-2026-h1", "source.paperclip.linuxdo-experience"], "boundary": "不等于部署、活跃、留存、商业客户或生产协作质量。", "evidenceType": "open_source_distribution" }
+        }
+      },
+      {
+        "id": "company.cofounder",
+        "pathID": "organization-work",
+        "dimensions": {
+          "control_objects": { "grade": "B", "summary": "Company、Canvas、Roadmap、Tasks、Departments、Agents 与 Integrations 覆盖早期公司经营。", "evidenceIDs": ["source.cofounder.docs-full-2026-07-15", "source.cofounder.homepage-2026-07-15"], "boundary": "覆盖面来自官方产品与文档。" },
+          "context_state": { "grade": "B", "summary": "共享 company context、部门与专业 Agent 明确。", "evidenceIDs": ["source.cofounder.docs-full-2026-07-15"], "boundary": "公开运行状态复现有限。" },
+          "work_contract": { "grade": "B", "summary": "Roadmap 与 Tasks 提供工作容器。", "evidenceIDs": ["source.cofounder.docs-full-2026-07-15"], "boundary": "owner、dependency、retry 与 accepted-outcome 契约弱于 Paperclip。" },
+          "runtime": { "grade": "B-", "summary": "托管基础设施与多系统集成承担执行。", "evidenceIDs": ["source.cofounder.docs-full-2026-07-15"], "boundary": "缺独立任务执行和失败恢复验证。" },
+          "governance": { "grade": "C+", "summary": "产品强调 approval，但 Terms 允许 standing authorization。", "evidenceIDs": ["source.cofounder.homepage-2026-07-15", "source.cofounder.terms-2026-07-15"], "boundary": "逐次审批、撤销、rollback 和 audit 未验证。" },
+          "economics": { "grade": "C+", "summary": "usage、pricing 与 managed services 可见。", "evidenceIDs": ["source.cofounder.pricing-2026-07-15"], "boundary": "计费可见不等于预算控制或 outcome economics。" },
+          "feedback": { "grade": "C+ / C / C", "summary": "公开材料没有证明细粒度执行审计与质量闭环。", "evidenceIDs": ["source.cofounder.docs-full-2026-07-15"], "boundary": "当前只能确认产品设计表述。", "breakdown": { "observability": "C+", "audit": "C", "eval": "C" } },
+          "adoption": { "grade": "C+", "summary": "官方 company 与 agent counters 及案例存在。", "evidenceIDs": ["source.cofounder.homepage-2026-07-15", "source.cofounder.activegraph-case-2026-07-15", "source.cofounder.veery-case-2026-07-15"], "boundary": "counter 定义不明；ActiveGraph 有投资人关联，Veery 属补贴 Fellowship cohort。", "evidenceType": "vendor_counter_and_biased_cases" }
+        }
+      },
+      {
+        "id": "company.teamday",
+        "pathID": "organization-work",
+        "dimensions": {
+          "control_objects": { "grade": "B", "summary": "company memory、files、missions、team、approval、MCP、browser-terminal 与 app builder 较完整。", "evidenceIDs": ["source.teamday.homepage-2026-07-15", "source.teamday.features-2026-07-15", "source.teamday.docs-2026-07-15"], "boundary": "当前主要由产品材料支撑。" },
+          "context_state": { "grade": "B-", "summary": "company memory、files、feed 与 durable missions 是产品核心。", "evidenceIDs": ["source.teamday.features-2026-07-15", "source.teamday.how-it-works-2026-07-15"], "boundary": "账号内持久状态未验证。" },
+          "work_contract": { "grade": "B-", "summary": "mission、work run 与 approval 提供重复任务容器。", "evidenceIDs": ["source.teamday.docs-2026-07-15", "source.teamday.pricing-2026-07-15"], "boundary": "work run 不等于 accepted outcome。" },
+          "runtime": { "grade": "B-", "summary": "支持可替换 Claude Code、Codex、Gemini CLI 等 harness 及 browser、terminal。", "evidenceIDs": ["source.teamday.docs-2026-07-15", "source.teamday.github-2026-07-15", "source.teamday.signup-smoke-2026-07-15"], "boundary": "本轮只有未登录 smoke。" },
+          "governance": { "grade": "B-/C+", "summary": "Human-and-AI Feed 强调 review 与 approval。", "evidenceIDs": ["source.teamday.features-2026-07-15"], "boundary": "权限层级、rollback 与失败升级未复现。" },
+          "economics": { "grade": "C+/B-", "summary": "workspace、work runs、computer minutes 与 provider cost 的计量对象清楚。", "evidenceIDs": ["source.teamday.pricing-2026-07-15", "source.teamday.terms-2026-07-15"], "boundary": "条款与现价有冲突，失败重试和结果没有对齐。" },
+          "feedback": { "grade": "C+ / C / C", "summary": "feed 与 operating receipt 可见。", "evidenceIDs": ["source.teamday.app-builder-2026-07-15", "source.teamday.security-2026-07-15", "source.teamday.soc2-blog-2026-07-15"], "boundary": "receipt 不是客户采用，SOC 2 状态冲突。", "breakdown": { "observability": "C+", "audit": "C", "eval": "C" } },
+          "adoption": { "grade": "C", "summary": "paid self-serve 处于极早期。", "evidenceIDs": ["source.teamday.paid-launch-2026-07-13", "source.teamday.app-builder-2026-07-15"], "boundary": "无独立客户结果或留存。", "evidenceType": "vendor_receipt_early_launch" }
+        }
+      },
+      {
+        "id": "company.pancake",
+        "pathID": "autonomous-operations",
+        "dimensions": {
+          "control_objects": { "grade": "B-", "summary": "Slack coordination、company brain、squads 与独享 pod 管理目标、角色、记忆和工具。", "evidenceIDs": ["source.pancake.homepage-2026-07-15", "source.pancake.blog-autonomous-stack-2026-07-06"], "boundary": "对象语义主要由官方材料说明。" },
+          "context_state": { "grade": "B-", "summary": "持久 Agent profile、session、brief、feedback loop 与 company brain 是核心。", "evidenceIDs": ["source.pancake.blog-autonomous-stack-2026-07-06"], "boundary": "主要为官方材料。" },
+          "work_contract": { "grade": "B-", "summary": "standing workflows 与 squad 任务存在。", "evidenceIDs": ["source.pancake.homepage-2026-07-15"], "boundary": "缺明确 owner、dependency、review 与 accepted-outcome contract。" },
+          "runtime": { "grade": "B-", "summary": "OpenClaw、独享环境、browser、email、GitHub 与 Google Workspace 承担执行。", "evidenceIDs": ["source.pancake.blog-autonomous-stack-2026-07-06", "source.pancake.privacy-2026-07-15"], "boundary": "未独立复现真实执行。" },
+          "governance": { "grade": "C+", "summary": "强调渐进自治、人批准高风险动作与 escalation。", "evidenceIDs": ["source.x.francois-pancake-autonomy-2026-05-27", "source.pancake.homepage-2026-07-15"], "boundary": "action policy、standing 或逐次审批、rollback 与 audit 未验证。" },
+          "economics": { "grade": "B-", "summary": "token pack、credits 和团队内部成本 benchmark 可见。", "evidenceIDs": ["source.pancake.pricing-2026-07-15", "source.pancake.blog-autonomous-stack-2026-07-06"], "boundary": "内部 500–700 美元月成本不是客户平均账单。" },
+          "feedback": { "grade": "C+ / C / C", "summary": "Basalt reliability 经验可能迁移。", "evidenceIDs": ["source.pancake.roadmap-2026-07-15"], "boundary": "observability 仍属未证实继承，不能作为 shipped capability。", "breakdown": { "observability": "C+", "audit": "C", "eval": "C" } },
+          "adoption": { "grade": "C+", "summary": "600+ companies、50% beta daily 与约 30K MRR 是厂商口径。", "evidenceIDs": ["source.pancake.homepage-2026-07-15", "source.pancake.linkedin-launch-2026-05-27", "source.pancake.blog-autonomous-stack-2026-07-06"], "boundary": "三个厂商口径不能拼成漏斗。", "evidenceType": "vendor_claims" }
+        }
+      },
+      {
+        "id": "company.polsia",
+        "pathID": "autonomous-operations",
+        "dimensions": {
+          "control_objects": { "grade": "B+", "summary": "从 company shell 到产品、GTM、支持、支付、广告与 dashboard，控制范围最广。", "evidenceIDs": ["source.polsia.homepage-2026-07-15", "source.polsia.about-2026-07-15"], "boundary": "Company 与 Task schema 的治理语义不如 Paperclip 明确。" },
+          "context_state": { "grade": "B+", "summary": "任务、live feed、company state 与经营汇总持续公开。", "evidenceIDs": ["source.polsia.live-dashboard-2026-07-15", "source.polsia.public-dashboard-api-2026-07-15"], "boundary": "不能证明完整 context 或 memory contract。" },
+          "work_contract": { "grade": "B-", "summary": "每天自规划、任务队列和失败项真实存在。", "evidenceIDs": ["source.polsia.live-dashboard-2026-07-15", "source.gtmnow.ben-cera-polsia-2026-06-01"], "boundary": "completion、accepted outcome、retry 与 compensation 定义不足。" },
+          "runtime": { "grade": "A-", "summary": "代码、部署、数据库、邮件、广告与支付持续执行，并能观察成功和失败事件。", "evidenceIDs": ["source.polsia.live-dashboard-2026-07-15", "source.polsia.public-dashboard-api-2026-07-15"], "boundary": "基础设施强绑定，运行规模不等于结果质量。" },
+          "governance": { "grade": "C+", "summary": "Terms 允许广泛 electronic-agent 动作。", "evidenceIDs": ["source.polsia.terms-2026-06-19"], "boundary": "用户承担审核、合法性、费用和权限责任，细粒度闸门与 rollback 不透明。" },
+          "economics": { "grade": "A-/B+", "summary": "订阅、任务包、广告费、boost、域名、20% 分成和 AI cost 可观测。", "evidenceIDs": ["source.polsia.public-dashboard-api-2026-07-15", "source.gtmnow.ben-cera-polsia-2026-06-01"], "boundary": "8.53M 美元是 mixed run-rate；订阅年化约 5.07M 美元，不能合并为纯 SaaS ARR。" },
+          "feedback": { "grade": "A- / C+ / C", "summary": "实时 dashboard、feed 与失败状态很强。", "evidenceIDs": ["source.polsia.live-dashboard-2026-07-15", "source.polsia.public-dashboard-api-2026-07-15", "source.polsia.public-source-map-2026-07-15"], "boundary": "这不是完整审计或质量 eval，公开数据本身也有边界。", "breakdown": { "observability": "A-", "audit": "C+", "eval": "C" } },
+          "adoption": { "grade": "A-/B+", "summary": "9,449 paying、10,783 active、52.1% paid churn 等官方指标与具体社区样本并存。", "evidenceIDs": ["source.polsia.public-dashboard-api-2026-07-15", "source.reddit.polsia-agents-of-ai-2026-03-05", "source.reddit.polsia-cannot-recommend-2026-06-21"], "boundary": "定义不完整且非审计；约 4.8% created-to-active、任务循环、扣费与支持问题必须同屏。", "evidenceType": "public_operating_data_and_user_samples" }
+        }
+      },
+      {
+        "id": "company.nanocorp",
+        "pathID": "autonomous-operations",
+        "dimensions": {
+          "control_objects": { "grade": "B+", "summary": "AI CEO、worker、company shell、网站、代码、邮件、广告、支付与 recap 覆盖软件型公司闭环。", "evidenceIDs": ["source.nanocorp.docs-index-2026-07-15", "source.nanocorp.homepage-2026-07-15"], "boundary": "覆盖面不自动等于任务质量。" },
+          "context_state": { "grade": "B+", "summary": "mission、documents、files、task history、analytics 与 company aggregate 持续存在。", "evidenceIDs": ["source.nanocorp.docs-index-2026-07-15", "source.nanocorp.live-dashboard-2026-07-15"], "boundary": "数据导出、迁移和 self-host 受限。" },
+          "work_contract": { "grade": "B", "summary": "autonomy 档位、daily task cap、tool rate limit、retry_after 与 should_wait 构成强 execution contract。", "evidenceIDs": ["source.nanocorp.docs-faq-2026-07-15", "source.nanocorp.docs-rate-limits-2026-07-15"], "boundary": "缺 owner、dependency、reviewer 与 accepted outcome。" },
+          "runtime": { "grade": "A-", "summary": "托管 sandbox、Vercel、Postgres、browser、email 与 Stripe 等真实运行，并产生公开公司结果。", "evidenceIDs": ["source.nanocorp.docs-index-2026-07-15", "source.nanocorp.live-dashboard-2026-07-15"], "boundary": "一次仅一 task，不支持 self-host 或 BYO model。" },
+          "governance": { "grade": "B-/C+", "summary": "暂停、cap、rate limit 与 support escalation 已公开。", "evidenceIDs": ["source.nanocorp.docs-faq-2026-07-15", "source.nanocorp.docs-rate-limits-2026-07-15"], "boundary": "无逐动作 approval、独立 validator、细粒度角色权限与通用 rollback。" },
+          "economics": { "grade": "B+", "summary": "credits、autonomy cap、广告预算、20% 提现和退款规则清楚。", "evidenceIDs": ["source.nanocorp.docs-plans-2026-07-15", "source.nanocorp.docs-advertising-2026-07-15", "source.nanocorp.docs-withdrawals-2026-07-09", "source.linkedin.nanocorp-arr-claim-2026-06"], "boundary": "平台 1M 美元 subscription ARR 仅为创始人自报。" },
+          "feedback": { "grade": "A-/B+ / C+ / B-", "summary": "production traces 进入 harness 改进，并公开 failure、recovery 与 cost 数据。", "evidenceIDs": ["source.nanocorp.nano-1-5-2026-05-21", "source.nanocorp.live-dashboard-2026-07-15"], "boundary": "无样本量、accepted-outcome benchmark 或通用审计。", "breakdown": { "observability": "A-/B+", "audit": "C+", "eval": "B-" } },
+          "adoption": { "grade": "B+", "summary": "29,108 created、28,266 live、197 earning，earning/created 约 0.68%。", "evidenceIDs": ["source.nanocorp.live-dashboard-2026-07-15", "source.linkedin.nanocorp-user-colin-2026", "source.linkedin.nanocorp-user-evann-2026", "source.linkedin.nanocorp-ambassador-2026-05", "source.nanocorp.competition-2026-07-10"], "boundary": "earning 定义与留存未知；Ambassador 和 competition 是补贴 cohort，平台 ARR 与用户公司约 11K 美元收入必须分账。", "evidenceType": "public_funnel_and_named_samples" }
+        }
+      },
+      {
+        "id": "company.ema",
+        "pathID": "enterprise-lifecycle",
+        "dimensions": {
+          "control_objects": { "grade": "B+", "summary": "AI Employee mesh、workflow、connector/MCP、browser、Context Graph 与 Autopilot 覆盖 build 到 deploy、monitor、maintain 与 evolve。", "evidenceIDs": ["source.ema.ai-employees-docs", "source.ema.autopilot-2026-04-29"], "boundary": "覆盖面主要由产品与文档支撑。" },
+          "context_state": { "grade": "B+", "summary": "Enterprise Context Graph 映射组织术语、政策、流程和运行反馈。", "evidenceIDs": ["source.ema.autopilot-2026-04-29"], "boundary": "是强产品主张，但缺独立技术验证。" },
+          "work_contract": { "grade": "B+", "summary": "workflow、审批规则、queue、widget 与多渠道交付明确。", "evidenceIDs": ["source.ema.ai-employees-docs", "source.ema.intelligent-actions"], "boundary": "跨系统异常、accepted outcome 与 rollback 需逐案验证。" },
+          "runtime": { "grade": "B+", "summary": "API/MCP 与 App Navigator 双轨，并已有大型企业生产采用。", "evidenceIDs": ["source.ema.intelligent-actions", "source.ema.app-navigator", "source.linkedin.artico-ema-customer-2026"], "boundary": "客户采用不直接验证 browser success、recovery、验证码、页面漂移或所有 connector。" },
+          "governance": { "grade": "B+", "summary": "HITL、OAuth scopes、审批和多部署模式进入工作流。", "evidenceIDs": ["source.ema.intelligent-actions", "source.ema.security-docs", "source.ema.ams-case-2026-06-17"], "boundary": "多为供应商文档或案例，不能替代客户审计。" },
+          "economics": { "grade": "B", "summary": "EmaFusion 以准确率、成本和延迟做模型路由。", "evidenceIDs": ["source.ema.funding-2024-07", "source.ema.autopilot-2026-04-29"], "boundary": "缺合同、unit economics 和任务级预算成效。" },
+          "feedback": { "grade": "B / B / B", "summary": "audit、usage、accuracy、latency、feedback、version 与 Autopilot 测试、漂移、影响分析完整。", "evidenceIDs": ["source.ema.ai-employees-docs", "source.ema.autopilot-2026-04-29"], "boundary": "500 deployments 等为官方口径，缺长期失败率、回滚与维护效果。", "breakdown": { "observability": "B", "audit": "B", "eval": "B" } },
+          "adoption": { "grade": "A-", "summary": "Artico CEO 确认两年合作并从 sandbox 进入 enterprise-wide production；Hitachi 与 AMS 提供规模和实施结构。", "evidenceIDs": ["source.linkedin.artico-ema-customer-2026", "source.ema.hitachi-case-2025-07-07", "source.ema.ams-case-2026-06-17"], "boundary": "Hitachi 与 AMS ROI 为供应商案例，不能估算 ARR、留存、活跃 Agent 或成功率。", "evidenceType": "customer_side_enterprise_production" }
+        }
+      },
+      {
+        "id": "company.relevance-ai",
+        "pathID": "enterprise-lifecycle",
+        "dimensions": {
+          "control_objects": { "grade": "A-/B+", "summary": "Agent team、tools/MCP、runtime/queue、eval、router、trace、governance 与 embedded deployment 六层完整。", "evidenceIDs": ["source.relevance-ai.homepage", "source.relevance-ai.docs-tasks", "source.relevance-ai.docs-evals"], "boundary": "完整设计不等于所有层都被独立验证。" },
+          "context_state": { "grade": "B+", "summary": "dataset、knowledge、workforce、credentials 与 version 构成企业执行状态。", "evidenceIDs": ["source.relevance-ai.homepage", "source.relevance-ai.docs-otel"], "boundary": "组织语义 context graph 不如 Ema 明确。" },
+          "work_contract": { "grade": "B+", "summary": "Tasks 分 Approvals、Escalated 与 Errors，edge 有 auto、approval、agent-decides，并支持从失败步骤重跑。", "evidenceIDs": ["source.relevance-ai.docs-tasks", "source.relevance-ai.docs-approvals"], "boundary": "exactly-once、compensation 与 accepted outcome 未验证。" },
+          "runtime": { "grade": "A-", "summary": "长任务、队列和并发限制已文档化，并有客户侧生产采用。", "evidenceIDs": ["source.relevance-ai.docs-limits", "source.linkedin.send-payments-governance-2026"], "boundary": "客户采用不证明所有 runtime contract。" },
+          "governance": { "grade": "B+", "summary": "人工审批、自动次数限制、escalation 和客户 Governance Committee 均有证据。", "evidenceIDs": ["source.relevance-ai.docs-approvals", "source.relevance-ai.docs-tasks", "source.linkedin.send-payments-governance-2026", "source.relevance-ai.docs-security"], "boundary": "Let Agent Decide 是非确定性 policy，安全拦截有明确边界。" },
+          "economics": { "grade": "B+", "summary": "actions、vendor credits、analytics 与 router 可做成本可见和归因。", "evidenceIDs": ["source.relevance-ai.docs-pricing", "source.relevance-ai.docs-analytics"], "boundary": "企业合同、预算预测和 outcome economics 未公开。" },
+          "feedback": { "grade": "B+ / B / B+", "summary": "Test、Runs、Checks、Publish、Monitor、阈值、live sampling 与 OTEL 是当前最完整 shipped design。", "evidenceIDs": ["source.relevance-ai.docs-evals", "source.relevance-ai.docs-analytics", "source.relevance-ai.docs-otel"], "boundary": "false pass、业务语义、rollback 与客户级 benchmark 缺失。", "breakdown": { "observability": "B+", "audit": "B", "eval": "B+" } },
+          "adoption": { "grade": "A-", "summary": "Send Payments 客户侧治理和生产确认最强，Qualified 与 Zembl 案例具体。", "evidenceIDs": ["source.linkedin.send-payments-governance-2026", "source.linkedin.send-payments-metrics-2026", "source.relevance-ai.qualified-case", "source.relevance-ai.zembl-case"], "boundary": "客户整体组织提升不能全部归因于 Relevance AI；续约、NRR 与任务成功率未知。", "evidenceType": "customer_side_production_and_supplier_cases" }
+        }
+      },
+      {
+        "id": "company.evose",
+        "pathID": "enterprise-lifecycle",
+        "dimensions": {
+          "control_objects": { "grade": "B", "summary": "Organization、Workspace、Workbench 分离供应、组装与消费，覆盖 Agent、Workflow、knowledge、model、tool 与 people。", "evidenceIDs": ["source.evose.docs-architecture", "source.evose.homepage"], "boundary": "当前主要由官方架构材料支撑。" },
+          "context_state": { "grade": "B", "summary": "Workspace、Library、会话分支、Schedule、知识与组织资源模型清楚。", "evidenceIDs": ["source.evose.docs-architecture", "source.evose.docs-channels"], "boundary": "账号内状态未验证。" },
+          "work_contract": { "grade": "B-", "summary": "Workflow、Agent、Schedule 与 HITL 可表达工作。", "evidenceIDs": ["source.evose.docs-architecture", "source.evose.docs-channels"], "boundary": "owner、dependency 与 accepted outcome 不突出。" },
+          "runtime": { "grade": "C+/B-", "summary": "低代码流程、MCP/HTTP、debug trace、热更新与 rollback 文档完整。", "evidenceIDs": ["source.evose.docs-architecture", "source.evose.docs-api", "source.evose.api-smoke", "source.evose.app-smoke"], "boundary": "API、SDK 与 app 的公开可复现状态有冲突。" },
+          "governance": { "grade": "C+/B-", "summary": "RBAC、ACL、凭据、资源策略和 HITL 有设计。", "evidenceIDs": ["source.evose.docs-security", "source.evose.docs-architecture"], "boundary": "真实多用户权限、审计和采购级状态未验证。" },
+          "economics": { "grade": "C+", "summary": "credits 与模型、工具成本归因和套餐清楚。", "evidenceIDs": ["source.evose.pricing", "source.evose.docs-observability"], "boundary": "告警仍属 future support，私有化计费边界不清。" },
+          "feedback": { "grade": "C+/B- / C+ / C", "summary": "Logs、Metrics、Traces 与保留期有官方文档。", "evidenceIDs": ["source.evose.docs-observability", "source.evose.docs-security", "source.evose.homepage"], "boundary": "演示数字不是采用数据，SOC 2、告警与 shipped state 存在冲突。", "breakdown": { "observability": "C+/B-", "audit": "C+", "eval": "C" } },
+          "adoption": { "grade": "C", "summary": "5000+、99.9%、99ms、15+ 数据中心和未具名企业均为自报。", "evidenceIDs": ["source.evose.homepage", "source.evose.bingo-finance-client", "source.evose.bingo-superai"], "boundary": "无具名客户、活跃或付费、留存、社区或流量验证。", "evidenceType": "unverified_vendor_claims" }
+        }
+      }
+    ],
+    "boundaryReferences": [
+      { "id": "company.raft", "summary": "协作入口与 Agent Experience：workspace 或 communication layer 与公司控制面有关，但并不等同于完整组织治理。" },
+      { "id": "company.kylon", "summary": "Gateway、Proxy 与身份归因：runtime access/control 是基础层，不等于完整组织工作面。" },
+      { "id": "company.lindy", "summary": "assistant-first packaging 与独立 Validator：单一成品入口可以拥有关键治理组件，但不等于公司级控制面。" },
+      { "id": "company.11x", "summary": "垂直 GTM 执行系统：业务垂直 control plane 与通用公司治理服务不同意图。" },
+      { "id": "company.newcore", "summary": "身份与授权控制面：agent identity 与 task-scoped token 是治理基础层，但不负责完整工作编排。" }
+    ],
+    "conceptIDs": ["concept.agent-company-control-plane", "concept.agent-lifecycle-control-plane"],
+    "methodID": "method.product-research-workflow-v0",
+    "featuredObjectIDs": ["concept.agent-company-control-plane", "concept.agent-lifecycle-control-plane", "company.paperclip", "company.polsia", "company.relevance-ai"],
+    "selectionGuidance": [
+      "想管理 Agent 的组织角色与工作：先看 Paperclip、TeamDay 与 Cofounder。",
+      "想让 Agent 直接经营软件型公司：看 Polsia、NanoCorp；Pancake 更偏现有公司运营。",
+      "想在大型企业部署并治理 Agent：看 Ema、Relevance AI 与 Evose。",
+      "所有选择都应追问 accepted outcome、rollback、成本 hard stop、权限范围和客户侧证据。"
+    ],
+    "homepage": {
+      "zhLabel": "AI 公司控制面",
+      "zhTitle": "Agent 如何进入组织、运行工作并接受治理",
+      "zhSummary": "比较九家公司如何保存组织状态、定义工作、控制权限与成本，并区分真实运行、客户采用和厂商自报。",
+      "enLabel": "AI company control planes"
+    },
+    "ogAsset": null
+  }
+]

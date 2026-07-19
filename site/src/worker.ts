@@ -24,6 +24,9 @@ import {
   type SEOObject,
   type SEORelation
 } from "./seo";
+import { expectedTopicObjectType, topicBySlug, topicDefinitions, topicPath, topicReferencedIDs } from "./topics/topic-definitions";
+import { topicCollectionSEOBody, topicCollectionStructuredData, topicSEOBody, topicStructuredData } from "./topics/topic-seo";
+import type { ResolvedTopic, ResolvedTopicObject, TopicDefinition } from "./topics/topic-types";
 
 interface Env {
   DB: D1Database;
@@ -597,6 +600,55 @@ async function getSEOObject(id: string, env: Env) {
   `).bind(id).first<SEOObject>();
 }
 
+async function resolveTopic(topic: TopicDefinition, env: Env): Promise<ResolvedTopic> {
+  const ids = topicReferencedIDs(topic);
+  const rows: SEOObject[] = [];
+  for (let offset = 0; offset < ids.length; offset += 80) {
+    const batch = ids.slice(offset, offset + 80);
+    const placeholders = batch.map(() => "?").join(",");
+    const result = await env.DB.prepare(`
+      SELECT id, type_id, title, body, body_html, body_path, fields_json, created_at, updated_at
+      FROM objects WHERE id IN (${placeholders})
+    `).bind(...batch).all<SEOObject>();
+    rows.push(...(result.results || []));
+  }
+  const rowByID = new Map(rows.map((row) => [row.id, row]));
+  const missing = ids.filter((id) => !rowByID.has(id));
+  if (missing.length > 0) throw new Error(`topic ${topic.id} references missing objects: ${missing.join(", ")}`);
+
+  const objects: Record<string, ResolvedTopicObject> = {};
+  for (const id of ids) {
+    const row = rowByID.get(id)!;
+    const expectedType = expectedTopicObjectType(topic, id);
+    if (expectedType && row.type_id !== expectedType) {
+      throw new Error(`topic ${topic.id} expects ${id} to be ${expectedType}, got ${row.type_id}`);
+    }
+    objects[id] = {
+      id,
+      type: row.type_id,
+      title: row.title || row.id,
+      canonical: objectPath(row),
+      updatedAt: row.updated_at,
+      indexable: isObjectIndexable(row)
+    };
+  }
+  return { definition: topic, objects };
+}
+
+function topicListPayload() {
+  return {
+    topics: topicDefinitions.map((topic) => ({
+      id: topic.id,
+      slug: topic.slug,
+      title: topic.title,
+      description: topic.description,
+      updatedAt: topic.updatedAt,
+      companyCount: topic.companies.length,
+      canonical: topicPath(topic.slug)
+    }))
+  };
+}
+
 async function getSEOCollection(type: string, env: Env) {
   const rows = await env.DB.prepare(`
     SELECT id, type_id, title, body, body_html, body_path, fields_json, created_at, updated_at
@@ -675,15 +727,23 @@ async function serveSitemap(request: Request, env: Env) {
   const url = new URL(request.url);
   if (url.pathname === "/sitemap.xml") {
     const entries = ["pages", ...seoConfig.indexing.collection_types.map((type) => routeForType(type)?.collection).filter(Boolean)];
-    const body = entries.map((name) => `<sitemap><loc>${escapeXML(absoluteURL(`/sitemaps/${name}.xml`))}</loc></sitemap>`).join("");
+    const body = [
+      ...entries.map((name) => absoluteURL(`/sitemaps/${name}.xml`)),
+      absoluteURL("/topics.xml")
+    ].map((location) => `<sitemap><loc>${escapeXML(location)}</loc></sitemap>`).join("");
     return xmlResponse(request, `<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${body}</sitemapindex>`);
+  }
+
+  if (url.pathname === "/topics.xml") {
+    const values = topicDefinitions.map((topic) => `<url><loc>${escapeXML(absoluteURL(topicPath(topic.slug)))}</loc><lastmod>${escapeXML(topic.updatedAt)}</lastmod></url>`).join("");
+    return xmlResponse(request, `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${values}</urlset>`);
   }
 
   const match = url.pathname.match(/^\/sitemaps\/([^/]+)\.xml$/);
   if (!match) return null;
   const name = match[1];
   if (name === "pages") {
-    const paths = ["/", ...seoConfig.indexing.collection_types.flatMap((type) => {
+    const paths = ["/", "/topics", ...seoConfig.indexing.collection_types.flatMap((type) => {
       const route = routeForType(type);
       return route ? [`/${route.collection}`] : [];
     })];
@@ -785,7 +845,49 @@ async function serveSEOPage(request: Request, env: Env) {
     });
   }
 
+  if (url.pathname === "/topics" || url.pathname === "/topics/") {
+    return htmlPage(request, env, {
+      shell: "",
+      title: `研究专题：跨公司比较与证据边界 | ${seoConfig.site.short_name}`,
+      description: "浏览 Oh My AI Company 的跨公司研究专题；每个专题保留比较框架、证据等级、边界与可追溯对象链接。",
+      canonicalPath: "/topics",
+      body: topicCollectionSEOBody(topicDefinitions),
+      indexable: url.searchParams.size === 0,
+      lang: "zh-CN",
+      structuredData: topicCollectionStructuredData(topicDefinitions)
+    });
+  }
+
   const parts = url.pathname.split("/").filter(Boolean);
+  if (parts.length === 2 && parts[0] === "topics") {
+    let slug = "";
+    try { slug = decodeURIComponent(parts[1]); } catch { slug = ""; }
+    const topic = topicBySlug.get(slug);
+    if (topic) {
+      const resolved = await resolveTopic(topic, env);
+      return htmlPage(request, env, {
+        shell: "",
+        title: topic.htmlTitle,
+        description: topic.description,
+        canonicalPath: topicPath(topic.slug),
+        body: topicSEOBody(resolved),
+        indexable: url.searchParams.size === 0,
+        lang: topic.language,
+        image: topic.ogAsset ? absoluteURL(`/media/${topic.ogAsset}`) : absoluteURL(seoConfig.site.default_image),
+        type: "website",
+        structuredData: topicStructuredData(resolved)
+      });
+    }
+    return htmlPage(request, env, {
+      shell: "",
+      title: `专题不存在 | ${seoConfig.site.name}`,
+      description: "This URL does not match a published research topic.",
+      canonicalPath: url.pathname,
+      body: notFoundSEOBody(),
+      indexable: false,
+      lang: "zh-CN"
+    }, 404);
+  }
   if (parts.length === 1) {
     const route = routeForCollection(parts[0]);
     if (!route) return null;
@@ -917,6 +1019,15 @@ async function api(request: Request, env: Env) {
   if (url.pathname === "/api/meta") {
     return json(await metadata(env), { headers: { "cache-control": "public, max-age=60" } });
   }
+  if (url.pathname === "/api/topics") {
+    return json(topicListPayload(), { headers: { "cache-control": "public, max-age=300" } });
+  }
+  if (url.pathname.startsWith("/api/topics/")) {
+    const slug = decodeURIComponent(url.pathname.slice("/api/topics/".length));
+    const topic = topicBySlug.get(slug);
+    if (!topic) return json({ error: "topic not found" }, { status: 404 });
+    return json(await resolveTopic(topic, env), { headers: { "cache-control": "public, max-age=300" } });
+  }
   if (url.pathname === "/api/types") {
     return json(await listTypes(env), { headers: { "cache-control": "public, max-age=300" } });
   }
@@ -948,7 +1059,7 @@ export default {
       if (url.pathname === "/favicon.ico") {
         return Response.redirect(new URL("/favicon.svg", url.origin).toString(), 301);
       }
-      if (url.pathname === "/sitemap.xml" || url.pathname.startsWith("/sitemaps/")) {
+      if (url.pathname === "/sitemap.xml" || url.pathname === "/topics.xml" || url.pathname.startsWith("/sitemaps/")) {
         const sitemap = await serveSitemap(request, env);
         if (sitemap) return sitemap;
       }

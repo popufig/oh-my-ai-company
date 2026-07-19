@@ -88,6 +88,50 @@ const collection = await read("/companies");
 assert(collection.response.status === 200, `collection: expected 200, got ${collection.response.status}`);
 includesAll(collection.body, ["<h1>Companies</h1>", 'href="/companies/kernel"', '"@type":"CollectionPage"'], "collection");
 
+const topics = await read("/topics");
+assert(topics.response.status === 200, `topics: expected 200, got ${topics.response.status}`);
+assert(topics.response.headers.get("x-robots-tag") === "index, follow", "topics: expected index header");
+includesAll(topics.body, [
+  "<h1>研究专题</h1>",
+  'href="/topics/ai-company-control-plane"',
+  '"@type":"CollectionPage"',
+  '<link rel="canonical" href="https://companies.yan5xu.ai/topics">'
+], "topics");
+
+const topic = await read("/topics/ai-company-control-plane");
+assert(topic.response.status === 200, `topic: expected 200, got ${topic.response.status}`);
+assert(topic.response.headers.get("x-robots-tag") === "index, follow", "topic: expected index header");
+includesAll(topic.body, [
+  "<title>AI 公司控制面：9 家产品如何管理 Agent 工作与治理 | OMAC</title>",
+  '<link rel="canonical" href="https://companies.yan5xu.ai/topics/ai-company-control-plane">',
+  '<html lang="zh-CN">',
+  "AI 公司控制面：Agent 如何进入组织、运行工作并接受治理",
+  'href="/companies/paperclip"',
+  'href="/companies/relevance-ai"',
+  'href="/sources/paperclip.readme"',
+  '"@type":"WebPage"',
+  '"@type":"BreadcrumbList"',
+  '"@type":"ItemList"'
+], "topic");
+assert((topic.body.match(/<h1\b/gi) || []).length === 1, "topic: expected exactly one H1");
+assert(!topic.body.includes('"@type":"Organization"'), "topic: must not describe the nine companies as one Organization");
+
+const topicQuery = await read("/topics/ai-company-control-plane?path=enterprise-lifecycle");
+assert(topicQuery.response.status === 200, "topic query: expected 200");
+assert(topicQuery.response.headers.get("x-robots-tag") === "noindex, follow", "topic query: expected noindex header");
+includesAll(topicQuery.body, ['<link rel="canonical" href="https://companies.yan5xu.ai/topics/ai-company-control-plane">'], "topic query");
+
+const topicAPI = await read("/api/topics/ai-company-control-plane");
+assert(topicAPI.response.status === 200, `topic API: expected 200, got ${topicAPI.response.status}`);
+const topicPayload = JSON.parse(topicAPI.body);
+assert(topicPayload.definition.companies.length === 9, "topic API: expected nine companies");
+assert(Object.keys(topicPayload.objects).length >= 100, "topic API: expected resolved evidence objects");
+assert(topicPayload.objects["company.paperclip"].canonical === "/companies/paperclip", "topic API: company canonical mismatch");
+
+const missingTopic = await read("/topics/not-a-topic");
+assert(missingTopic.response.status === 404, `missing topic: expected 404, got ${missingTopic.response.status}`);
+assert(missingTopic.response.headers.get("x-robots-tag") === "noindex, follow", "missing topic: expected noindex header");
+
 const graph = await read("/graph");
 assert(graph.response.status === 200, `graph: expected 200, got ${graph.response.status}`);
 includesAll(graph.body, ['<meta name="robots" content="noindex,follow">', "Interactive graph workspace"], "graph");
@@ -109,7 +153,11 @@ includesAll(missing.body, ["Research object not found", '<meta name="robots" con
 const sitemap = await read("/sitemap.xml");
 assert(sitemap.response.status === 200, `sitemap: expected 200, got ${sitemap.response.status}`);
 assert(sitemap.response.headers.get("content-type")?.includes("application/xml"), "sitemap: expected XML content type");
-includesAll(sitemap.body, ["<sitemapindex", "/sitemaps/companies.xml", "/sitemaps/sources.xml"], "sitemap");
+includesAll(sitemap.body, ["<sitemapindex", "/sitemaps/companies.xml", "/sitemaps/sources.xml", "/topics.xml"], "sitemap");
+
+const topicsSitemap = await read("/topics.xml");
+assert(topicsSitemap.response.status === 200, "topics sitemap: expected 200");
+includesAll(topicsSitemap.body, ["<urlset", "https://companies.yan5xu.ai/topics/ai-company-control-plane", "<lastmod>2026-07-19</lastmod>"], "topics sitemap");
 
 const companiesSitemap = await read("/sitemaps/companies.xml");
 assert(companiesSitemap.response.status === 200, "company sitemap: expected 200");

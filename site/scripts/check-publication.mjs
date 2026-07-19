@@ -8,6 +8,7 @@ const vault = resolve(process.env.MEMEX_VAULT || "..");
 const sourceDB = resolve(vault, ".memex/memex.db");
 const manifest = JSON.parse(readFileSync(resolve("publish.manifest.json"), "utf8"));
 const seoConfig = JSON.parse(readFileSync(resolve("seo.config.json"), "utf8"));
+const topics = JSON.parse(readFileSync(resolve("src/topics/topics.json"), "utf8"));
 const assets = JSON.parse(readFileSync(resolve("generated/public-assets.json"), "utf8"));
 const indexNowManifest = JSON.parse(readFileSync(resolve("generated/indexnow-manifest.json"), "utf8"));
 let migrations = readdirSync(resolve("migrations"))
@@ -74,6 +75,33 @@ const sourceObjects = rows(sourceDB, "SELECT id,body_path FROM objects ORDER BY 
 const publishedObjects = rows(db, "SELECT id,body,body_html,fields_json FROM objects ORDER BY id");
 const publishedByID = new Map(publishedObjects.map((object) => [object.id, object]));
 const publicIDs = new Set(publishedObjects.map((object) => object.id));
+const publicTypeByID = new Map(rows(db, "SELECT id,type_id FROM objects").map((object) => [object.id, object.type_id]));
+
+function topicReferencedIDs(topic) {
+  const ids = new Set([
+    ...topic.companies.map((company) => company.id),
+    ...topic.boundaryReferences.map((reference) => reference.id),
+    ...topic.conceptIDs,
+    topic.methodID,
+    ...topic.featuredObjectIDs
+  ]);
+  for (const company of topic.companies) for (const cell of Object.values(company.dimensions)) for (const id of cell.evidenceIDs) ids.add(id);
+  return [...ids];
+}
+
+for (const topic of topics) {
+  assert(topic.id === topic.slug && /^\d{4}-\d{2}-\d{2}$/.test(topic.updatedAt), `invalid topic definition ${topic.id}`);
+  for (const id of topicReferencedIDs(topic)) {
+    assert(publicIDs.has(id), `topic ${topic.id} references missing object ${id}`);
+    const expected = topic.companies.some((company) => company.id === id) || topic.boundaryReferences.some((reference) => reference.id === id)
+      ? "company"
+      : topic.conceptIDs.includes(id) ? "concept" : topic.methodID === id ? "method" : id.startsWith("source.") ? "source.item" : null;
+    if (expected) assert(publicTypeByID.get(id) === expected, `topic ${topic.id} expects ${id} to be ${expected}`);
+  }
+  const topicURL = `https://companies.yan5xu.ai/topics/${encodeURIComponent(topic.slug)}`;
+  assert(indexNowManifest.entries.some((entry) => entry.url === topicURL), `topic ${topic.id} is missing from IndexNow manifest`);
+}
+assert(indexNowManifest.entries.some((entry) => entry.url === "https://companies.yan5xu.ai/topics"), "topics collection is missing from IndexNow manifest");
 
 for (const object of sourceObjects) {
   const published = publishedByID.get(object.id);
@@ -119,7 +147,7 @@ assert(Number(scalar(db, "SELECT value FROM metadata WHERE key='object_count'"))
 assert(Number(scalar(db, "SELECT value FROM metadata WHERE key='link_count'")) === sourceCounts.links, "link metadata count is wrong");
 const seoIndexableCount = Number(scalar(db, "SELECT value FROM metadata WHERE key='seo_indexable_count'"));
 assert(seoIndexableCount > 0 && seoIndexableCount <= sourceCounts.objects, "SEO indexable count is invalid");
-assert(indexNowManifest.entries.length === seoIndexableCount + 1 + seoConfig.indexing.collection_types.length, "IndexNow manifest does not match indexable objects and collection pages");
+assert(indexNowManifest.entries.length === seoIndexableCount + 2 + seoConfig.indexing.collection_types.length + topics.length, "IndexNow manifest does not match indexable objects, topics, and collection pages");
 
 rmSync(db, { force: true });
 console.log(`Publication check passed: full vault with ${sourceCounts.types} types, ${sourceCounts.objects} objects, ${sourceCounts.links} links, and ${assets.length} assets`);

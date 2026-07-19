@@ -13,6 +13,8 @@ const manifestPath = resolve(dirname(new URL(import.meta.url).pathname), "../pub
 const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
 const seoConfigPath = resolve(dirname(new URL(import.meta.url).pathname), "../seo.config.json");
 const seoConfig = JSON.parse(readFileSync(seoConfigPath, "utf8"));
+const topicsPath = resolve(dirname(new URL(import.meta.url).pathname), "../src/topics/topics.json");
+const topics = JSON.parse(readFileSync(topicsPath, "utf8"));
 
 if (manifest.mode !== "full-vault") throw new Error(`unsupported publication mode: ${manifest.mode}`);
 
@@ -273,6 +275,51 @@ function isSEOIndexable(object) {
     && seoConfig.indexing.source_processing_status.includes(String(fields.processing_status || ""));
 }
 
+function topicReferencedIDs(topic) {
+  const ids = new Set([
+    ...topic.companies.map((company) => company.id),
+    ...topic.boundaryReferences.map((reference) => reference.id),
+    ...topic.conceptIDs,
+    topic.methodID,
+    ...topic.featuredObjectIDs
+  ]);
+  for (const company of topic.companies) {
+    for (const cell of Object.values(company.dimensions)) {
+      for (const evidenceID of cell.evidenceIDs) ids.add(evidenceID);
+    }
+  }
+  return [...ids].sort();
+}
+
+function expectedTopicType(topic, id) {
+  if (topic.companies.some((company) => company.id === id) || topic.boundaryReferences.some((reference) => reference.id === id)) return "company";
+  if (topic.conceptIDs.includes(id)) return "concept";
+  if (topic.methodID === id) return "method";
+  if (id.startsWith("source.")) return "source.item";
+  return null;
+}
+
+const topicResolutions = topics.map((topic) => {
+  if (!topic.id || topic.id !== topic.slug || !/^\d{4}-\d{2}-\d{2}$/.test(topic.updatedAt)) {
+    throw new Error(`invalid topic definition: ${topic.id || "missing id"}`);
+  }
+  const resolved = topicReferencedIDs(topic).map((id) => {
+    const object = objectByID.get(id);
+    if (!object) throw new Error(`topic ${topic.id} references missing object ${id}`);
+    const expected = expectedTopicType(topic, id);
+    if (expected && object.type_id !== expected) throw new Error(`topic ${topic.id} expects ${id} to be ${expected}, got ${object.type_id}`);
+    return {
+      id,
+      type: object.type_id,
+      title: object.title,
+      canonical: publicObjectPath(object),
+      updated_at: object.updated_at,
+      indexable: isSEOIndexable(object)
+    };
+  });
+  return { definition: topic, resolved };
+});
+
 const seoIndexableObjects = objects.filter(isSEOIndexable);
 const seoIndexableCount = seoIndexableObjects.length;
 
@@ -320,14 +367,29 @@ const objectIndexNowEntries = seoIndexableObjects.map((object) => ({
   type: object.type_id,
   object_id: object.id
 }));
+const topicIndexNowEntries = topicResolutions.map(({ definition, resolved }) => ({
+  url: absolutePublicURL(`/topics/${encodeURIComponent(definition.slug)}`),
+  fingerprint: digest({ definition, resolved }),
+  type: "topic",
+  topic_id: definition.id
+}));
 const pageIndexNowEntries = [
   {
     url: absolutePublicURL("/"),
     fingerprint: digest({
       seo_config_version: seoConfig.version,
-      objects: objectIndexNowEntries.map((entry) => [entry.url, entry.fingerprint])
+      objects: objectIndexNowEntries.map((entry) => [entry.url, entry.fingerprint]),
+      topics: topicIndexNowEntries.map((entry) => [entry.url, entry.fingerprint])
     }),
     type: "page"
+  },
+  {
+    url: absolutePublicURL("/topics"),
+    fingerprint: digest({
+      seo_config_version: seoConfig.version,
+      topics: topicIndexNowEntries.map((entry) => [entry.url, entry.fingerprint])
+    }),
+    type: "collection"
   },
   ...seoConfig.indexing.collection_types.flatMap((type) => {
     const route = seoConfig.routes[type];
@@ -346,7 +408,7 @@ const pageIndexNowEntries = [
 const indexNowManifest = {
   version: 1,
   generated_at: new Date().toISOString(),
-  entries: [...pageIndexNowEntries, ...objectIndexNowEntries].sort((a, b) => a.url.localeCompare(b.url))
+  entries: [...pageIndexNowEntries, ...topicIndexNowEntries, ...objectIndexNowEntries].sort((a, b) => a.url.localeCompare(b.url))
 };
 
 const lines = [
@@ -399,6 +461,7 @@ pushMetadata(lines, "link_count", links.length);
 pushMetadata(lines, "asset_count", publicAssets.length);
 pushMetadata(lines, "seo_config_version", seoConfig.version);
 pushMetadata(lines, "seo_indexable_count", seoIndexableCount);
+pushMetadata(lines, "topic_count", topics.length);
 pushMetadata(lines, "type_definitions", JSON.stringify(typeDefinitions));
 pushMetadata(lines, "graph_views", JSON.stringify(graphViews));
 

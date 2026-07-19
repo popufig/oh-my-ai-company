@@ -41,6 +41,7 @@ export const homeCopy = {
     searchHint: "按公司进入，也可以从专题与关系图继续。",
     topicsLabel: "热门专题",
     topics: [
+      ["AI 公司控制面", "/topics/ai-company-control-plane"],
       ["Agent Infra", "/companies?filter=category%3Dagent-infra"],
       ["企业 Agent / AI Employee", "/companies?filter=category%3Denterprise-agent"],
       ["Agent 支付、治理与执行层", "/companies?filter=tags%3Dagent-payments"]
@@ -182,6 +183,7 @@ export const homeCopy = {
     searchHint: "Enter through a company, a research theme, or the relationship graph.",
     topicsLabel: "Explore themes",
     topics: [
+      ["AI company control planes", "/topics/ai-company-control-plane"],
       ["Agent Infra", "/companies?filter=category%3Dagent-infra"],
       ["Enterprise Agents / AI Employees", "/companies?filter=category%3Denterprise-agent"],
       ["Agent Payments, Governance & Execution", "/companies?filter=tags%3Dagent-payments"]
