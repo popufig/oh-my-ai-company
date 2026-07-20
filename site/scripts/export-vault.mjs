@@ -276,25 +276,46 @@ function isSEOIndexable(object) {
 }
 
 function topicReferencedIDs(topic) {
-  const ids = new Set([
-    ...topic.companies.map((company) => company.id),
-    ...topic.boundaryReferences.map((reference) => reference.id),
-    ...topic.conceptIDs,
-    topic.methodID,
-    ...topic.featuredObjectIDs
-  ]);
-  for (const company of topic.companies) {
-    for (const cell of Object.values(company.dimensions)) {
-      for (const evidenceID of cell.evidenceIDs) ids.add(evidenceID);
+  const ids = new Set();
+  if (topic.format === "comparison") {
+    for (const company of topic.companies) ids.add(company.id);
+    for (const reference of topic.boundaryReferences) ids.add(reference.id);
+    for (const id of topic.conceptIDs) ids.add(id);
+    ids.add(topic.methodID);
+    for (const id of topic.featuredObjectIDs) ids.add(id);
+    for (const company of topic.companies) {
+      for (const cell of Object.values(company.dimensions)) {
+        for (const evidenceID of cell.evidenceIDs) ids.add(evidenceID);
+      }
     }
+  } else if (topic.format === "essay") {
+    for (const id of [...topic.coveredCompanyIDs, ...topic.featuredObjectIDs]) ids.add(id);
+    for (const reference of topic.bridgeReferences) ids.add(reference.id);
+    for (const chapter of topic.chapters) {
+      for (const block of chapter.blocks) {
+        if (block.type === "prose" || block.type === "evidence-callout") {
+          for (const id of block.objectIDs || []) ids.add(id);
+          for (const id of block.evidenceIDs || []) ids.add(id);
+        } else if (block.type === "anchor-comparison") {
+          for (const anchor of block.anchors) {
+            ids.add(anchor.id);
+            for (const id of anchor.evidenceIDs) ids.add(id);
+          }
+        } else if (block.type === "supporting-cases") {
+          for (const item of block.cases) ids.add(item.id);
+        }
+      }
+    }
+  } else {
+    throw new Error(`topic ${topic.id} has unknown format ${topic.format}`);
   }
   return [...ids].sort();
 }
 
-function expectedTopicType(topic, id) {
-  if (topic.companies.some((company) => company.id === id) || topic.boundaryReferences.some((reference) => reference.id === id)) return "company";
-  if (topic.conceptIDs.includes(id)) return "concept";
-  if (topic.methodID === id) return "method";
+function expectedTopicType(_topic, id) {
+  if (id.startsWith("company.")) return "company";
+  if (id.startsWith("concept.")) return "concept";
+  if (id.startsWith("method.")) return "method";
   if (id.startsWith("source.")) return "source.item";
   return null;
 }
@@ -319,6 +340,15 @@ const topicResolutions = topics.map((topic) => {
   });
   return { definition: topic, resolved };
 });
+
+const topicIDs = new Set(topics.map((topic) => topic.id));
+for (const topic of topics) {
+  if (topic.format === "essay") {
+    for (const childID of topic.childTopicIDs) {
+      if (!topicIDs.has(childID)) throw new Error(`topic ${topic.id} references missing child topic ${childID}`);
+    }
+  }
+}
 
 const seoIndexableObjects = objects.filter(isSEOIndexable);
 const seoIndexableCount = seoIndexableObjects.length;

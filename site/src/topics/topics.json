@@ -2,6 +2,7 @@
   {
     "id": "ai-company-control-plane",
     "slug": "ai-company-control-plane",
+    "format": "comparison",
     "updatedAt": "2026-07-19",
     "language": "zh-CN",
     "title": "AI 公司控制面：Agent 如何进入组织、运行工作并接受治理",
@@ -199,6 +200,378 @@
       "zhTitle": "Agent 如何进入组织、运行工作并接受治理",
       "zhSummary": "比较九家公司如何保存组织状态、定义工作、控制权限与成本，并区分真实运行、客户采用和厂商自报。",
       "enLabel": "AI company control planes"
+    },
+    "ogAsset": null
+  },
+  {
+    "id": "ai-agents-at-work",
+    "slug": "ai-agents-at-work",
+    "format": "essay",
+    "updatedAt": "2026-07-20",
+    "language": "zh-CN",
+    "title": "AI Agent 如何进入公司：工作区、AI 员工、控制面与自治公司",
+    "htmlTitle": "AI Agent 如何进入公司：工作区、AI 员工与自治公司 | OMAC",
+    "description": "从 Raft、Helio、Viktor、11x、Paperclip、Relevance AI、Polsia 与 NanoCorp 出发，分析 Agent 如何获得组织状态、执行工作、接受权限治理并承担业务结果，以及二十多家公司代表的四条产品路径。",
+    "intent": {
+      "primary": ["AI 员工", "AI agent workspace", "AI workforce", "AI company OS", "agent control plane"],
+      "secondary": ["Agent governance", "AI 员工平台比较", "自治公司", "Agent 工作区", "AI company control plane"],
+      "excludes": "单家公司品牌与主体研究意图继续由各自 company canonical 承接。"
+    },
+    "promise": "不把 AI 员工当成一个统一品类，也不按功能数量排名。专题解释 Agent 以什么组织拓扑进入公司，谁保存连续责任、谁拥有执行环境、权限和结果责任如何分配，以及产品架构为什么导向不同的商业模式和失败路径。",
+    "featuredObjectIDs": ["company.raft", "company.viktor", "company.paperclip", "company.polsia"],
+    "introduction": [
+      "今天被称为“AI 员工”的产品，可能只是住在 Slack 里的执行助手，也可能是一个让本地 coding agents 进入频道的工作区、一套管理 Agent 任务和预算的控制面，或一个从建站、获客到收款都替用户完成的自治公司系统。它们共享相似的拟人化语言，实际控制的对象、承担的责任和需要证明的价值完全不同。",
+      "真正的分水岭不是头像、职位名称或 Agent 数量，而是五个问题：它是否拥有持续的组织状态；工作是否有 owner、完成定义和验收；执行发生在哪个 runtime；外部副作用由谁授权和回滚；系统最终按什么结果收费、被什么证据证明有效。",
+      "本专题把二十多家公司放回四条产品路径：Agent 原生工作区、成品与垂直执行系统、组织与生命周期控制面、公司自治运行层。四条路径不是互斥分类，很多产品都在跨层移动；runtime access、身份、验证、支付与成本则是贯穿多条路径的基础控制点。"
+    ],
+    "theses": [
+      "AI 员工是结果语言，不是稳定产品类别。同一称呼背后可能是 workspace、managed service、runtime、workflow platform 或 revenue-share operating system。",
+      "持续身份不自动产生持续价值。更可能沉淀为组织资产的是 owner、history、artifact、permission、review 和 correction 构成的责任状态。",
+      "新建 Agent-native workspace 与进入 Slack/Teams 存在 state completeness 和 distribution 的张力，但入口表面不决定最终状态完整性。",
+      "当前证据不支持一种产品形态通吃。探索协作、垂直执行、企业治理与自治公司面对不同买方、迁移成本、责任边界和经济模型。"
+    ],
+    "chapters": [
+      {
+        "id": "workspace",
+        "eyebrow": "Path one · Agent-native workspace",
+        "title": "Agent 原生工作区：谁拥有共同工作的状态",
+        "summary": "传统协作软件是为持续在线的人设计的，Agent 却是一次次被唤起的 turn-based process。Agent 原生工作区争夺的不是新的聊天界面，而是持续责任状态的所有权。",
+        "blocks": [
+          {
+            "type": "prose",
+            "title": "核心矛盾",
+            "paragraphs": [
+              "Agent 要成为团队成员，不能只在被 prompt 时短暂出现。它需要知道自己是谁、负责什么、房间发生了什么变化、任务由谁认领、草稿是否过时、什么结果已经被人接受。",
+              "持续身份、消息量和 handoff 都只是过程信号。真正需要追踪的是 accepted deliverables、handoff success、human interventions、cost per accepted output 和 time-to-verification。"
+            ]
+          },
+          {
+            "type": "anchor-comparison",
+            "title": "锚点对照：Raft 与 Helio",
+            "anchors": [
+              {
+                "id": "company.raft",
+                "title": "Raft：先把已有 runtime 变成团队成员",
+                "paragraphs": [
+                  "Raft 不要求用户购买一套官方 AI 员工。Codex、Claude Code、Kimi CLI、Gemini CLI 等运行在用户电脑上的 Agent，通过 daemon 进入频道、私信、线程和任务。task owner、todo→in progress→in review→done、subtask、reminder、room version、held draft 和 Agent inbox 被放进同一工作面。",
+                  "它真正争夺的是 Agent Experience 协议：Agent 如何筛选信号、感知房间版本、避免重复劳动，并在交接时留下可验证状态。官方从研究、实现到独立 verifier 和人类发布闸门的复盘，以及真实 power-user 的组织实践，都证明协作行为确实存在。",
+                  "边界也很明确：DAA、活跃 thread 和 handoff 不能证明交付物合格；重复劳动、quota 消耗和上下文膨胀说明横向可见的 Agent team 不天然优于层级 orchestrator。企业 SSO、私有部署和高级权限仍缺成熟公开证据。"
+                ],
+                "evidenceIDs": ["source.raft.blog-ax-chaos", "source.raft.docs-tasks", "source.raft.blog-feature-ships", "source.raft.wechat-ed-huang", "source.raft.blog-daa", "source.raft.linuxdo-agent-management", "source.raft.xiaohongshu-counterthesis", "source.raft.terms", "source.raft.privacy"]
+              },
+              {
+                "id": "company.helio",
+                "title": "Helio：先包装一个可以被雇用的长期 teammate",
+                "paragraphs": [
+                  "Helio 把 Profile、Memory、Tasks、Calendar、Skills、Credentials、Inbox、Activity trace 和按动作审批包装成长期 AI teammate。新用户先选择研究、写作、邮件、briefing 或日程任务，系统交付默认 teammate 和结果，再逐步扩展角色与自动化。",
+                  "控制不是一个 autonomy 总开关。阅读、搜索和起草可以自主执行；外部邮件、代码、API、删除、发布和部署应按风险进入 human gate。第三方实测了多角色协作和任务状态，官方安装包、Docs、ship 与 anycli 也足以排除 landing-only 项目。",
+                  "但产品能力领先于采用与信任材料：没有公开定价、付费客户、留存或企业部署规模；宽泛内容许可、model training 条款和缺少 SOC 2、DPA、完整 subprocessor，使连接公司邮箱、代码和频道所需的信任合同仍不完整。"
+                ],
+                "evidenceIDs": ["source.helio.homepage", "source.helio.product", "source.helio.docs-onboarding", "source.helio.docs-control", "source.helio.testingcatalog", "source.helio.github-ship", "source.helio.github-anycli", "source.helio.legal-terms", "source.helio.legal-privacy"]
+              }
+            ],
+            "synthesis": [
+              "Raft 优先接受用户已有 runtime，降低模型与执行环境锁定，但要证明多 Agent 可见协作能提高单位注意力产出的合格交付；Helio 优先交付角色与责任，降低首次激活难度，但必须证明长期记忆、权限和企业信任不会随角色数量一起失控。",
+              "两者都在争夺持续责任状态，只是一个从 runtime/team protocol 向上，一个从 packaged teammate 向下。"
+            ]
+          },
+          {
+            "type": "supporting-cases",
+            "title": "支持、bridge 与边界案例",
+            "cases": [
+              { "id": "company.dust", "role": "workspace 与企业入口的 bridge：检查共享 context、权限和 analytics 能否跨 Slack、Teams 与独立工作面保持。" },
+              { "id": "company.teamday", "role": "workspace 向 company control plane 上移：company memory、files、missions、runtime 与 app builder 共存。" },
+              { "id": "company.moxt", "role": "文件原生 context、workflow state、云执行与最终交付 UI 一体。" },
+              { "id": "company.bloome", "role": "托管模型、本地 coding agent 与云 Agent 同处 IM，代表 protocol/IM 的早期实验。" },
+              { "id": "company.multica", "role": "Issue、repo 与 local runtime 构成 coding-specific 工作面，反驳通用群聊一定更高效。" },
+              { "id": "company.floatboat", "role": "桌面本地 context 与日历触发，作为个人和小团队 proactive workspace 边界。" },
+              { "id": "company.kylon", "role": "Gateway、Proxy 与 CLI 控制 runtime access 和归因，但不是完整组织工作区。" }
+            ]
+          },
+          {
+            "type": "evidence-callout",
+            "title": "入口表面不能替代状态模型检查",
+            "paragraphs": [
+              "新工作区通常更容易建立 Agent-native state；现有协作入口通常更容易分发。Dust、TeamDay、Helio 等正在尝试组合两者，说明这是一种张力而不是严格二分。",
+              "本章提出的 accepted deliverables、handoff success、human interventions、cost per accepted output 和 time-to-verification 是后续研究指标，不是行业已经形成的共同标准。"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "packaged-execution",
+        "eyebrow": "Path two · Packaged and vertical execution",
+        "title": "成品与垂直执行系统：卖角色，还是承担结果",
+        "summary": "角色包装让买家跳过 builder，但越接近一个职位，产品越需要承担数据、基础设施、实施、异常处理和人工交接。降低激活成本，不等于软件已经独立承担结果。",
+        "blocks": [
+          {
+            "type": "prose",
+            "title": "核心矛盾",
+            "paragraphs": [
+              "AI 员工最强的商业价值是让买家不用学习 node、trigger、connector 和 prompt，只需把一个职位或结果交出去。",
+              "职位名称不能代替 accepted outcome、人工介入率、失败恢复、续约和单位经济。credits、actions、leads 或 created agents 也不能直接解释为劳动力产出。"
+            ]
+          },
+          {
+            "type": "anchor-comparison",
+            "title": "锚点对照：Viktor 与 11x",
+            "anchors": [
+              {
+                "id": "company.viktor",
+                "title": "Viktor：借 Slack/Teams 降低迁移成本",
+                "paragraphs": [
+                  "Viktor 住在 Slack 和 Microsoft Teams 中。员工像给同事分配工作一样让它拉数据、查网页、写代码、建 dashboard、部署内部应用并运行定时流程；持久 cloud computer、workspace、integration、频道与对话沉淀为 knowledge base、skills 和 notes。",
+                  "TWL 供应商案例显示约 25 人团队在 15 天内建立 12 个 scheduled workflows；Element Turf 从客户侧确认前 20 天连接 15 个 tools、7 个 inboxes，建立 62 个 workflows，并取消一项每年 3000 美元的工具。",
+                  "运行证据也暴露治理缺口：236 个 standing routines 中有 53 个超过一个月没有输出。当前依赖 failure alert、heartbeat 和人工审计；没有公开证明原生 retry/backoff、incident management、补偿事务或通用 rollback。HITL 仍是 instruction checkpoint、approval 与 OAuth/channel/read-write scope 的组合。",
+                  "FAQ 的 workspace-level integration、per-user roadmap 与 changelog 的 channel privacy 声明冲突。credits 能事后归因，却没有单任务 hard cap、accepted-output cost 或统一失败退款。"
+                ],
+                "evidenceIDs": ["source.website.viktor-home-2026-07-08", "source.website.viktor-product-2026-07-08", "source.website.viktor-changelog-runtime-2026-07-20", "source.blog.viktor-workflow-audit-2026-07-20", "source.blog.viktor-human-in-loop-2026-07-20", "source.blog.viktor-security-diligence-2026-07-20", "source.website.viktor-twl-case-study-2026-07-20", "source.linkedin.element-turf-viktor-2026-07-20", "source.website.element-turf-ai-workflows-2026-07-20", "source.website.viktor-pricing-2026-07-08", "source.trustpilot.viktor-reviews-2026-07-08"]
+              },
+              {
+                "id": "company.11x",
+                "title": "11x：垂直角色变成 managed execution system",
+                "paragraphs": [
+                  "11x 从 AI SDR 扩展为出站、入站和 RevOps 的垂直 GTM 系统。Alice 负责账户发现、研究、enrichment、个性化、多渠道触达与 CRM 回写；Julian 负责电话、聊天、SMS、WhatsApp、资格判断和人工路由。",
+                  "真正闭环的是数据、deliverability、managed inbox、CRM schema、onboarding、weekly check-in、CSM/FDE 和 human handoff。这解释了为什么数字员工往往不是零服务软件，也解释了 task/outcome pricing 为什么会回到 prospect volume、合同和 managed service 计量。",
+                  "Ramp 支持 11x 已进入企业采购，实名供应商案例比 logo wall 更强；但指标定义、基线、成本和续约未公开。TechCrunch 对客户 Logo、CARR 和早期 churn 的调查及公司回应，必须与融资和案例同屏。团队和产品重建说明公司在修复，不能证明历史问题已经解决。"
+                ],
+                "evidenceIDs": ["source.11x.alice", "source.11x.julian", "source.11x.revops", "source.11x.pricing", "source.11x.checkr-case", "source.11x.canibuild-case", "source.11x.mmb-case", "source.ramp.11x-vendor-2026", "source.techcrunch.11x-customer-claims-2025", "source.linkedin.opkit-11x-acquisition-2024"]
+              }
+            ],
+            "synthesis": [
+              "Viktor 先降低组织迁移成本，再扩展通用工作面；11x 先选择可量化销售角色，再用数据、基础设施和实施把垂直流程闭环。",
+              "横向 employee 需要宽工具面、长期 context 和可靠 routine；垂直 employee 更容易定义 workflow 与采购价值，却可能成为高服务密度的 managed labor platform。"
+            ]
+          },
+          {
+            "type": "prose",
+            "title": "第三种机制：成品入口之下仍是平台",
+            "paragraphs": [
+              "Lindy 用 inbox、calendar 和 iMessage 做默认发行版，同时保留 Agent Builder、Computer Use、Memory、Evals、Observability 与 enterprise 管理。一次真实副作用事故后，团队为外部动作增加独立 Validator，说明像员工真正难的是授权语义，而不是角色文案。",
+              "Floatbot 的保险部署提醒我们，垂直平台价值经常来自 FDE 和实施：16 周部署、UAT、上线后修改与 hallucination 修复，比开箱即用替代劳动力更接近企业现实。Motion 则说明既有任务、日历和 work suite 可以成为 AI employee 的 system-of-record 入口。"
+            ],
+            "objectIDs": ["company.lindy", "company.floatbot", "company.motion"]
+          },
+          {
+            "type": "supporting-cases",
+            "title": "支持、bridge 与边界案例",
+            "cases": [
+              { "id": "company.lindy", "role": "成品助理到 builder/control plane 的 bridge；Validator 是副作用治理锚点。" },
+              { "id": "company.floatbot", "role": "保险垂直平台加 FDE 实施，不是即插即用员工。" },
+              { "id": "company.motion", "role": "既有 SaaS 与 system of record 向 AI employee 上移。" },
+              { "id": "company.wonderly", "role": "服务型 SMB outcome stack，作为交付模式边界，不承担同维机制比较。" }
+            ]
+          },
+          {
+            "type": "evidence-callout",
+            "title": "分发成立，不等于结果责任成立",
+            "paragraphs": [
+              "Sintra 与 Marblism 已证明 persona、character-first AI office、affiliate/paid acquisition 和 AI-hours 可以形成商业分发。",
+              "但角色包装本身不能证明执行质量、自然口碑、留存或 outcome economics。"
+            ],
+            "evidenceIDs": []
+          }
+        ]
+      },
+      {
+        "id": "control-plane",
+        "eyebrow": "Path three · Organization and lifecycle control",
+        "title": "组织与生命周期控制面：谁管理 Agent 的责任",
+        "summary": "当企业持续创建、运行和修改一批 Agent，问题从能否完成任务变成谁定义工作、批准发布、观察失败、承担成本并撤销权限。",
+        "blocks": [
+          {
+            "type": "prose",
+            "title": "核心矛盾",
+            "paragraphs": [
+              "控制面不是一个 dashboard 能解决的单一功能，而是工作控制、runtime access、身份权限、成本支付、观测、审计与 eval 的组合。",
+              "Task、Issue、Mission、execution contract 与 accepted outcome 不是同一层；调用 runtime、拥有 runtime 与承担 runtime 失败责任也必须分开。"
+            ]
+          },
+          {
+            "type": "anchor-comparison",
+            "title": "锚点对照：Paperclip 与 Relevance AI",
+            "anchors": [
+              {
+                "id": "company.paperclip",
+                "title": "Paperclip：把工作合同做成控制对象",
+                "paragraphs": [
+                  "Paperclip 把组织图、Company、Mission、Goal、Project、Issue、budget、approval、heartbeat、routine 与 audit 做成开源、自托管、model-agnostic 的 work control plane。Issue 的 owner、status、dependency、reviewer 和 approver 是当前最清晰的 work container；本地 no-model smoke 证明对象和状态可以真实运行。",
+                  "但 schema 不等于治理有效。subscription/Hermes adapter 成本不上报会让 budget hard-stop 失效，heartbeat 空转和 cost blowup 可能放大 token 消耗，Issue 循环、secret leak 和 human review 瓶颈也说明组织原语不能自动生成合格结果。",
+                  "Paperclip 强在工作合同设计，弱在 accepted outcome、补偿与 rollback 以及生产采用证据。"
+                ],
+                "evidenceIDs": ["source.paperclip.readme", "source.paperclip.local-product-smoke", "source.paperclip.docs-costs", "source.paperclip.github-budget-subscription", "source.paperclip.github-hermes-cost", "source.paperclip.github-heartbeat-cost", "source.paperclip.github-cost-blowup", "source.paperclip.github-secret-leak"]
+              },
+              {
+                "id": "company.relevance-ai",
+                "title": "Relevance AI：把生命周期、评测和生产采用连起来",
+                "paragraphs": [
+                  "Relevance AI 补齐 Agent team、tools/MCP、长任务 queue、Tasks、Approvals、Escalated、Errors、失败步骤重跑、Evals 发布阈值、live sampling、analytics 与 OTEL。",
+                  "Send Payments 的客户侧材料证明治理委员会和 Agent 生产使用存在；Qualified 与 Zembl 提供具体供应商案例。这比只有产品文档更接近企业采用。",
+                  "它仍没有证明业务语义 eval、false pass、rollback、任务成功率和续约。LLM judge、规则和 tool-use checks 是严肃的 shipped design，却不能自动判断销售机会是否合格、客户问题是否解决或跨系统副作用是否可接受。"
+                ],
+                "evidenceIDs": ["source.relevance-ai.docs-tasks", "source.relevance-ai.docs-approvals", "source.relevance-ai.docs-evals", "source.relevance-ai.docs-analytics", "source.relevance-ai.docs-otel", "source.linkedin.send-payments-governance-2026", "source.linkedin.send-payments-metrics-2026", "source.relevance-ai.qualified-case", "source.relevance-ai.zembl-case"]
+              }
+            ],
+            "synthesis": [
+              "Paperclip 从 work container 和组织原语切入，Relevance AI 从 enterprise runtime、eval 与 deployment lifecycle 切入。两者证明控制面可以从不同层开始，但都不能只凭局部机制声称已经承担完整结果责任。",
+              "客户生产采用可以证明产品进入真实组织，不能自动把 eval、权限与成本治理每一格升为成熟。"
+            ]
+          },
+          {
+            "type": "prose",
+            "title": "横切基础控制点",
+            "paragraphs": [
+              "工作控制由 Paperclip、TeamDay 等管理 owner、mission、state 与 review；Kylon 通过 Gateway、Proxy、CLI 管 runtime access 和归因；NewCore 用 agent identity、task-scoped token 与 inventory 管谁代表谁行动；Lindy Validator 表明 action authorization 应独立于主 Agent。",
+              "Browserbase 与 Kernel 提供浏览器和计算基础设施；Sapiom、PayInsider 等支付与成本方向决定 Agent 如何获得预算和支付权限。拥有其中一层，不等于拥有完整公司控制面。"
+            ],
+            "objectIDs": ["company.teamday", "company.kylon", "company.newcore", "company.lindy", "company.browserbase", "company.kernel"]
+          },
+          {
+            "type": "supporting-cases",
+            "title": "不同买方与成熟度的组合",
+            "cases": [
+              { "id": "company.ema", "role": "Context Graph、AI employee mesh 与 Autopilot 强调 enterprise day-2 operations，并有客户侧生产确认。" },
+              { "id": "company.evose", "role": "Organization、Workspace、Workbench 三层模型清楚，但 SOC 2、SDK/API、告警与 app 状态存在 shipped-state 冲突。" },
+              { "id": "company.cofounder", "role": "把 Canvas、Roadmap、Departments、Agents 合并，却在始终审批与 standing authorization 之间留下治理问题。" }
+            ]
+          },
+          {
+            "type": "child-topic",
+            "topicID": "ai-company-control-plane",
+            "title": "AI 公司控制面：9 家产品如何管理 Agent 工作与治理",
+            "summary": "深入比较 work contract、runtime、权限、成本、observability、audit、eval 与采用证据；保留 9×8 结构化矩阵，不在本页重复。"
+          }
+        ]
+      },
+      {
+        "id": "autonomous-company",
+        "eyebrow": "Path four · Autonomous company operations",
+        "title": "公司自治运行层：当平台开始承担公司副作用",
+        "summary": "自治公司产品触碰代码、域名、邮件、广告、支付、退款和客户关系。自治提高时，权限、预算、rollback、责任与数据迁移必须变得更明确。",
+        "blocks": [
+          {
+            "type": "prose",
+            "title": "核心矛盾",
+            "paragraphs": [
+              "自治公司系统不只生成文本或流程，而是直接改变外部世界。现实中，很多 Terms 仍把合法性、费用和结果审查主要推回用户。",
+              "自治越高，平台越需要明确承担副作用责任是一项规范性判断，不是当前事实；现有条款、退款和权限材料恰好说明责任仍大量留在用户侧。"
+            ]
+          },
+          {
+            "type": "anchor-comparison",
+            "title": "锚点对照：Polsia 与 NanoCorp",
+            "anchors": [
+              {
+                "id": "company.polsia",
+                "title": "Polsia：公开运行面带来最强 observability 样本",
+                "paragraphs": [
+                  "Polsia 把 idea、网站、数据库、邮件、支付、广告、支持与持续任务封成托管系统。公开 live dashboard 和 API 能看到 active companies、tasks、emails、paying users、AI cost 和失败状态。",
+                  "headline 8.53M 美元 mixed run-rate 可以拆成订阅年化约 5.07M 美元，加任务包、广告、boost、域名等近 30 天现金流年化，不能写成纯 SaaS ARR。",
+                  "同一公开面也暴露约 4.8% created-to-active、52.1% 的 30-day paid churn，以及任务循环、credits、扣费和支持问题。大规模创建和持续经营价值之间仍有巨大距离。Terms 允许 Agent 执行外部动作，却让用户承担审核、合法性、费用和权限责任。"
+                ],
+                "evidenceIDs": ["source.polsia.live-dashboard-2026-07-15", "source.polsia.public-dashboard-api-2026-07-15", "source.polsia.terms-2026-06-19", "source.reddit.polsia-agents-of-ai-2026-03-05", "source.reddit.polsia-cannot-recommend-2026-06-21", "source.gtmnow.ben-cera-polsia-2026-06-01"]
+              },
+              {
+                "id": "company.nanocorp",
+                "title": "NanoCorp：执行约束与 production-trace harness loop",
+                "paragraphs": [
+                  "NanoCorp 把一句话到 company shell、网站、代码、邮件、广告、支付和经营 recap 做成高吞吐系统，同时提供更清楚的工具 contract：autonomy 档位、daily task cap、credit cap、send_email、create_product、prospect search rate limit，以及 retry_after 和 should_wait。",
+                  "production traces 进入新版 harness，形成 failure、recovery、cost 的改进循环。但公开经营漏斗显示约 29,108 created companies、28,266 live sites，只有 197 earning companies，earning/created 约 0.68%。",
+                  "创始人自报的 1M 美元 platform subscription ARR 与用户公司累计约 11K 美元收入必须分账；Ambassador credits 与比赛也使公开成功故事带有补贴 cohort 偏差。"
+                ],
+                "evidenceIDs": ["source.nanocorp.docs-index-2026-07-15", "source.nanocorp.docs-faq-2026-07-15", "source.nanocorp.docs-rate-limits-2026-07-15", "source.nanocorp.nano-1-5-2026-05-21", "source.nanocorp.live-dashboard-2026-07-15", "source.linkedin.nanocorp-arr-claim-2026-06", "source.linkedin.nanocorp-ambassador-2026-05", "source.nanocorp.competition-2026-07-10"]
+              }
+            ],
+            "synthesis": [
+              "Polsia 的优势是从基础设施到 GTM、支付和公开经营数据的强默认系统；NanoCorp 的优势是执行约束、工具合同与 production-trace harness loop。",
+              "两者都把生成并发布一家公司产品化，却没有证明大多数用户公司能持续经营。created、live、tasks 和 emails 是过程信号，earning cohort、retained workflows、refund、incident 与 cost per accepted output 才更接近业务价值。"
+            ]
+          },
+          {
+            "type": "supporting-cases",
+            "title": "已有公司、角色分发与渐进自治",
+            "cases": [
+              { "id": "company.pancake", "role": "不从 prompt 创建新公司，而是用 Slack、OpenClaw、company brain 和独享环境逐步接管已有公司职能。" },
+              { "id": "company.sintra", "role": "character-first AI office 与强分发，证明 persona 和 packaging 不是无价值表面。" },
+              { "id": "company.marblism", "role": "从 prompt-to-app 转向直接做工作，用 AI-hours 尝试结果侧计量。" }
+            ]
+          },
+          {
+            "type": "evidence-callout",
+            "title": "创建吞吐不是持续经营",
+            "paragraphs": [
+              "自治公司赛道最容易把 created companies、live sites、messages 和 tasks 混成 adoption。真正应与公开漏斗同屏的是 earning、retained workflows、退款、incident、human intervention 和 accepted-output cost。",
+              "Terms 中谁承担合法性、外部费用、结果检查和不可逆动作，必须与自治叙事一起阅读。"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cross-path",
+        "eyebrow": "Cross-path conclusions",
+        "title": "如何判断一个 AI Agent 是否真的进入公司",
+        "summary": "跨路径比较不寻找统一赢家，而是把责任状态、入口、控制点、HITL、规模信号和后续指标拆开。",
+        "blocks": [
+          {
+            "type": "prose",
+            "title": "看责任状态，不只看身份",
+            "paragraphs": ["持续身份本身不能证明价值。应检查 owner、history、artifact、permission、review 和 correction 是否跨任务保留，错误是否能被追踪和纠正。角色包装可以降低采用门槛，但只有责任状态更可能沉淀为组织资产。"]
+          },
+          {
+            "type": "prose",
+            "title": "看入口与状态的组合",
+            "paragraphs": ["新工作区通常更容易建立 Agent-native state；现有协作入口通常更容易分发。Dust、TeamDay、Helio 等正在尝试组合两者，说明这是一种张力而不是严格二分。"]
+          },
+          {
+            "type": "prose",
+            "title": "分清工作、runtime、身份和支付四个控制点",
+            "paragraphs": ["Paperclip、TeamDay 更接近工作控制，Kylon 接近 runtime access，NewCore 接近身份权限，支付和成本基础设施决定预算如何进入执行。拥有其中一层，不代表拥有完整公司控制面。"],
+            "objectIDs": ["company.paperclip", "company.teamday", "company.kylon", "company.newcore"]
+          },
+          {
+            "type": "prose",
+            "title": "把 HITL 拆成具体机制",
+            "paragraphs": ["Human-in-the-loop 不是一句人类始终控制。要分别问逐次审批、standing authorization、action policy、exception escalation、独立 validator、rollback 和 audit。多家公司正在把人类从每步操作转向 exception、approval、verification，但这不是全市场既成事实。"]
+          },
+          {
+            "type": "prose",
+            "title": "不把所有规模信号放在同一轴",
+            "paragraphs": ["GitHub stars、created agents、messages、tasks、created companies、paying users、供应商案例和客户侧 enterprise production 是不同 evidence type。它们不应被合并成 adoption score。"]
+          },
+          {
+            "type": "evidence-callout",
+            "title": "更有解释力、但尚未标准化的研究指标",
+            "paragraphs": ["本专题提出六个后续指标：accepted outcomes、human interventions、cost per accepted output、time-to-verification、rollback/incident rate、retained workflows。它们不是行业现成标准，不同垂直的 accepted outcome 也不可直接横比。"]
+          }
+        ]
+      }
+    ],
+    "coveredCompanyIDs": ["company.raft", "company.helio", "company.dust", "company.teamday", "company.moxt", "company.bloome", "company.multica", "company.viktor", "company.11x", "company.lindy", "company.floatbot", "company.motion", "company.paperclip", "company.relevance-ai", "company.ema", "company.evose", "company.cofounder", "company.polsia", "company.nanocorp", "company.pancake", "company.sintra", "company.marblism"],
+    "bridgeReferences": [
+      { "id": "company.kylon", "summary": "runtime access、Gateway、Proxy 和归因边界。" },
+      { "id": "company.newcore", "summary": "Agent identity、task-scoped token 和 inventory 的身份治理层。" },
+      { "id": "company.floatboat", "summary": "桌面本地 context 与日历触发的 proactive workspace 边界。" },
+      { "id": "company.wonderly", "summary": "服务型 SMB outcome stack 的交付模式边界。" },
+      { "id": "company.browserbase", "summary": "浏览器 runtime 基础设施，只作控制 rail 点名。" },
+      { "id": "company.kernel", "summary": "计算与 browser execution 基础设施，只作控制 rail 点名。" },
+      { "id": "company.artisan", "summary": "垂直与嵌入式入口边界；当前不承担深度机制判断。" },
+      { "id": "company.sierra", "summary": "垂直与嵌入式入口边界；当前不承担深度机制判断。" },
+      { "id": "company.harvey", "summary": "垂直与嵌入式入口边界；当前不承担深度机制判断。" }
+    ],
+    "childTopicIDs": ["ai-company-control-plane"],
+    "conclusion": {
+      "title": "Agent 进入公司的过程，是逐步获得状态、工作、执行权限和责任",
+      "paragraphs": [
+        "工作区先争夺共同状态，成品 AI 员工先争夺一个角色或结果，控制面管理一批 Agent 的生命周期，自治公司系统则把平台责任推向代码、广告、支付和客户关系。",
+        "当前最清楚的结论不是谁会赢，而是哪些问题已经从 demo 变成产品：Agent 如何认领工作、避免过时响应、限制副作用、发现沉默失败、把 production trace 变成改进，以及让成本对应合格结果。当前证据仍不支持一种产品形态通吃，也没有公司公开完整的结果、介入、成本、事故和留存指标。"
+      ],
+      "closingQuestion": "它被允许做什么，失败时谁知道，结果由谁验收，成本何时停止，组织为何会在 90 天后继续让它工作？"
+    },
+    "homepage": {
+      "zhLabel": "AI Agent 如何进入公司",
+      "zhTitle": "工作区、AI 员工、控制面与自治公司",
+      "zhSummary": "从八个机制锚点出发，分析二十多家公司如何让 Agent 获得组织状态、执行权限与业务责任。",
+      "enLabel": "How AI agents enter the workplace"
     },
     "ogAsset": null
   }

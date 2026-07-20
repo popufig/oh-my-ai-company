@@ -295,7 +295,7 @@ export function homeSEOBody() {
       <p class="seo-eyebrow">Living AI company atlas</p>
       <h1>Follow AI companies through evidence, people, capital, and market signals.</h1>
       <p class="seo-lede">${escapeHTML(seoConfig.site.default_description)}</p>
-      <section aria-labelledby="seo-start"><h2 id="seo-start">Start exploring</h2><ul class="seo-links"><li><a href="/topics/ai-company-control-plane">AI 公司控制面：Agent 如何进入组织、运行工作并接受治理</a></li><li><a href="/companies">Company dossiers</a></li><li><a href="/investors">Investor networks</a></li><li><a href="/concepts">Reusable market concepts</a></li><li><a href="/sources">Traceable evidence</a></li></ul></section>
+      <section aria-labelledby="seo-start"><h2 id="seo-start">Start exploring</h2><ul class="seo-links"><li><a href="/topics/ai-agents-at-work">AI Agent 如何进入公司：工作区、AI 员工、控制面与自治公司</a></li><li><a href="/companies">Company dossiers</a></li><li><a href="/investors">Investor networks</a></li><li><a href="/concepts">Reusable market concepts</a></li><li><a href="/sources">Traceable evidence</a></li></ul></section>
       <section aria-labelledby="seo-method"><h2 id="seo-method">How the atlas is built</h2><p>Subjects connect to founders and investment events. Sources and traffic snapshots record evidence. Notes, concepts, and methods keep facts separate from research judgment.</p></section>
     </main>
   </div>`;

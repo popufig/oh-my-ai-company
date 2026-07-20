@@ -78,24 +78,50 @@ const publicIDs = new Set(publishedObjects.map((object) => object.id));
 const publicTypeByID = new Map(rows(db, "SELECT id,type_id FROM objects").map((object) => [object.id, object.type_id]));
 
 function topicReferencedIDs(topic) {
-  const ids = new Set([
-    ...topic.companies.map((company) => company.id),
-    ...topic.boundaryReferences.map((reference) => reference.id),
-    ...topic.conceptIDs,
-    topic.methodID,
-    ...topic.featuredObjectIDs
-  ]);
-  for (const company of topic.companies) for (const cell of Object.values(company.dimensions)) for (const id of cell.evidenceIDs) ids.add(id);
+  const ids = new Set();
+  if (topic.format === "comparison") {
+    for (const company of topic.companies) ids.add(company.id);
+    for (const reference of topic.boundaryReferences) ids.add(reference.id);
+    for (const id of topic.conceptIDs) ids.add(id);
+    ids.add(topic.methodID);
+    for (const id of topic.featuredObjectIDs) ids.add(id);
+    for (const company of topic.companies) for (const cell of Object.values(company.dimensions)) for (const id of cell.evidenceIDs) ids.add(id);
+  } else if (topic.format === "essay") {
+    for (const id of [...topic.coveredCompanyIDs, ...topic.featuredObjectIDs]) ids.add(id);
+    for (const reference of topic.bridgeReferences) ids.add(reference.id);
+    for (const chapter of topic.chapters) {
+      for (const block of chapter.blocks) {
+        if (block.type === "prose" || block.type === "evidence-callout") {
+          for (const id of block.objectIDs || []) ids.add(id);
+          for (const id of block.evidenceIDs || []) ids.add(id);
+        } else if (block.type === "anchor-comparison") {
+          for (const anchor of block.anchors) {
+            ids.add(anchor.id);
+            for (const id of anchor.evidenceIDs) ids.add(id);
+          }
+        } else if (block.type === "supporting-cases") {
+          for (const item of block.cases) ids.add(item.id);
+        }
+      }
+    }
+  } else {
+    assert(false, `topic ${topic.id} has unknown format ${topic.format}`);
+  }
   return [...ids];
 }
 
+const topicIDs = new Set(topics.map((topic) => topic.id));
+
 for (const topic of topics) {
   assert(topic.id === topic.slug && /^\d{4}-\d{2}-\d{2}$/.test(topic.updatedAt), `invalid topic definition ${topic.id}`);
+  if (topic.format === "essay") for (const childID of topic.childTopicIDs) assert(topicIDs.has(childID), `topic ${topic.id} references missing child topic ${childID}`);
   for (const id of topicReferencedIDs(topic)) {
     assert(publicIDs.has(id), `topic ${topic.id} references missing object ${id}`);
-    const expected = topic.companies.some((company) => company.id === id) || topic.boundaryReferences.some((reference) => reference.id === id)
-      ? "company"
-      : topic.conceptIDs.includes(id) ? "concept" : topic.methodID === id ? "method" : id.startsWith("source.") ? "source.item" : null;
+    const expected = id.startsWith("company.") ? "company"
+      : id.startsWith("concept.") ? "concept"
+      : id.startsWith("method.") ? "method"
+      : id.startsWith("source.") ? "source.item"
+      : null;
     if (expected) assert(publicTypeByID.get(id) === expected, `topic ${topic.id} expects ${id} to be ${expected}`);
   }
   const topicURL = `https://companies.yan5xu.ai/topics/${encodeURIComponent(topic.slug)}`;

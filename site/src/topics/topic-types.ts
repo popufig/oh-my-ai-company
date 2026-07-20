@@ -44,9 +44,10 @@ export type TopicBoundaryReference = {
   summary: string;
 };
 
-export type TopicDefinition = {
+type TopicBase = {
   id: string;
   slug: string;
+  format: "comparison" | "essay";
   updatedAt: string;
   language: "zh-CN";
   title: string;
@@ -58,16 +59,7 @@ export type TopicDefinition = {
     excludes: string;
   };
   promise: string;
-  introduction: string;
-  judgments: string[];
-  dimensions: TopicDimension[];
-  paths: TopicPath[];
-  companies: TopicCompany[];
-  boundaryReferences: TopicBoundaryReference[];
-  conceptIDs: string[];
-  methodID: string;
   featuredObjectIDs: string[];
-  selectionGuidance: string[];
   homepage: {
     zhLabel: string;
     zhTitle: string;
@@ -76,6 +68,83 @@ export type TopicDefinition = {
   };
   ogAsset: string | null;
 };
+
+export type ComparisonTopicDefinition = TopicBase & {
+  format: "comparison";
+  introduction: string;
+  judgments: string[];
+  dimensions: TopicDimension[];
+  paths: TopicPath[];
+  companies: TopicCompany[];
+  boundaryReferences: TopicBoundaryReference[];
+  conceptIDs: string[];
+  methodID: string;
+  selectionGuidance: string[];
+};
+
+export type EssayAnchor = {
+  id: string;
+  title: string;
+  paragraphs: string[];
+  evidenceIDs: string[];
+};
+
+export type EssayBlock =
+  | {
+      type: "prose";
+      title?: string;
+      paragraphs: string[];
+      objectIDs?: string[];
+      evidenceIDs?: string[];
+    }
+  | {
+      type: "anchor-comparison";
+      title: string;
+      anchors: [EssayAnchor, EssayAnchor];
+      synthesis: string[];
+    }
+  | {
+      type: "supporting-cases";
+      title: string;
+      cases: Array<{ id: string; role: string }>;
+    }
+  | {
+      type: "evidence-callout";
+      title: string;
+      paragraphs: string[];
+      evidenceIDs?: string[];
+    }
+  | {
+      type: "child-topic";
+      topicID: string;
+      title: string;
+      summary: string;
+    };
+
+export type EssayChapter = {
+  id: string;
+  eyebrow: string;
+  title: string;
+  summary: string;
+  blocks: EssayBlock[];
+};
+
+export type EssayTopicDefinition = TopicBase & {
+  format: "essay";
+  introduction: string[];
+  theses: string[];
+  chapters: EssayChapter[];
+  coveredCompanyIDs: string[];
+  bridgeReferences: TopicBoundaryReference[];
+  childTopicIDs: string[];
+  conclusion: {
+    title: string;
+    paragraphs: string[];
+    closingQuestion: string;
+  };
+};
+
+export type TopicDefinition = ComparisonTopicDefinition | EssayTopicDefinition;
 
 export type ResolvedTopicObject = {
   id: string;

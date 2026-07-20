@@ -27,7 +27,8 @@ includesAll(home.body, [
   '<link rel="icon" href="/favicon.svg" type="image/svg+xml">',
   '<link rel="canonical" href="https://companies.yan5xu.ai/">',
   'type="application/ld+json"',
-  "Follow AI companies through evidence"
+  "Follow AI companies through evidence",
+  'href="/topics/ai-agents-at-work"'
 ], "home");
 
 const company = await read("/companies/kernel");
@@ -93,6 +94,7 @@ assert(topics.response.status === 200, `topics: expected 200, got ${topics.respo
 assert(topics.response.headers.get("x-robots-tag") === "index, follow", "topics: expected index header");
 includesAll(topics.body, [
   "<h1>研究专题</h1>",
+  'href="/topics/ai-agents-at-work"',
   'href="/topics/ai-company-control-plane"',
   '"@type":"CollectionPage"',
   '<link rel="canonical" href="https://companies.yan5xu.ai/topics">'
@@ -128,6 +130,54 @@ assert(topicPayload.definition.companies.length === 9, "topic API: expected nine
 assert(Object.keys(topicPayload.objects).length >= 100, "topic API: expected resolved evidence objects");
 assert(topicPayload.objects["company.paperclip"].canonical === "/companies/paperclip", "topic API: company canonical mismatch");
 
+const essayTopic = await read("/topics/ai-agents-at-work");
+assert(essayTopic.response.status === 200, `essay topic: expected 200, got ${essayTopic.response.status}`);
+assert(essayTopic.response.headers.get("x-robots-tag") === "index, follow", "essay topic: expected index header");
+includesAll(essayTopic.body, [
+  "<title>AI Agent 如何进入公司：工作区、AI 员工与自治公司 | OMAC</title>",
+  '<link rel="canonical" href="https://companies.yan5xu.ai/topics/ai-agents-at-work">',
+  '<html lang="zh-CN">',
+  "AI Agent 如何进入公司：工作区、AI 员工、控制面与自治公司",
+  "Agent 原生工作区：谁拥有共同工作的状态",
+  "成品与垂直执行系统：卖角色，还是承担结果",
+  "组织与生命周期控制面：谁管理 Agent 的责任",
+  "公司自治运行层：当平台开始承担公司副作用",
+  'href="/companies/raft"',
+  'href="/companies/helio"',
+  'href="/companies/viktor"',
+  'href="/companies/11x"',
+  'href="/companies/paperclip"',
+  'href="/companies/relevance-ai"',
+  'href="/companies/polsia"',
+  'href="/companies/nanocorp"',
+  'href="/sources/raft.blog-ax-chaos"',
+  'href="/topics/ai-company-control-plane"',
+  "236 个 standing routines",
+  "53 个",
+  "52.1%",
+  "0.68%",
+  '"@type":"WebPage"',
+  '"@type":"BreadcrumbList"',
+  '"@type":"ItemList"'
+], "essay topic");
+assert((essayTopic.body.match(/<h1\b/gi) || []).length === 1, "essay topic: expected exactly one H1");
+assert(!essayTopic.body.includes('"@type":"Organization"'), "essay topic: must not describe covered companies as one Organization");
+
+const essayQuery = await read("/topics/ai-agents-at-work?chapter=workspace");
+assert(essayQuery.response.status === 200, "essay topic query: expected 200");
+assert(essayQuery.response.headers.get("x-robots-tag") === "noindex, follow", "essay topic query: expected noindex header");
+includesAll(essayQuery.body, ['<link rel="canonical" href="https://companies.yan5xu.ai/topics/ai-agents-at-work">'], "essay topic query");
+
+const essayAPI = await read("/api/topics/ai-agents-at-work");
+assert(essayAPI.response.status === 200, `essay topic API: expected 200, got ${essayAPI.response.status}`);
+const essayPayload = JSON.parse(essayAPI.body);
+assert(essayPayload.definition.format === "essay", "essay topic API: expected essay format");
+assert(essayPayload.definition.chapters.length === 5, "essay topic API: expected four paths and a cross-path conclusion");
+assert(essayPayload.definition.coveredCompanyIDs.length === 22, "essay topic API: expected 22 covered companies");
+assert(essayPayload.definition.childTopicIDs.includes("ai-company-control-plane"), "essay topic API: child topic missing");
+assert(Object.keys(essayPayload.objects).length >= 90, "essay topic API: expected resolved company and evidence objects");
+assert(essayPayload.objects["company.raft"].canonical === "/companies/raft", "essay topic API: company canonical mismatch");
+
 const missingTopic = await read("/topics/not-a-topic");
 assert(missingTopic.response.status === 404, `missing topic: expected 404, got ${missingTopic.response.status}`);
 assert(missingTopic.response.headers.get("x-robots-tag") === "noindex, follow", "missing topic: expected noindex header");
@@ -157,7 +207,7 @@ includesAll(sitemap.body, ["<sitemapindex", "/sitemaps/companies.xml", "/sitemap
 
 const topicsSitemap = await read("/topics.xml");
 assert(topicsSitemap.response.status === 200, "topics sitemap: expected 200");
-includesAll(topicsSitemap.body, ["<urlset", "https://companies.yan5xu.ai/topics/ai-company-control-plane", "<lastmod>2026-07-19</lastmod>"], "topics sitemap");
+includesAll(topicsSitemap.body, ["<urlset", "https://companies.yan5xu.ai/topics/ai-company-control-plane", "<lastmod>2026-07-19</lastmod>", "https://companies.yan5xu.ai/topics/ai-agents-at-work", "<lastmod>2026-07-20</lastmod>"], "topics sitemap");
 
 const companiesSitemap = await read("/sitemaps/companies.xml");
 assert(companiesSitemap.response.status === 200, "company sitemap: expected 200");

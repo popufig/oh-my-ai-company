@@ -16,13 +16,13 @@ const siteExtension: MemexSiteExtension = {
       Component: TopicPage
     }
   ],
-  automationActions: ["listTopics", "openTopic", "selectPath", "selectCompany", "selectDimension", "expandEvidence"],
+  automationActions: ["listTopics", "openTopic", "openChildTopic", "setChapter", "selectAnchor", "selectPath", "selectCompany", "selectDimension", "expandEvidence"],
   automation: {
     actions: ["listTopics", "openTopic"],
     state: () => ({ topicIDs: topicDefinitions.map((topic) => topic.id) }),
     invoke: (action, payload) => {
-      if (action === "listTopics") return topicDefinitions.map(({ id, slug, title }) => ({ id, slug, title }));
-      if (action === "openTopic") {
+      if (action === "listTopics") return topicDefinitions.map(({ id, slug, title, format }) => ({ id, slug, title, format }));
+      if (action === "openTopic" || action === "openChildTopic") {
         const slug = typeof payload === "string" ? payload : String((payload as { slug?: unknown } | null)?.slug ?? "");
         if (!topicBySlug.has(slug)) throw new Error(`Unknown topic: ${slug}`);
         window.location.assign(topicPath(slug));

@@ -1,18 +1,23 @@
 import {
   ArrowRight,
-  Building2,
   Button,
   ChevronDown,
   ExternalLink,
-  Network,
   useEffect,
   useMemo,
   useQuery,
   useState,
   type SiteProjectPageProps
 } from "@memex/site";
-import { topicBySlug, topicDefinitions, topicPath } from "./topic-definitions";
-import { topicDimensionIDs, type ResolvedTopic, type TopicCompany, type TopicDimensionID } from "./topic-types";
+import { topicBySlug, topicDefinitions, topicPath, topicPrimaryCompanyIDs } from "./topic-definitions";
+import {
+  topicDimensionIDs,
+  type ComparisonTopicDefinition,
+  type EssayBlock,
+  type EssayTopicDefinition,
+  type ResolvedTopic,
+  type TopicCompany
+} from "./topic-types";
 import "./topic.css";
 
 type TopicListPayload = {
@@ -24,6 +29,7 @@ type TopicListPayload = {
     updatedAt: string;
     companyCount: number;
     canonical: string;
+    format: "comparison" | "essay";
   }>;
 };
 
@@ -85,7 +91,7 @@ function TopicCollection({ automationRef }: Pick<SiteProjectPageProps, "automati
           window.location.assign(topicPath(slug));
           return { slug, path: topicPath(slug) };
         }
-        if (action === "listTopics") return topicDefinitions.map(({ id, slug, title }) => ({ id, slug, title }));
+        if (action === "listTopics") return topicDefinitions.map(({ id, slug, title, format }) => ({ id, slug, title, format }));
         throw new Error(`Unknown topic action: ${action}`);
       }
     };
@@ -99,16 +105,16 @@ function TopicCollection({ automationRef }: Pick<SiteProjectPageProps, "automati
       <main className="topic-collection">
         <p className="topic-kicker">Research topics</p>
         <h1>研究专题</h1>
-        <p className="topic-collection-lede">专题不是标签集合，而是由编辑问题、比较框架、研究对象和证据边界组成的跨公司阅读路径。</p>
+        <p className="topic-collection-lede">专题不是标签集合，而是由编辑问题、长篇叙事或比较框架、研究对象和证据边界组成的跨公司阅读路径。</p>
         <div className="topic-collection-list">
           {(topics.data?.topics ?? topicDefinitions.map((topic) => ({
             ...topic,
-            companyCount: topic.companies.length,
+            companyCount: topicPrimaryCompanyIDs(topic).length,
             canonical: topicPath(topic.slug)
           }))).map((topic) => (
             <article key={topic.id}>
               <div>
-                <span>{topic.companyCount} 家公司 · 更新于 {topic.updatedAt}</span>
+                <span>{topic.format === "essay" ? "长篇专题" : "比较专题"} · {topic.companyCount} 家公司 · 更新于 {topic.updatedAt}</span>
                 <h2><a href={topic.canonical}>{topic.title}</a></h2>
                 <p>{topic.description}</p>
               </div>
@@ -122,7 +128,7 @@ function TopicCollection({ automationRef }: Pick<SiteProjectPageProps, "automati
 }
 
 type TopicMatrixProps = {
-  topic: ResolvedTopic;
+  topic: ResolvedTopic & { definition: ComparisonTopicDefinition };
   pathFilter: string;
   companyFilter: string;
   dimensionFilter: string;
@@ -203,12 +209,12 @@ function TopicMatrix({ topic, pathFilter, companyFilter, dimensionFilter, openEv
   );
 }
 
-function TopicDetail({ slug, automationRef }: { slug: string; automationRef: SiteProjectPageProps["automationRef"] }) {
-  const definition = topicBySlug.get(slug);
+function ComparisonTopicDetail({ definition, automationRef }: { definition: ComparisonTopicDefinition; automationRef: SiteProjectPageProps["automationRef"] }) {
+  const slug = definition.slug;
   const topic = useQuery({
     queryKey: ["omac-topic", slug],
-    queryFn: () => fetchJSON<ResolvedTopic>(`/api/topics/${encodeURIComponent(slug)}`),
-    enabled: Boolean(definition)
+    queryFn: () => fetchJSON<ResolvedTopic & { definition: ComparisonTopicDefinition }>(`/api/topics/${encodeURIComponent(slug)}`),
+    enabled: true
   });
   const [pathFilter, setPathFilter] = useState("");
   const [companyFilter, setCompanyFilter] = useState("");
@@ -216,7 +222,6 @@ function TopicDetail({ slug, automationRef }: { slug: string; automationRef: Sit
   const [openEvidence, setOpenEvidence] = useState("");
 
   const visibleCompanyIDs = useMemo(() => {
-    if (!definition) return [];
     return definition.companies
       .filter((company) => (!pathFilter || company.pathID === pathFilter) && (!companyFilter || company.id === companyFilter))
       .map((company) => company.id);
@@ -230,26 +235,27 @@ function TopicDetail({ slug, automationRef }: { slug: string; automationRef: Sit
     const snapshot = () => ({
       page: "topic",
       topicIDs: topicDefinitions.map((item) => item.id),
-      topicID: definition?.id ?? null,
+      format: definition.format,
+      topicID: definition.id,
       path: pathFilter || null,
       company: companyFilter || null,
       dimension: dimensionFilter || null,
       evidencePanel: openEvidence || null,
       visibleCompanyIDs,
-      grades: definition ? visibleCompanyIDs.flatMap((companyID) => {
+      grades: visibleCompanyIDs.flatMap((companyID) => {
         const company = definition.companies.find((item) => item.id === companyID)!;
         return topicDimensionIDs
           .filter((dimensionID) => !dimensionFilter || dimensionID === dimensionFilter)
           .map((dimensionID) => ({ companyID, dimensionID, grade: company.dimensions[dimensionID].grade }));
-      }) : [],
+      }),
       resolvedCanonicals: topic.data ? Object.fromEntries(Object.entries(topic.data.objects).map(([id, object]) => [id, object.canonical])) : {}
     });
     const controller = {
       state: snapshot,
       invoke: async (action: string, payload?: unknown) => {
         const value = typeof payload === "string" ? payload : String((payload as { id?: unknown; slug?: unknown } | null)?.id ?? (payload as { slug?: unknown } | null)?.slug ?? "");
-        if (action === "listTopics") return topicDefinitions.map(({ id, slug: itemSlug, title }) => ({ id, slug: itemSlug, title }));
-        if (action === "openTopic") {
+        if (action === "listTopics") return topicDefinitions.map(({ id, slug: itemSlug, title, format }) => ({ id, slug: itemSlug, title, format }));
+        if (action === "openTopic" || action === "openChildTopic") {
           const nextSlug = value;
           if (!topicBySlug.has(nextSlug)) throw new Error(`Unknown topic: ${nextSlug}`);
           window.location.assign(topicPath(nextSlug));
@@ -272,9 +278,6 @@ function TopicDetail({ slug, automationRef }: { slug: string; automationRef: Sit
     return () => { if (automationRef.current === controller) automationRef.current = null; };
   }, [automationRef, companyFilter, definition, dimensionFilter, openEvidence, pathFilter, topic.data, visibleCompanyIDs]);
 
-  if (!definition) {
-    return <div className="omac-topic"><TopicHeader /><main className="topic-error"><p>404</p><h1>专题不存在</h1><a href="/topics">返回研究专题</a></main></div>;
-  }
   if (topic.isLoading) return <div className="omac-topic"><TopicHeader /><main className="topic-error"><p>Loading</p><h1>{definition.title}</h1></main></div>;
   if (topic.error || !topic.data) return <div className="omac-topic"><TopicHeader /><main className="topic-error"><p>Topic unavailable</p><h1>专题引用未通过发布校验</h1><a href="/topics">返回研究专题</a></main></div>;
 
@@ -377,7 +380,230 @@ function TopicDetail({ slug, automationRef }: { slug: string; automationRef: Sit
   );
 }
 
+type EssayEvidenceProps = {
+  topic: ResolvedTopic;
+  ids: string[];
+  panelKey: string;
+  openEvidence: string;
+  onEvidence: (key: string) => void;
+};
+
+function EssayEvidence({ topic, ids, panelKey, openEvidence, onEvidence }: EssayEvidenceProps) {
+  if (ids.length === 0) return null;
+  const expanded = openEvidence === panelKey;
+  return (
+    <div className="essay-evidence">
+      <button type="button" aria-expanded={expanded} onClick={() => onEvidence(expanded ? "" : panelKey)}>
+        {ids.length} 条证据 <ChevronDown aria-hidden="true" />
+      </button>
+      {expanded && (
+        <ul>
+          {ids.map((id) => {
+            const evidence = objectFor(topic, id);
+            return <li key={id}><a href={evidence.canonical}>{evidence.title}</a><span>{evidence.indexable ? "可索引证据页" : "公开可读 · noindex"}</span></li>;
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+type EssayBlockViewProps = {
+  block: EssayBlock;
+  blockKey: string;
+  topic: ResolvedTopic;
+  openEvidence: string;
+  activeAnchor: string;
+  onEvidence: (key: string) => void;
+  onAnchor: (id: string) => void;
+};
+
+function EssayBlockView({ block, blockKey, topic, openEvidence, activeAnchor, onEvidence, onAnchor }: EssayBlockViewProps) {
+  if (block.type === "prose") {
+    return (
+      <section className="essay-prose">
+        {block.title && <h3>{block.title}</h3>}
+        {block.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        {block.objectIDs && block.objectIDs.length > 0 && (
+          <div className="essay-object-links">{block.objectIDs.map((id) => { const object = objectFor(topic, id); return <a href={object.canonical} key={id}>{object.title}<ArrowRight aria-hidden="true" /></a>; })}</div>
+        )}
+        <EssayEvidence topic={topic} ids={block.evidenceIDs ?? []} panelKey={`${blockKey}:evidence`} openEvidence={openEvidence} onEvidence={onEvidence} />
+      </section>
+    );
+  }
+
+  if (block.type === "anchor-comparison") {
+    return (
+      <section className="essay-anchor-comparison" aria-labelledby={`${blockKey}-title`}>
+        <h3 id={`${blockKey}-title`}>{block.title}</h3>
+        <div className="essay-anchor-grid">
+          {block.anchors.map((anchor, index) => {
+            const object = objectFor(topic, anchor.id);
+            return (
+              <article key={anchor.id} className={activeAnchor === anchor.id ? "is-active" : ""}>
+                <span>锚点 0{index + 1}</span>
+                <h4><a href={object.canonical} onClick={() => onAnchor(anchor.id)}>{anchor.title}<ExternalLink aria-hidden="true" /></a></h4>
+                {anchor.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                <EssayEvidence topic={topic} ids={anchor.evidenceIDs} panelKey={`${blockKey}:${anchor.id}`} openEvidence={openEvidence} onEvidence={onEvidence} />
+              </article>
+            );
+          })}
+        </div>
+        <div className="essay-synthesis"><span>这组对照说明什么</span>{block.synthesis.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
+      </section>
+    );
+  }
+
+  if (block.type === "supporting-cases") {
+    return (
+      <section className="essay-supporting" aria-labelledby={`${blockKey}-title`}>
+        <h3 id={`${blockKey}-title`}>{block.title}</h3>
+        <div>{block.cases.map((item) => { const object = objectFor(topic, item.id); return <article key={item.id}><h4><a href={object.canonical}>{object.title}<ArrowRight aria-hidden="true" /></a></h4><p>{item.role}</p></article>; })}</div>
+      </section>
+    );
+  }
+
+  if (block.type === "evidence-callout") {
+    return (
+      <aside className="essay-callout" aria-labelledby={`${blockKey}-title`}>
+        <span>Evidence boundary</span>
+        <h3 id={`${blockKey}-title`}>{block.title}</h3>
+        {block.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        <EssayEvidence topic={topic} ids={block.evidenceIDs ?? []} panelKey={`${blockKey}:evidence`} openEvidence={openEvidence} onEvidence={onEvidence} />
+      </aside>
+    );
+  }
+
+  const child = topicBySlug.get(block.topicID);
+  return (
+    <aside className="essay-child-topic">
+      <span>深入子专题</span>
+      <div><h3><a href={topicPath(block.topicID)}>{block.title}</a></h3><p>{block.summary}</p></div>
+      <a href={topicPath(block.topicID)} aria-label={`打开 ${child?.title ?? block.title}`}><ArrowRight aria-hidden="true" /></a>
+    </aside>
+  );
+}
+
+function EssayTopicDetail({ definition, automationRef }: { definition: EssayTopicDefinition; automationRef: SiteProjectPageProps["automationRef"] }) {
+  const topic = useQuery({
+    queryKey: ["omac-topic", definition.slug],
+    queryFn: () => fetchJSON<ResolvedTopic>(`/api/topics/${encodeURIComponent(definition.slug)}`)
+  });
+  const [currentChapter, setCurrentChapter] = useState(definition.chapters[0]?.id ?? "");
+  const [activeAnchor, setActiveAnchor] = useState("");
+  const [openEvidence, setOpenEvidence] = useState("");
+
+  useEffect(() => { document.title = definition.htmlTitle; }, [definition.htmlTitle]);
+
+  useEffect(() => {
+    const snapshot = () => ({
+      page: "topic",
+      format: definition.format,
+      topicIDs: topicDefinitions.map((item) => item.id),
+      topicID: definition.id,
+      chapter: currentChapter || null,
+      anchor: activeAnchor || null,
+      evidencePanel: openEvidence || null,
+      childTopicIDs: definition.childTopicIDs,
+      visibleCompanyIDs: definition.coveredCompanyIDs,
+      resolvedCanonicals: topic.data ? Object.fromEntries(Object.entries(topic.data.objects).map(([id, object]) => [id, object.canonical])) : {}
+    });
+    const controller = {
+      state: snapshot,
+      invoke: async (action: string, payload?: unknown) => {
+        const target = payload as { id?: unknown; slug?: unknown; key?: unknown } | null;
+        const value = typeof payload === "string" ? payload : String(target?.id ?? target?.slug ?? target?.key ?? "");
+        if (action === "listTopics") return topicDefinitions.map(({ id, slug, title, format }) => ({ id, slug, title, format }));
+        if (action === "openTopic" || action === "openChildTopic") {
+          if (!topicBySlug.has(value)) throw new Error(`Unknown topic: ${value}`);
+          window.location.assign(topicPath(value));
+          return { slug: value, path: topicPath(value) };
+        }
+        if (action === "setChapter") {
+          if (!definition.chapters.some((chapter) => chapter.id === value)) throw new Error(`Unknown chapter: ${value}`);
+          setCurrentChapter(value);
+          document.getElementById(`chapter-${value}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else if (action === "selectAnchor") {
+          setActiveAnchor(value);
+        } else if (action === "expandEvidence") {
+          setOpenEvidence(value);
+        } else if (action !== "state") {
+          throw new Error(`Unknown topic action: ${action}`);
+        }
+        await new Promise((resolve) => window.setTimeout(resolve, 30));
+        return { ...snapshot(), chapter: action === "setChapter" ? value : currentChapter, anchor: action === "selectAnchor" ? value : activeAnchor, evidencePanel: action === "expandEvidence" ? value : openEvidence };
+      }
+    };
+    automationRef.current = controller;
+    return () => { if (automationRef.current === controller) automationRef.current = null; };
+  }, [activeAnchor, automationRef, currentChapter, definition, openEvidence, topic.data]);
+
+  if (topic.isLoading) return <div className="omac-topic"><TopicHeader /><main className="topic-error"><p>Loading</p><h1>{definition.title}</h1></main></div>;
+  if (topic.error || !topic.data) return <div className="omac-topic"><TopicHeader /><main className="topic-error"><p>Topic unavailable</p><h1>专题引用未通过发布校验</h1><a href="/topics">返回研究专题</a></main></div>;
+
+  const resolved = topic.data;
+  return (
+    <div className="omac-topic essay-topic">
+      <TopicHeader />
+      <main>
+        <section className="essay-hero" aria-labelledby="essay-title">
+          <p className="topic-kicker">Long-form research · {definition.updatedAt}</p>
+          <h1 id="essay-title">{definition.title}</h1>
+          <div className="essay-hero-grid">
+            <div className="essay-introduction">{definition.introduction.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
+            <aside><span>开篇判断</span><ol>{definition.theses.map((thesis) => <li key={thesis}>{thesis}</li>)}</ol></aside>
+          </div>
+          <p className="essay-promise">{definition.promise}</p>
+          <nav className="essay-toc" aria-label="专题目录">
+            {definition.chapters.map((chapter, index) => <a href={`#chapter-${chapter.id}`} key={chapter.id} onClick={() => setCurrentChapter(chapter.id)}><span>{index < 4 ? `0${index + 1}` : "结论"}</span><strong>{chapter.title}</strong></a>)}
+          </nav>
+        </section>
+
+        <article className="essay-body">
+          {definition.chapters.map((chapter, chapterIndex) => (
+            <section className="essay-chapter" id={`chapter-${chapter.id}`} key={chapter.id} aria-labelledby={`chapter-${chapter.id}-title`}>
+              <header>
+                <span>{chapterIndex < 4 ? `0${chapterIndex + 1}` : "Cross-path"}</span>
+                <div><p className="topic-kicker">{chapter.eyebrow}</p><h2 id={`chapter-${chapter.id}-title`}>{chapter.title}</h2><p>{chapter.summary}</p></div>
+              </header>
+              <div className="essay-chapter-content">
+                {chapter.blocks.map((block, index) => <EssayBlockView key={`${chapter.id}-${index}`} block={block} blockKey={`${chapter.id}-${index}`} topic={resolved} openEvidence={openEvidence} activeAnchor={activeAnchor} onEvidence={setOpenEvidence} onAnchor={setActiveAnchor} />)}
+              </div>
+            </section>
+          ))}
+        </article>
+
+        <section className="essay-boundaries" aria-labelledby="essay-boundaries-title">
+          <header>
+            <p className="topic-kicker">Bridge / boundary references</p>
+            <h2 id="essay-boundaries-title">相关基础层与边界案例</h2>
+            <p>这些公司帮助界定 runtime、身份、基础设施与垂直入口，但不进入本专题的主体 ItemList，也不承担同等深度判断。</p>
+          </header>
+          <div>
+            {definition.bridgeReferences.map((reference) => {
+              const object = objectFor(resolved, reference.id);
+              return <article key={reference.id}><h3><a href={object.canonical}>{object.title}<ArrowRight aria-hidden="true" /></a></h3><p>{reference.summary}</p></article>;
+            })}
+          </div>
+        </section>
+
+        <section className="essay-conclusion" aria-labelledby="essay-conclusion-title">
+          <p className="topic-kicker">Conclusion</p>
+          <h2 id="essay-conclusion-title">{definition.conclusion.title}</h2>
+          {definition.conclusion.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          <blockquote>{definition.conclusion.closingQuestion}</blockquote>
+        </section>
+      </main>
+      <footer className="topic-footer"><a href="/">Oh My AI Company</a><span>公开研究 vault · 证据与判断分离</span><a href="/topics">全部专题</a></footer>
+    </div>
+  );
+}
+
 export function TopicPage({ pathname, automationRef }: SiteProjectPageProps) {
   if (pathname === "/topics" || pathname === "/topics/") return <TopicCollection automationRef={automationRef} />;
-  return <TopicDetail slug={topicSlugFromPath(pathname)} automationRef={automationRef} />;
+  const definition = topicBySlug.get(topicSlugFromPath(pathname));
+  if (!definition) return <div className="omac-topic"><TopicHeader /><main className="topic-error"><p>404</p><h1>专题不存在</h1><a href="/topics">返回研究专题</a></main></div>;
+  return definition.format === "essay"
+    ? <EssayTopicDetail definition={definition} automationRef={automationRef} />
+    : <ComparisonTopicDetail definition={definition} automationRef={automationRef} />;
 }

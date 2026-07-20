@@ -24,7 +24,7 @@ import {
   type SEOObject,
   type SEORelation
 } from "./seo";
-import { expectedTopicObjectType, topicBySlug, topicDefinitions, topicPath, topicReferencedIDs } from "./topics/topic-definitions";
+import { expectedTopicObjectType, topicBySlug, topicDefinitions, topicPath, topicPrimaryCompanyIDs, topicReferencedIDs } from "./topics/topic-definitions";
 import { topicCollectionSEOBody, topicCollectionStructuredData, topicSEOBody, topicStructuredData } from "./topics/topic-seo";
 import type { ResolvedTopic, ResolvedTopicObject, TopicDefinition } from "./topics/topic-types";
 
@@ -643,7 +643,8 @@ function topicListPayload() {
       title: topic.title,
       description: topic.description,
       updatedAt: topic.updatedAt,
-      companyCount: topic.companies.length,
+      format: topic.format,
+      companyCount: topicPrimaryCompanyIDs(topic).length,
       canonical: topicPath(topic.slug)
     }))
   };
