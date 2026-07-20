@@ -9,7 +9,7 @@
 5. 对官网 logo 做客户侧精确检索，并单独读取 Santander 联合演讲；
 6. 查 HN、Reddit、微信、Product Hunt 和 YouTube；域名搜索只用 verified_count 判断精确社区命中；
 7. 从 DOM 的 lazy image、X video poster 和 selector screenshot 同时提取原图与页面状态；
-8. 尝试 Similarweb，因登录态失效只记录 unavailable，不制造数字。
+8. 首次尝试 Similarweb 时登录态失效，先记录 unavailable；用户恢复登录后继续同一轮，提取月度 Highcharts 序列、地域、设备、搜索和渠道数据，并用总量与环比做自洽校验。
 
 ## 本轮校正
 
@@ -18,11 +18,12 @@
 - “deterministic”必须拆成 plan、code execution、validation 和 end-to-end outcome 四层，不把代码可复现外推为系统零幻觉。
 - Reddit/HN 的 count 不等于声量。Reddit 10 个候选只有 1 个精确域名命中；新的 verified_count 语义有效避免了假阳性。
 - 图片策略继续采用“DOM 原图优先 + 页面截图补状态 + 视频 poster 补产品界面”，没有把纯渐变背景放入资产。
+- Similarweb 详细页的月序列合计能复算 91,139 和 6 月 +18.1%，因此采用；概览页另一组 4,509 monthly visits 无法与总量自洽，保留为口径冲突而不合并。
 
 ## 工具与缺口
 
 - Pinix browser/site、LinkedIn、X、HN、Reddit、微信和 YouTube transcript 本轮均可用；YouTube 对目标视频明确返回 empty transcript，符合空壳红线。
-- Similarweb 登录过期，流量维度未完成；这是外部登录状态，不用搜索估算替代。
+- Similarweb 首次登录过期，恢复后完成流量快照；完整上半年渠道份额仍因小样本 unavailable，只保留 7 月 month-to-date 的渠道绝对计数并明确时间边界。
 - Product Hunt 精确检索无结果；没有硬造 launch。
 - 官网 Elementor selector screenshot 偶发 target closed，并行截同一 tab 不稳定；串行重试可完成。
 - 账号已加入 X `AI Product` / `AI Founder` lists，深挖转为持续监控。

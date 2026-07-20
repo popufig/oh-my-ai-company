@@ -177,7 +177,26 @@ Maisa 不是一次 launch 完成的产品：
 
 ## 流量与社区
 
-本轮 Similarweb 入口登录态失效，没有取得可复核访问量、渠道、国家、关键词或 similar sites；不制造流量估算，见 [[source.maisa.similarweb-unavailable]]。
+![Maisa 2026 年上半年 Similarweb 流量与设备分布](assets/maisa/traffic.png)
+
+Similarweb 对 `maisa.ai` 主域、全球、全流量的第三方估算显示，2026 年 1–6 月合计约 **91,139 visits**，月均约 **15,190**。月度序列可自洽复算为：
+
+| 月份 | 估算访问量 |
+|---|---:|
+| 1 月 | 13,451 |
+| 2 月 | 13,074 |
+| 3 月 | 14,807 |
+| 4 月 | 14,676 |
+| 5 月 | 16,107 |
+| 6 月 | 19,023 |
+
+6 月环比约 **+18.1%**，从年初到 6 月增长约 41%。这说明官网注意力在稳步抬升，但仍是月访问约 2 万以下的小体量 enterprise site，不能据此估算客户、ARR 或留存。
+
+上半年月均指标约为 7,490 unique visitors、49 秒访问时长、1.73 页/次、42.43% 跳出率；移动 Web 占 67.42%，桌面占 32.58%。地域高度集中在西班牙 58.12%，其后是美国 19.80%、德国 8.29%、巴西 6.26%、英国 4.68%。这与西班牙创始团队及面向欧美企业销售的路径一致，但只是访问来源，不等于客户所在地。
+
+完整上半年渠道卡因样本不足没有给出稳定份额；2026 年 7 月 month-to-date 的绝对计数为 Organic Search 483、Organic Social 276、Direct 245、Gen AI 49、Email 32，合计 1,085。换算约为搜索 44.5%、社交 25.4%、直接 22.6%、GenAI 4.5%、邮件 2.9%，只能作为当月早期方向信号。搜索约 80% branded、20% non-brand，Top query 仍以 Maisa 及拼写变体为主，说明搜索发现主要依赖品牌，而非成熟的非品牌 SEO。
+
+Similarweb 自动列出的 Automation Anywhere、Aporia、modl.ai、Digital Workforce 混合了直接竞争、受众邻接和同词匹配，不能直接作为竞品集合。页面概览模块另显示一组不自洽的 4,509 monthly visits；本文采用能与 91,139 总量和 +18.1% 环比互相复算的详细月序列，不合并两种口径。详见 [[source.maisa.similarweb-2026h1]] 与 [[traffic.similarweb.maisa-2026-h1]]。
 
 可确认的公开分发信号：
 
@@ -250,4 +269,4 @@ Maisa 不是一次 launch 完成的产品：
 - [[source.maisa.linkedin-company]]、[[source.maisa.linkedin-founders]]
 - [[source.maisa.david-demo]]、[[source.maisa.youtube-studio]]
 - [[source.maisa.hn-scan]]、[[source.maisa.reddit-scan]]、[[source.maisa.wechat-scan]]
-- [[source.maisa.producthunt-scan]]、[[source.maisa.similarweb-unavailable]]
+- [[source.maisa.producthunt-scan]]、[[source.maisa.similarweb-2026h1]]、[[traffic.similarweb.maisa-2026-h1]]
