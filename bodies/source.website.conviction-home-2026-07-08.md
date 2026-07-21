@@ -1,25 +1,17 @@
-# Conviction 官网
+# Conviction 官方网站（更新至 2026-07-21）
 
-采集时间：2026-07-08，证据等级 S1。
+官网将 [[investor.conviction]] 定义为服务 AI-native / “Software 3.0” 公司的 venture firm，公开支票范围为 100 万至 2500 万美元，偏好早期且经常是 first investor。
 
-## 核心信息
+## 当前结构
 
-Conviction 官网自称是服务 AI-Native / “Software 3.0” 公司的 early-stage venture fund。
+- 投资侧人物：[[person.sarah-guo]]、[[person.mike-vernal]]、[[person.pranav-reddy-conviction]]、[[person.bella-garcia-camargo]]；
+- Talent：Niki Nguyen、Vivian Nguyen；
+- EA/Ops：Christy Hogue、Cami Brunjes；
+- 官网列 18 家公开 portfolio，并说明另有未公开 stealth 公司；
+- Projects 包括 Embed、Jobs、Mixture of Experts、No Priors、Good Company、Commit。
 
-关键口径：
+## 证据边界
 
-- 支票大小：$1M-$25M。
-- 投资阶段：偏早期，often the first investor。
-- 定位：帮助 powerful AI models 转化成 powerful products。
-- 团队：Sarah Guo、Mike Vernal、Pranav Reddy、Bella Garcia-Camargo，以及 talent / ops 团队。
-- 官网明确强调 deep network、hands-on、domain understanding。
+官网能证明当前公开团队、品牌定位、支票口径和 portfolio membership，不能证明每笔投资的轮次、金额、领投、board、vehicle 或最终决策人。页面是动态机构自述，后续更新应覆盖采集时间。
 
-## 官网 portfolio 列表
-
-官网列出的 portfolio 包括：Baseten、Cartesia、Cognition、Corridor、Distributed Spectrum、Essential、Harvey、HeyGen、Latent、Listen Labs、Mistral、Mithril、Onyx、Open Evidence、RunSybil、Sierra、Sola、Sunday。
-
-## 用法
-
-这条 source 是 Conviction 本体、团队、portfolio、支票大小和定位的主证据。
-
-相关机构：[[investor.conviction]]。
+URL：https://www.conviction.com/

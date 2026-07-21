@@ -1,6 +1,6 @@
-# 投资机构调研 SOP v0（First Round + a16z 校准）
+# 投资机构调研 SOP v0
 
-> **状态：draft。** 本方法先由 [[investor.first-round-capital]] 跑通精品早期机构，再由 [[investor.andreessen-horowitz]] 校准多基金、多阶段、平台型机构，并吸收 Accel、Lightspeed 的历史经验。它仍需用小型 AI-native 机构继续校准，不是已经固化的通用标准。
+> **状态：active v0。** 本方法由 [[investor.first-round-capital]]、[[investor.andreessen-horowitz]]、[[investor.conviction]] 分别校准精品早期、多基金平台型、小型 AI-native 三类机构，并吸收 Accel、Lightspeed 的历史经验。它是当前批量摸排的操作基线，不是永不变化的最终标准；每轮仍记录流程与反例，再决定是否修订。
 
 ## 目标
 
@@ -78,6 +78,10 @@
 
 官网单列 AI、security、fintech 等 topic，不代表存在同名 fund 或 team。至少用三个证据面交叉：fund announcement、team directory 的实际 vertical、具体 investment byline/vehicle。主题页只证明内容与市场入口，除非有额外证据，不升级为组织结构。
 
+### 小型机构也要检查 sidecar / opportunity vehicle
+
+团队小不代表资本结构简单。个人品牌或 AI-native 机构仍可能同时存在 flagship、expansion/opportunity、select/SPV、accelerator SAFE。监管 filing 中的 offering amount、amount sold、first sale、related persons 分别记录；新 vehicle 的设立不等于已完成募资，也不自动说明它投资了哪些公司。
+
 ## 3. 把 current team 与历史归因分开
 
 建立人物层时至少分：
@@ -91,6 +95,8 @@
 人物对象至少保留 role、机构 affiliation、官方 bio、X、LinkedIn。不要因为 portfolio 仍显示某人，就把他写成当前合伙人。
 
 对于上百人团队，默认只建三类人物：机构创始/治理者、能解释当前 portfolio 交集的公开责任人、能够代表关键 thesis/平台能力的负责人。其余人员保留在结构化 source 或统计摘要中，避免图谱被组织目录淹没。
+
+对于 10 人以内的小机构，可扫描完整团队，但默认只把投资侧、关键 platform owner 和可解释关系的人建为 person；EA/Ops 与一般支持角色先留在团队 source。个人品牌需要同时作为 sourcing/distribution 资产与 key-person risk 研究。
 
 ## 4. 研究决策系统
 
@@ -157,6 +163,8 @@
 不要从“服务完整”直接推出“服务有效”。
 
 对平台型机构，额外拆出 customer/government briefing、media/distribution、global partnerships、accelerator 和 open-source/research。注意这些服务往往是选择性投入；历史 pipeline 不是收入，launch exposure 不是 adoption，团队规模也不是覆盖率。
+
+对小型 AI-native 机构，重点检查 cohort、compute/API credits、人才活动、播客、fellowship 和公开 opportunity map。名义 credits 不等于实际使用，活动名单不等于 portfolio，投资方 launch 文中的客户结果仍需客户侧或独立来源交叉。
 
 ## 7. 把内容与社群当作网络研究
 
@@ -237,11 +245,11 @@
 
 不要把正文长度、社交关注或机构名气直接当优先级。完整批次设计与当前基线见 [[note.investor-sweep-baseline-2026-07-21]]。
 
-## 试点留下的待校准问题
+## 后续继续校准的问题
 
 - 非美国机构、corporate VC、accelerator、family office 是否需要不同章节；
 - 多阶段机构是否需要在 Memex 新增独立 `fund` / `program` type；当前先在正文和 source 中保留 vehicle 语义，避免过早扩 schema；
 - 人物 cluster 应按项目数、当前活跃度还是 thesis article 加权；
 - operating support 的效果应如何建立可比指标。
 
-First Round 与 a16z 已覆盖精品早期和多阶段平台两端。后续至少再用一家个人品牌/小型 AI 原生基金跑一轮，才能决定哪些步骤升级为 active SOP。
+First Round、a16z 与 Conviction 已覆盖当前批量摸排所需的三种主要机构形态。SOP 进入 active v0；遇到非美国机构、corporate VC、accelerator、family office 时，先记录差异，不强行套用，再决定是否形成分支方法。

@@ -21,12 +21,18 @@ Conviction 做了几件很适合 AI startup 的事：
 
 ## 对我们后续研究的影响
 
-以后看到一家 AI 公司有 Conviction，应该提高关注优先级。它可能代表：
+以后看到一家 AI 公司有 Conviction，可以把它作为高质量发现信号，但不能自动升级公司判断。它可能代表：
 
-- founder 质量较高；
+- 团队通过了一个集中型 AI 投资网络的筛选；
 - 方向符合 AI-native / Software 3.0 thesis；
 - 公司可能能接入美国 AI founder / researcher / customer 网络；
 - 如果公司有跨境背景，Conviction 可能还承担“身份重构/美国市场可信度”的作用。
+
+## 2026-07-21 校正
+
+Conviction 已不是纯 solo-GP 模式：Mike Vernal 加入后，Fund II、Expansion I、Select I 形成了不同资本载体，当前官网投资侧也扩展为 Sarah、Mike、Pranav、Bella。个人品牌仍是核心资产，但研究时必须继续追 vehicle、公开署名人和具体投资证据。
+
+同时，“被 Conviction 投资”不能直接支持 founder quality、产品规模或商业成功。官方 portfolio 关系只用于发现；轮次、角色、采用和结果仍需公司侧与第三方证据。
 
 相关概念：[[concept.ai-native-venture-platform]]、[[concept.ai-company-us-repositioning]]。
 相关机构：[[investor.conviction]]。
