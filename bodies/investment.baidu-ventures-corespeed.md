@@ -1,0 +1,1 @@
+2025-07-24 的公开稿称 CoreSpeed 获得 Baidu Ventures 天使投资，未披露金额。公司 LinkedIn 当前也写 Backed by BV Fund。多家转载高度同源，因此关系置信度保留为 medium；不把后续采访中的累计数百万美元或估值分配给 Baidu Ventures。证据：[[source.ifeng.corespeed-baidu-2025-07-24]]。
