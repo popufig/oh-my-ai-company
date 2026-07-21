@@ -1,6 +1,6 @@
-# 投资机构调研 SOP v0（First Round 试点）
+# 投资机构调研 SOP v0（First Round + a16z 校准）
 
-> **状态：draft。** 本方法来自 [[investor.first-round-capital]] 一个完整试点，并吸收 Accel、Lightspeed 的历史经验。它用于下一批机构校准，不是已经固化的通用标准。
+> **状态：draft。** 本方法先由 [[investor.first-round-capital]] 跑通精品早期机构，再由 [[investor.andreessen-horowitz]] 校准多基金、多阶段、平台型机构，并吸收 Accel、Lightspeed 的历史经验。它仍需用小型 AI-native 机构继续校准，不是已经固化的通用标准。
 
 ## 目标
 
@@ -62,6 +62,22 @@
 
 证据优先级：监管 filing / 官方公告 > 强媒体 > 数据库聚合 > 社区。Form D 的 offering amount、amount sold、filing date 必须分别写，不能把 offering target 写成 final close。
 
+### 多阶段机构先画品牌下的资金地图
+
+大型机构不能只建一个 investor 再挂全部 company。先区分：
+
+- brand 与 SEC registered adviser；
+- Seed / Venture / Growth / sector fund；
+- accelerator、scout、fellowship、opportunity vehicle；
+- evergreen / long-duration / family capital 等非典型平台；
+- 当前策略与历史 fund 的继承关系。
+
+基金公告里的总募资是多 vehicle 之和时，不得写成单一主题基金。AUM、RAUM、committed capital、fund size 与可部署 dry powder 必须保留各自口径。
+
+### 主题、团队、基金不是同一层
+
+官网单列 AI、security、fintech 等 topic，不代表存在同名 fund 或 team。至少用三个证据面交叉：fund announcement、team directory 的实际 vertical、具体 investment byline/vehicle。主题页只证明内容与市场入口，除非有额外证据，不升级为组织结构。
+
 ## 3. 把 current team 与历史归因分开
 
 建立人物层时至少分：
@@ -73,6 +89,8 @@
 - 已离职但仍出现在历史 portfolio 的投资人。
 
 人物对象至少保留 role、机构 affiliation、官方 bio、X、LinkedIn。不要因为 portfolio 仍显示某人，就把他写成当前合伙人。
+
+对于上百人团队，默认只建三类人物：机构创始/治理者、能解释当前 portfolio 交集的公开责任人、能够代表关键 thesis/平台能力的负责人。其余人员保留在结构化 source 或统计摘要中，避免图谱被组织目录淹没。
 
 ## 4. 研究决策系统
 
@@ -86,6 +104,8 @@
 - 冲突、竞争投资和信息墙如何处理。
 
 若只看到原则口号，就明确写“机制不可见”。
+
+投资公告作者、partner attribution、董事会席位和最终决策权是四种不同关系。Byline 可以支持公开归因和能力圈，不能自动支持 sponsor、IC vote、否决权或单人决策。旧文章披露的机制必须标注年代；机构重组后不可直接沿用。
 
 ## 5. 结构化 portfolio，再形成 partner clusters
 
@@ -113,6 +133,8 @@
 - 被同一 partner 连续下注，能验证其 thesis；
 - 已有强证据且能进入监控闭环。
 
+大型 portfolio 默认只扩当前 vault 已研究公司的交集，以及少量能验证新产品层的候选。不为了“完整”导入数百家公司；官方列表也可能排除未获披露许可、未宣布资产并存在更新滞后。
+
 ## 6. 研究机构 operating system
 
 投资后支持至少拆成：
@@ -133,6 +155,8 @@
 4. 有独立结果或 cohort 数据。
 
 不要从“服务完整”直接推出“服务有效”。
+
+对平台型机构，额外拆出 customer/government briefing、media/distribution、global partnerships、accelerator 和 open-source/research。注意这些服务往往是选择性投入；历史 pipeline 不是收入，launch exposure 不是 adoption，团队规模也不是覆盖率。
 
 ## 7. 把内容与社群当作网络研究
 
@@ -216,9 +240,8 @@
 ## 试点留下的待校准问题
 
 - 非美国机构、corporate VC、accelerator、family office 是否需要不同章节；
-- 多阶段巨型机构如何避免 fund vehicle 与 portfolio 爆炸；
+- 多阶段机构是否需要在 Memex 新增独立 `fund` / `program` type；当前先在正文和 source 中保留 vehicle 语义，避免过早扩 schema；
 - 人物 cluster 应按项目数、当前活跃度还是 thesis article 加权；
-- 是否需要独立的 `fund` 和 `program` type；
 - operating support 的效果应如何建立可比指标。
 
-后续至少用一家多阶段机构和一家个人品牌/小型 AI 原生基金再跑两轮，才能决定哪些步骤升级为 active SOP。
+First Round 与 a16z 已覆盖精品早期和多阶段平台两端。后续至少再用一家个人品牌/小型 AI 原生基金跑一轮，才能决定哪些步骤升级为 active SOP。
