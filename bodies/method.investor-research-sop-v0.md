@@ -203,6 +203,16 @@
 - Graph 能从 investor 看到 person、investment、company、source、note、concept、touchpoint；
 - 单独记录本轮流程、失败和方法变化。
 
+## 12. 全面摸排时使用三级深度
+
+单机构试点不能直接复制到全部 investor。先根据不同已研究 company 的去重交集、战略相关性、现有资产债务和机构类型分层：
+
+- **核心机构：** 通常连接 5 家以上公司，或对目标赛道具有高战略价值。运行本 SOP 全部步骤，形成完整 dossier 与人物/机构网络。
+- **重复机构：** 连接 2–4 家公司或在同一赛道重复出现。先做标准档案：身份、关键人物、已验证投资边、portfolio cluster、官方 thesis、判断 note 与监控入口。
+- **单次机构/个人：** 只出现一次时先做证据卡：主体消歧、官方 URL、investment 和 source。出现第二家公司、明确 thesis 或关键网络关系时再升级。
+
+不要把正文长度、社交关注或机构名气直接当优先级。完整批次设计与当前基线见 [[note.investor-sweep-baseline-2026-07-21]]。
+
 ## 试点留下的待校准问题
 
 - 非美国机构、corporate VC、accelerator、family office 是否需要不同章节；
