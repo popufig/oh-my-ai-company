@@ -12,6 +12,11 @@
     "ahrefs_site_verification": "7eac0aad1691283de095cbce82756447c55a0bb8368c45f0ec2b75c6dc99d99b",
     "indexnow_key": "395a13fe1103f644f6ad99fd1623fe09"
   },
+  "og_image_selection": {
+    "allowed_content_types": ["image/png", "image/jpeg", "image/webp"],
+    "maximum_aspect_ratio": 4,
+    "excluded_filename_terms": ["logo", "wordmark"]
+  },
   "routes": {
     "batch": { "collection": "batches", "id_prefix": "batch", "label": "Batches" },
     "company": { "collection": "companies", "id_prefix": "company", "label": "Companies" },

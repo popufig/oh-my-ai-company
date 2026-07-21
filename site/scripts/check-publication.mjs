@@ -151,6 +151,10 @@ for (const object of publishedObjects) {
 for (const asset of assets) {
   assert(existsSync(resolve(vault, asset.path)), `referenced asset is missing: ${asset.path}`);
   assert(publicIDs.has(asset.object_id), `asset owner is missing: ${asset.path}`);
+  if (asset.content_type.startsWith("image/")) {
+    assert(Number.isInteger(asset.width) && asset.width > 0, `image width is missing: ${asset.path}`);
+    assert(Number.isInteger(asset.height) && asset.height > 0, `image height is missing: ${asset.path}`);
+  }
 }
 
 const typeDefinitions = JSON.parse(scalar(db, "SELECT value FROM metadata WHERE key='type_definitions'"));

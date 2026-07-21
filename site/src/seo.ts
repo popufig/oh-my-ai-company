@@ -35,6 +35,11 @@ type SEOConfig = {
     ahrefs_site_verification?: string;
     indexnow_key?: string;
   };
+  og_image_selection: {
+    allowed_content_types: string[];
+    maximum_aspect_ratio: number;
+    excluded_filename_terms: string[];
+  };
   routes: Record<string, RouteConfig>;
   indexing: {
     collection_types: string[];
@@ -45,6 +50,13 @@ type SEOConfig = {
     source_processing_status: string[];
   };
   visible_fields: Record<string, string[]>;
+};
+
+export type PublicAsset = {
+  path: string;
+  content_type: string;
+  width: number | null;
+  height: number | null;
 };
 
 export const seoConfig = seoConfigJSON as SEOConfig;
@@ -279,13 +291,43 @@ function relationRows(relations: SEORelation[]) {
   }).join("");
 }
 
-export function firstObjectImage(object: SEOObject, normalizeAsset: (path: string, base: string) => string) {
-  const markdown = object.body.match(/!\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/)?.[1];
-  const html = object.body.match(/<img\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/i)?.[1];
-  const source = markdown || html || "";
-  if (/^https?:\/\//i.test(source)) return source;
-  const key = source.startsWith("assets/") ? normalizeAsset(`/${source}`, "") : normalizeAsset(source, object.body_path);
-  return key.startsWith("assets/") ? absoluteURL(`/media/${key.split("/").map(encodeURIComponent).join("/")}`) : absoluteURL(seoConfig.site.default_image);
+export function objectImageAssetPaths(object: SEOObject, normalizeAsset: (path: string, base: string) => string) {
+  const paths: string[] = [];
+  const seen = new Set<string>();
+  const images = /!\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)|<img\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi;
+  for (const match of object.body.matchAll(images)) {
+    const source = match[1] || match[2] || "";
+    if (!source || /^(?:https?:|data:|blob:)/i.test(source)) continue;
+    const path = source.startsWith("assets/") ? normalizeAsset(`/${source}`, "") : normalizeAsset(source, object.body_path);
+    if (!path.startsWith("assets/") || seen.has(path)) continue;
+    seen.add(path);
+    paths.push(path);
+  }
+  return paths;
+}
+
+function excludedOGFilename(path: string) {
+  const basename = path.split("/").at(-1)?.replace(/\.[^.]+$/, "").toLowerCase() || "";
+  return seoConfig.og_image_selection.excluded_filename_terms.some((term) => {
+    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return new RegExp(`(?:^|[-_.])${escaped}(?:$|[-_.])`, "i").test(basename);
+  });
+}
+
+export function firstObjectImage(
+  object: SEOObject,
+  publicAssets: Iterable<PublicAsset>,
+  normalizeAsset: (path: string, base: string) => string
+) {
+  const assets = new Map([...publicAssets].map((asset) => [asset.path, asset]));
+  for (const path of objectImageAssetPaths(object, normalizeAsset)) {
+    const asset = assets.get(path);
+    if (!asset || !seoConfig.og_image_selection.allowed_content_types.includes(asset.content_type)) continue;
+    if (!asset.width || !asset.height || asset.width / asset.height > seoConfig.og_image_selection.maximum_aspect_ratio) continue;
+    if (excludedOGFilename(path)) continue;
+    return absoluteURL(`/media/${path.split("/").map(encodeURIComponent).join("/")}`);
+  }
+  return absoluteURL(seoConfig.site.default_image);
 }
 
 export function homeSEOBody() {

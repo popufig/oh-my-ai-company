@@ -11,6 +11,7 @@ import {
   isObjectIndexable,
   notFoundSEOBody,
   objectDescription,
+  objectImageAssetPaths,
   objectIDFromPath,
   objectPageTitle,
   objectPath,
@@ -22,6 +23,7 @@ import {
   routeForType,
   seoConfig,
   type SEOObject,
+  type PublicAsset,
   type SEORelation
 } from "./seo";
 import { expectedTopicObjectType, topicBySlug, topicDefinitions, topicPath, topicPrimaryCompanyIDs, topicReferencedIDs } from "./topics/topic-definitions";
@@ -600,6 +602,22 @@ async function getSEOObject(id: string, env: Env) {
   `).bind(id).first<SEOObject>();
 }
 
+async function getObjectOGImage(object: SEOObject, env: Env) {
+  const paths = objectImageAssetPaths(object, normalizeAssetPath);
+  if (paths.length === 0) return firstObjectImage(object, [], normalizeAssetPath);
+  const assets: PublicAsset[] = [];
+  for (let offset = 0; offset < paths.length; offset += 80) {
+    const batch = paths.slice(offset, offset + 80);
+    const placeholders = batch.map(() => "?").join(",");
+    const result = await env.DB.prepare(`
+      SELECT path, content_type, width, height
+      FROM public_assets WHERE path IN (${placeholders})
+    `).bind(...batch).all<PublicAsset>();
+    assets.push(...(result.results || []));
+  }
+  return firstObjectImage(object, assets, normalizeAssetPath);
+}
+
 async function resolveTopic(topic: TopicDefinition, env: Env): Promise<ResolvedTopic> {
   const ids = topicReferencedIDs(topic);
   const rows: SEOObject[] = [];
@@ -927,7 +945,7 @@ async function serveSEOPage(request: Request, env: Env) {
           body: objectSEOBody(object, relations),
           indexable: isObjectIndexable(object) && url.searchParams.size === 0,
           lang: pageLanguage(object),
-          image: firstObjectImage(object, normalizeAssetPath),
+          image: await getObjectOGImage(object, env),
           type: "article",
           structuredData: objectStructuredData(object)
         });

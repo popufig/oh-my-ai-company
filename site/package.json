@@ -13,6 +13,7 @@
     "db:migrate": "wrangler d1 migrations apply oh-my-ai-company-prod --remote",
     "data:export": "node scripts/export-vault.mjs .. generated/vault.sql",
     "publication:check": "npm run data:export && node scripts/check-publication.mjs",
+    "test:og": "tsx scripts/test-og-image.ts",
     "seo:verify": "node scripts/verify-seo.mjs",
     "data:sync": "npm run publication:check && wrangler d1 execute oh-my-ai-company-prod --remote --file generated/vault.sql",
     "assets:sync": "node scripts/sync-assets.mjs ..",
@@ -28,6 +29,8 @@
   "devDependencies": {
     "@cloudflare/workers-types": "5.20260713.1",
     "@types/node": "^24.0.0",
+    "sharp": "0.34.5",
+    "tsx": "^4.23.1",
     "typescript": "^5.8.3",
     "wrangler": "4.110.0"
   }

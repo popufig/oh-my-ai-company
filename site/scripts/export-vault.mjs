@@ -4,6 +4,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, extname, relative, resolve, sep } from "node:path";
 import { marked } from "marked";
 import sanitizeHtml from "sanitize-html";
+import sharp from "sharp";
 import { matchesSensitivePattern } from "./publication-safety.mjs";
 
 const vault = resolve(process.argv[2] || "..");
@@ -244,7 +245,7 @@ function registerAsset(src, object) {
   const rel = relative(vault, localPath);
   if (rel.startsWith(`..${sep}`) || rel === "..") throw new Error(`asset path escapes vault: ${src}`);
   if (!existsSync(localPath)) throw new Error(`missing asset ${asset} referenced by ${object.id}`);
-  assetByPath.set(asset, { path: asset, object_id: object.id, content_type: contentType(asset) });
+  assetByPath.set(asset, { path: asset, object_id: object.id, content_type: contentType(asset), local_path: localPath });
 }
 
 function publicBody(object) {
@@ -260,7 +261,16 @@ const fieldsByID = new Map(objects.map((object) => [object.id, object.fields]));
 const objectByID = new Map(objects.map((object) => [object.id, object]));
 const bodiesByID = new Map(objects.map((object) => [object.id, publicBody(object)]));
 const bodyHTMLByID = new Map(objects.map((object) => [object.id, renderBodyHTML(bodiesByID.get(object.id), objectByID)]));
-const publicAssets = [...assetByPath.values()].sort((a, b) => a.path.localeCompare(b.path));
+const publicAssets = await Promise.all([...assetByPath.values()].map(async ({ local_path, ...asset }) => {
+  if (!asset.content_type.startsWith("image/")) return { ...asset, width: null, height: null };
+  const metadata = await sharp(local_path).metadata();
+  return {
+    ...asset,
+    width: Number.isFinite(metadata.width) ? metadata.width : null,
+    height: Number.isFinite(metadata.height) ? metadata.height : null
+  };
+}));
+publicAssets.sort((a, b) => a.path.localeCompare(b.path));
 const companyCount = objects.filter((object) => object.type_id === "company").length;
 
 function isSEOIndexable(object) {
@@ -478,7 +488,7 @@ for (const link of links) {
   lines.push(`INSERT INTO links (id,from_object_id,to_object_id,kind,relation,line,text,resolved) VALUES (${Number(link.id)},${sqlString(link.from_object_id)},${sqlString(link.to_object_id)},${sqlString(link.kind)},${sqlString(link.relation)},${Number(link.line || 0)},${sqlString(link.text || "")},1);`);
 }
 for (const asset of publicAssets) {
-  lines.push(`INSERT INTO public_assets (path,object_id,content_type) VALUES (${sqlString(asset.path)},${sqlString(asset.object_id)},${sqlString(asset.content_type)});`);
+  lines.push(`INSERT INTO public_assets (path,object_id,content_type,width,height) VALUES (${sqlString(asset.path)},${sqlString(asset.object_id)},${sqlString(asset.content_type)},${asset.width ?? "NULL"},${asset.height ?? "NULL"});`);
 }
 
 const generatedAt = new Date().toISOString();
