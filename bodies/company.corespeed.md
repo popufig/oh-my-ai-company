@@ -26,6 +26,12 @@
 
 这不是简单换 landing copy，而是控制点发生变化：旧产品控制 runtime，新产品试图控制 Agent 访问现实世界时使用的身份、凭证、工具、预算与策略。当前官网把范围扩展到 1,000+ connectors、built-in tools、memory、Agent Pay 和 One Bill，但仍处于 waitlist。
 
+### Sarea：同一公司的可下载前台产品
+
+[[company.sarea|Sarea]] 不是另一家独立融资公司，而是 CoreSpeed Inc. 运营的 macOS 多 Agent workspace。Sarea Privacy/Terms、footer、bundle ID 与 Developer ID signer 都指向 CoreSpeed；v0.13.0 安装包可下载、签名验证并启动，包内还能看到 ACP agent schema、六个 connector definition 和 browser/computer 工具。
+
+这条产品线说明团队确实把 Agent、local context、connector、permission 与 gateway 组合进过桌面客户端，但不能反向证明当前 CoreSpeed 的 portable memory、server-side policy、1,000+ connectors、Agent Pay 或 One Bill 已向所有 Agent 客户端开放。最稳的分工是：Sarea 控制本地 workspace 与交互，CoreSpeed 新方向试图控制跨 workspace 的 access/control assets。融资关系继续挂在 CoreSpeed，不迁移到 Sarea。
+
 ## 当前产品模型
 
 ![CoreSpeed 把 connectors、tools、approvals、memory、payments 与 bill 放在同一控制面](assets/corespeed/control-surface.png)
